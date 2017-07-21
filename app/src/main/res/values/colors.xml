@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
+
     <color name="colorPrimaryDark">#303F9F</color>
+
     <color name="colorWhite">#FFFFFF</color>
+
     <color name="colorBottomBar">#e6e6e6</color>
+
     <color name="colorGray">#515151</color>
+
     <color name="colorLightBlue">#1296db</color>
+
     <color name="colorRed">#ff3030</color>
+
     <color name="colorBlack">#2c2c2c</color>
+
     <color name="colorPink">#FF4081</color>
+
+    <color name="notice_Catagory">#30559b</color>
+    <!--通知页面 顶部分类选择按钮的颜色-->
+    <color name="notice_Catagory_red">#f26760</color>
+    <!--通知页面的颜色：红色  （事件优先级：1）-->
+    <color name="notice_Catagory_orange">#f0a56b</color>
+    <!--通知页面的颜色：红色  （事件优先级：2）-->
+    <color name="notice_Catagory_yellow">#f8c76b</color>
+    <!--通知页面的颜色：红色  （事件优先级：3）-->
+    <color name="notice_Catagory_green">#6dcb59</color>
+    <!--通知页面的颜色：红色  （事件优先级：4）-->
+    <color name="notice_Catagory_bule">#57b6ec</color>
+    <!--通知页面的颜色：红色  （事件优先级：5）-->
+    <color name="notice_Catagory_ping">#d388e5</color>
+    <!--通知页面的颜色：红色  （事件优先级：6）-->
+    <color name="notice_Catagory_gray">#a4a3a8</color>
+    <!--通知页面的颜色：红色  （事件优先级：7）-->
+
+
 </resources>
