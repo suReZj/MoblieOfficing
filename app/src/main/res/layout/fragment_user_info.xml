@@ -10,4 +10,10 @@
         android:layout_height="wrap_content"
         android:text="userFragment"/>
 
+    <Button
+        android:id="@+id/button_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="登录测试"/>
+
 </LinearLayout>
