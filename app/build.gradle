@@ -25,6 +25,10 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
+    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
+    compile 'com.belerweb:pinyin4j:2.5.0'
+    compile 'com.bigkoo:quicksidebar:1.0.3'
     testCompile 'junit:junit:4.12'
 }
