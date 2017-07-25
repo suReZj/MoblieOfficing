@@ -10,4 +10,23 @@
     <color name="colorBlack">#2c2c2c</color>
     <color name="colorPink">#FF4081</color>
     <color name="messageTitle">#40aefc</color>
+
+    <color name="notice_Catagory">#30559b</color>
+    <!--通知页面 顶部分类选择按钮的颜色-->
+    <color name="notice_Catagory_red">#f26760</color>
+    <!--通知页面的颜色：红色  （事件优先级：1）-->
+    <color name="notice_Catagory_orange">#f0a56b</color>
+    <!--通知页面的颜色：红色  （事件优先级：2）-->
+    <color name="notice_Catagory_yellow">#f8c76b</color>
+    <!--通知页面的颜色：红色  （事件优先级：3）-->
+    <color name="notice_Catagory_green">#6dcb59</color>
+    <!--通知页面的颜色：红色  （事件优先级：4）-->
+    <color name="notice_Catagory_bule">#57b6ec</color>
+    <!--通知页面的颜色：红色  （事件优先级：5）-->
+    <color name="notice_Catagory_ping">#d388e5</color>
+    <!--通知页面的颜色：红色  （事件优先级：6）-->
+    <color name="notice_Catagory_gray">#a4a3a8</color>
+    <!--通知页面的颜色：红色  （事件优先级：7）-->
+
 </resources>
+
