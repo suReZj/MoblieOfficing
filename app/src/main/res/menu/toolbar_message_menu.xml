@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/first"
+        android:icon="@mipmap/ic_launcher_round"
+        android:title="first"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/second"
+        android:icon="@mipmap/ic_launcher_round"
+        android:title="second"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/third"
+        android:icon="@mipmap/message_toolbar_more"
+        android:title="third"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/fourth"
+                    android:icon="@mipmap/ic_launcher_round"
+                    android:title="aaaaa"
+                    app:showAsAction="ifRoom"
+                    />
+                <item
+                    android:id="@+id/fiveth"
+                    android:icon="@mipmap/ic_launcher_round"
+                    android:title="aaaaa"
+                    app:showAsAction="ifRoom"/>
+                <item
+                    android:id="@+id/sixth"
+                    android:icon="@mipmap/ic_launcher_round"
+                    android:title="aaaaa"
+                    app:showAsAction="ifRoom"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>

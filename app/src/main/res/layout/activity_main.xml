@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.r2.scau.moblieofficing.activity.MainActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray"
+        android:layout_above="@+id/bottom_bar"/>
+
+    <LinearLayout
+        android:id="@+id/bottom_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorBottomBar"
+        android:paddingTop="10dp"
+        android:paddingBottom="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_bottom_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableTop="@drawable/bottom_bar__message"
+            android:textColor="@drawable/bottom_bar_text"
+            android:text="消息"
+            android:textSize="12sp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/tv_bottom_notice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableTop="@drawable/bottom_bar_notice"
+            android:textColor="@drawable/bottom_bar_text"
+            android:text="公告"
+            android:textSize="12sp"
+            android:layout_weight="1"/>
+
+
+
+        <TextView
+            android:id="@+id/tv_bottom_work"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableTop="@drawable/bottom_bar_work"
+            android:textColor="@drawable/bottom_bar_text"
+            android:text="工作"
+            android:textSize="12sp"
+            android:layout_weight="1"/>
+
+
+        <TextView
+            android:id="@+id/tv_bottom_contact"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableTop="@drawable/bottom_bar_contact"
+            android:textColor="@drawable/bottom_bar_text"
+            android:text="联系人"
+            android:textSize="12sp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/tv_bottom_user"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:drawableTop="@drawable/bottom_bar_user"
+            android:textColor="@drawable/bottom_bar_text"
+            android:text="我的"
+            android:textSize="12sp"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottom_bar">
+    </FrameLayout>
+
+</RelativeLayout>
