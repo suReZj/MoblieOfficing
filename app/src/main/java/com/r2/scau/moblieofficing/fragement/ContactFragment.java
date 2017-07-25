@@ -1,15 +1,14 @@
 package com.r2.scau.moblieofficing.fragement;
 
-import android.app.Fragment;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -26,7 +25,6 @@ import com.r2.scau.moblieofficing.bean.Contact;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,10 +41,9 @@ public class ContactFragment extends Fragment implements OnQuickSideBarTouchList
 
     private View view;
     private Context mContext;
-    private Handler mHandler;
     private RecyclerView mRecyclerView;
     private ContactAdapter adapter;
-    private List<Contact> mContactList = Collections.synchronizedList(new ArrayList<Contact>());
+    private List<Contact> mContactList = new ArrayList<>();
     private ContentResolver mContentResolver;
     private HashMap<String,Integer> letters = new HashMap<>();
     private QuickSideBarView mQuickSideBarView;
@@ -59,15 +56,6 @@ public class ContactFragment extends Fragment implements OnQuickSideBarTouchList
         view = inflater.inflate(R.layout.fragment_contact, container, false);
         mContext = getActivity();
         initView();
-        mHandler = new Handler(){
-            @Override
-            public void handleMessage(Message msg) {
-                Log.e("getContact", "finish2");
-                List<Contact> contacts = (List<Contact>) msg.obj;
-                adapter.addAll(contacts);
-            }
-        };
-        //getContactList();
         return view;
     }
 
@@ -82,6 +70,7 @@ public class ContactFragment extends Fragment implements OnQuickSideBarTouchList
         mRecyclerView.setLayoutManager(layoutManager);
 
         // Add the sticky headers decoration
+        mContactList.clear();
         adapter = new ContactAdapter();
 
         getContact();
