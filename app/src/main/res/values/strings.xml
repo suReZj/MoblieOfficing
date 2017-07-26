@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">MoblieOfficing</string>
+
+    <!-- 文件管理 使用的字段 -->
+    <string name="my_file">个人文档</string>
+    <string name="shared_file">公共文档</string>
+    <string name="filelist_edit">编辑</string>
+    <string name="filelist_newfolder">新建文件夹</string>
+    <string name="filelist_allselect">全选</string>
+    <string name="filelist_allnoneselect">取消全选</string>
+    <string name="filelist_move">移动</string>
+    <string name="filelist_delete">删除</string>
+    <string name="filelist_rename">重命名</string>
+    <string name="folder">文件夹</string>
+    <string name="filelist_shareto">发送给联系人</string>
+    <!---->
+
+    <string name="back_button">返回</string>
+
 </resources>

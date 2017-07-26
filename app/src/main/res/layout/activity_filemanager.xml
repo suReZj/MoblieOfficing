@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/filemanager_title"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="标题栏"
+        android:gravity="center"
+        />
+    
+    <ScrollView
+        android:id="@+id/filemanager_scroller"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/filemanager_title">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/filemanager_myfileBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:drawableLeft="@drawable/filemanager_personal"
+                android:paddingLeft="12dp"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/my_file"/>
+
+            <Button
+                android:id="@+id/filemanager_sharedfileBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:layout_below="@id/filemanager_myfileBtn"
+                android:drawableLeft="@drawable/filemanager_shared"
+                android:paddingLeft="12dp"
+                android:drawablePadding="12dp"
+                android:gravity="center_vertical"
+                android:text="@string/shared_file"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

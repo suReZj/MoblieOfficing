@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="EDCToolBar">
+        <attr name="leftButtonIcon" format="reference"/>
+        <attr name="rightFirstButtonIcon" format="reference"/>
+        <attr name="rightSecondButtonIcon" format="reference"/>
+        <attr name="leftButtonText" format="string"/>
+        <attr name="rightFirstButtonText" format="string"/>
+        <attr name="rightSecondButtonText" format="string"/>
+    </declare-styleable>
+
+</resources>

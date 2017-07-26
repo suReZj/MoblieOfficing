@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.fragement.ContactFragment;
 import com.r2.scau.moblieofficing.fragement.MessageFragment;
@@ -36,6 +37,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        /**初始化facebook 图片加载器*/
+        Fresco.initialize(MainActivity.this);
+
         initView();
     }
 
