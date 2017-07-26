@@ -16,22 +16,6 @@
         <item name="android:windowIsFloating">true</item>
     </style>
 
-
-
-    <!-- toolbar弹出菜单样式 -->
-    <!-- Created by 张子健  -->
-    <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
-        <item name="android:colorBackground">@color/colorBottomBar</item>
-        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
-        <item name="colorPrimaryDark">@color/colorBlack</item>
-    </style>
-    <!--修改Toolbar popup menu 弹出位置-->
-    <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
-    </style>
-
-
-
     <!-- toolbar弹出菜单样式 -->
     <!-- Created by 张子健  -->
     <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
