@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.OnItemClickLitener;
-import com.r2.scau.moblieofficing.utils.Contacts;
+import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.widge.BottomView;
 
 import java.io.File;

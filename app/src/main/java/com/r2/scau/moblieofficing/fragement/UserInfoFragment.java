@@ -12,7 +12,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.activity.FileSelect;
+import com.r2.scau.moblieofficing.activity.FileSelect_Avtivity;
+import com.r2.scau.moblieofficing.activity.LoginActivity;
 import com.r2.scau.moblieofficing.widge.BottomView;
 
 /**
@@ -21,11 +22,16 @@ import com.r2.scau.moblieofficing.widge.BottomView;
  */
 
 public class UserInfoFragment extends Fragment implements View.OnClickListener{
+
+    private View view;
+    private Context mContext;
+    private Button mButton;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_info, container, false);
-        Context mContext = getActivity();
+        view = inflater.inflate(R.layout.fragment_user_info, container, false);
+        mContext = getActivity();
 
         Button button = (Button) view.findViewById(R.id.filemanageBtn);
 
@@ -33,6 +39,8 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
 
         button1.setOnClickListener(this);
         button.setOnClickListener(this);
+
+        initView();
 
         return view;
     }
@@ -63,12 +71,24 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
                 break;
 
             case R.id.filemanage:
-                Intent intent = new Intent(getActivity(), FileSelect.class);
+                Intent intent = new Intent(getActivity(), FileSelect_Avtivity.class);
                 startActivity(intent);
                 break;
 
 
         }
 
+
+    }
+
+    public void initView(){
+        mButton = (Button) view.findViewById(R.id.button_login);
+        mButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

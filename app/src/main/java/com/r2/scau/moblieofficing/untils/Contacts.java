@@ -1,4 +1,4 @@
-package com.r2.scau.moblieofficing.utils;
+package com.r2.scau.moblieofficing.untils;
 
 /**
  * Created by EdwinCheng on 2017/7/24.

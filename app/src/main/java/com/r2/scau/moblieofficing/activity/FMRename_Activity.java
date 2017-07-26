@@ -6,7 +6,7 @@ import android.view.View;
  * Created by EdwinCheng on 2017/7/26.
  */
 
-public class FileManagerRename extends BaseActivity {
+public class FMRename_Activity extends BaseActivity {
     @Override
     protected void initView() {
 

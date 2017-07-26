@@ -26,20 +26,21 @@
                 android:id="@+id/filemanager_myfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:drawableLeft="@drawable/filemanager_personal"
+                android:background="@drawable/basebutton_pressed"
+                android:drawableLeft="@mipmap/ic_personalfile"
                 android:paddingLeft="12dp"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"
-                android:text="@string/my_file"/>
+                android:text="@string/my_file"
+                />
 
             <Button
                 android:id="@+id/filemanager_sharedfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/transparent"
+                android:background="@drawable/basebutton_pressed"
                 android:layout_below="@id/filemanager_myfileBtn"
-                android:drawableLeft="@drawable/filemanager_shared"
+                android:drawableLeft="@mipmap/ic_sharedfile"
                 android:paddingLeft="12dp"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"

@@ -12,7 +12,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.utils.Contacts;
+import com.r2.scau.moblieofficing.untils.Contacts;
 
 /**
  * Created by EdwinCheng on 2017/7/25.

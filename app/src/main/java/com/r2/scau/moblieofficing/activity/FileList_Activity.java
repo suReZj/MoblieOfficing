@@ -10,7 +10,7 @@ import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.FileManagerAdapter;
-import com.r2.scau.moblieofficing.utils.ToastUtils;
+import com.r2.scau.moblieofficing.untils.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -22,9 +22,9 @@ import java.util.Stack;
  *
  */
 
-public class FileList extends BaseActivity {
+public class FileList_Activity extends BaseActivity {
 
-    private static final String TAG = "FileList";
+    private static final String TAG = "FileList_Activity";
     private RecyclerView fileListRecycler;
     private LinearLayoutManager linearLayoutManager;
     private FileManagerAdapter fileManagerAdapter;
@@ -53,7 +53,7 @@ public class FileList extends BaseActivity {
         if (fileList == null){
             fileList = new ArrayList<>();
             currentPathStack = new Stack<>();
-            linearLayoutManager = new LinearLayoutManager(FileList.this);
+            linearLayoutManager = new LinearLayoutManager(FileList_Activity.this);
         }
         rootPath = Environment.getExternalStorageDirectory().toString();
 
@@ -74,7 +74,7 @@ public class FileList extends BaseActivity {
     }
 
     private void initRecycler(){
-        fileManagerAdapter = new FileManagerAdapter(FileList.this,fileList);
+        fileManagerAdapter = new FileManagerAdapter(FileList_Activity.this,fileList);
         fileListRecycler.setLayoutManager(linearLayoutManager);
         fileListRecycler.setAdapter(fileManagerAdapter);
         this.fileManagerAdapter.setOnItemClickLitener(new OnItemClickLitener() {
@@ -99,15 +99,15 @@ public class FileList extends BaseActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                ToastUtils.show(FileList.this,"长点击position:" +position, Toast.LENGTH_SHORT);
+                ToastUtils.show(FileList_Activity.this,"长点击position:" +position, Toast.LENGTH_SHORT);
             }
         });
     }
 
     @Override
     protected void initListener() {
-        filelist_editBtn.setOnClickListener(FileList.this);
-        filelist_newfolderBtn.setOnClickListener(FileList.this);
+        filelist_editBtn.setOnClickListener(FileList_Activity.this);
+        filelist_newfolderBtn.setOnClickListener(FileList_Activity.this);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class FileList extends BaseActivity {
     @Override
     public void onBackPressed() {
         if (currentPathStack.peek() == rootPath){
-            FileList.this.finish();
+            FileList_Activity.this.finish();
 
         }else{
             currentPathStack.pop();

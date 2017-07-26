@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,9 +20,17 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.r2.scau.moblieofficing.activity.FileList"/>
+        <activity android:name="com.r2.scau.moblieofficing.activity.FileList_Activity"/>
 
-        <activity android:name="com.r2.scau.moblieofficing.activity.FileSelect"/>
+        <activity android:name="com.r2.scau.moblieofficing.activity.FileSelect_Avtivity"/>
+
+
+        <activity android:name=".activity.chat_Activity" />
+
+        <activity android:name=".activity.LoginActivity">
+        </activity>
+        <activity android:name=".activity.SignUpActivity">
+        </activity>
 
 
     </application>
