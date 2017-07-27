@@ -25,7 +25,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpHelper.okHttpClient;
+import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
 public class SignUpActivity extends AppCompatActivity {
 

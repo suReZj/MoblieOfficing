@@ -1,13 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="noticeFragment"/>
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_notice"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBottomBar"
+        android:title="公告"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextColor="@color/messageTitle"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <TextView
+          android:id="@+id/tv_notice_unread"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:gravity="center_horizontal|center_vertical"
+          android:textColor="@drawable/notice_read_status"
+          android:textSize="18sp"
+          android:text="未读"
+      />
+
+      <View
+          android:layout_width="1px"
+          android:layout_height="match_parent"
+          android:background="@color/colorGray"
+          />
+
+      <TextView
+          android:id="@+id/tv_notice_read"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:padding="10dp"
+          android:gravity="center_horizontal|center_vertical"
+          android:textColor="@drawable/notice_read_status"
+          android:textSize="18sp"
+          android:text="已读"
+          />
+
+  </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray"
+        />
 
 </LinearLayout>

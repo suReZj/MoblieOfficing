@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.untils.MathUtil;
+import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +24,7 @@ import okhttp3.Headers;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpHelper.okHttpClient;
+import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -79,7 +80,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //step 3: 创建请求
-        Request request = new Request.Builder().url("http://192.168.13.32:8080/u/mobileLogin.shtml")
+        Request request = new Request.Builder().url("http://192.168.13.19:8080/u/mobileLogin.shtml")
                 .post(formBody)
                 .build();
 
@@ -103,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 loginSessionID = session.substring(0, session.indexOf(";"));
                 Log.i("info_s", "session is  :" + loginSessionID);
-
+                OkHttpClientManager.loginSessionID = loginSessionID;
                 //changePassword();
             }
         });

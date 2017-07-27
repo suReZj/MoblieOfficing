@@ -13,7 +13,9 @@ import okhttp3.OkHttpClient;
  * Created by 嘉进 on 11:05.
  */
 
-public class OkHttpHelper {
+public class OkHttpClientManager {
+
+    public static String loginSessionID;
     public static OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .cookieJar(new CookieJar() {
                 private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
@@ -29,8 +31,31 @@ public class OkHttpHelper {
                     return cookies != null ? cookies : new ArrayList<Cookie>();
                 }
             })
-            .build();
+            .build();;
+    private static OkHttpClientManager sInstance;
 
-    public static String sessionID;
+    public static final int WITHSESSION = 0;
+    public static final int WITHOUTSESSUIN = 1;
+
+
+    public OkHttpClientManager(){
+
+    }
+
+    public static OkHttpClientManager getInstance()
+    {
+        if (sInstance == null)
+        {
+            synchronized (OkHttpClientManager.class)
+            {
+                if (sInstance == null)
+                {
+                    sInstance = new OkHttpClientManager();
+                }
+            }
+        }
+        return sInstance;
+    }
+
 
 }
