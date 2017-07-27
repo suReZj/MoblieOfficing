@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
@@ -21,13 +21,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.FileListActivity"/>
         <activity android:name=".activity.FileSelectActivity"/>
-        <activity android:name=".activity.ChatActivity" />
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.SignUpActivity" />
-        <activity android:name=".activity.SendNoticeActivity" />
-
+        <activity android:name=".activity.ChatActivity"/>
+        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name=".activity.SignUpActivity"/>
+        <activity android:name=".activity.SendNoticeActivity"/>
+        <activity android:name=".activity.PersonalContactActivity">
+        </activity>
     </application>
+
 </manifest>
