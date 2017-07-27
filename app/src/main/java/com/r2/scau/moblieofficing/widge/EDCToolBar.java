@@ -84,10 +84,26 @@ public class EDCToolBar extends Toolbar{
                 setRightSecondButtonText(rightSecondButtonText);
             }
 
+            final int leftButtonTextColor = a.getColor(R.styleable.EDCToolBar_leftButtonTextColor,defStyleAttr);
+            if (leftButtonTextColor != 0){
+                setLeftButtonTextColor(leftButtonTextColor);
+            }
+
+            final int rightFirstButtonTextColor = a.getColor(R.styleable.EDCToolBar_rightFirstButtonTextColor,defStyleAttr);
+            if (rightFirstButtonTextColor != 0){
+                setRightFirstButtonTextColor(rightFirstButtonTextColor);
+            }
+
+            final int rightSecondButtonTextColor = a.getColor(R.styleable.EDCToolBar_rightSecondButtonTextColor,defStyleAttr);
+            if (rightSecondButtonTextColor != 0){
+                setRightSecondButtonTextColor(rightSecondButtonTextColor);
+            }
+
             a.recycle();
         }
 
     }
+
 
     private void initView() {
         if(mView == null) {
@@ -179,6 +195,19 @@ public class EDCToolBar extends Toolbar{
         setRightSecondButtonText(getResources().getString(id));
     }
 
+    public void setLeftButtonTextColor(int id) {
+        mLeftButton.setTextColor(id);
+    }
+
+    private void setRightFirstButtonTextColor(int id) {
+        mRightFirstButton.setTextColor(id);
+    }
+
+    private void setRightSecondButtonTextColor(int id) {
+        mRightSecondButton.setTextColor(id);
+    }
+
+
     public Button getLeftButton(){
         return this.mLeftButton;
     }
@@ -214,5 +243,6 @@ public class EDCToolBar extends Toolbar{
         if (mTextTitle != null)
             mTextTitle.setVisibility(GONE);
     }
+
 
 }

@@ -8,6 +8,9 @@
         <attr name="leftButtonText" format="string"/>
         <attr name="rightFirstButtonText" format="string"/>
         <attr name="rightSecondButtonText" format="string"/>
+        <attr name="leftButtonTextColor" format="color"/>
+        <attr name="rightFirstButtonTextColor" format="color"/>
+        <attr name="rightSecondButtonTextColor" format="color"/>
     </declare-styleable>
 
 </resources>
