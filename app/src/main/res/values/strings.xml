@@ -12,9 +12,11 @@
     <string name="filelist_delete">删除</string>
     <string name="filelist_rename">重命名</string>
     <string name="folder">文件夹</string>
+
     <string name="filelist_shareto">发送给联系人</string>
     <!---->
 
-    <string name="back_button">返回</string>
+    <string name="titlebar_back_button">返回</string>
+    <string name="titlebar_commit">完成</string>
 
 </resources>

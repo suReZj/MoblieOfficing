@@ -45,7 +45,7 @@ public class EDCToolBar extends Toolbar{
         super(context, attrs, defStyleAttr);
 
         initView();
-        setContentInsetsRelative(10,10);
+        setContentInsetsRelative(0,0);
 
         if(attrs != null) {
             final TintTypedArray a = TintTypedArray.obtainStyledAttributes(getContext(), attrs,

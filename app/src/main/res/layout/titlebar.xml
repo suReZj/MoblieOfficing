@@ -2,8 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?attr/actionBarSize"
+    android:background="@drawable/basebottomline"
+    >
 
     <TextView
         android:id="@+id/toolbar_title"
@@ -12,7 +15,6 @@
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="修改文件夹"
         android:textSize="20sp"
         android:visibility="gone"
         />
@@ -33,31 +35,28 @@
 
     <Button
         android:id="@+id/toolbar_rightSecondButton"
-        android:layout_width="58dp"
+        android:layout_width="52dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:background="@color/transparent"
         android:textSize="14sp"
+        android:gravity="center_vertical|right"
+        android:paddingRight="6dp"
         android:visibility="gone"
         />
 
     <Button
         android:id="@+id/toolbar_rightFirstButton"
-        android:layout_width="58dp"
+        android:layout_width="52dp"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/toolbar_rightSecondButton"
         android:textSize="14sp"
         android:background="@color/transparent"
         android:layout_centerVertical="true"
+        android:gravity="center_vertical|right"
+        android:paddingRight="6dp"
         android:visibility="gone"
         />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorGray"
-        android:layout_below="@id/toolbar_leftButton"/>
-
 
 </RelativeLayout>
