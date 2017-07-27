@@ -6,12 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.fragement.ContactFragment;
 import com.r2.scau.moblieofficing.fragement.MessageFragment;
@@ -22,7 +22,7 @@ import com.r2.scau.moblieofficing.fragement.WorkFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener,ViewPager.OnPageChangeListener{
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
 
     private TextView mMessageTV;
     private TextView mNoticeTV;
@@ -36,26 +36,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initView();
     }
 
+    @Override
     public void initView(){
+        setContentView(R.layout.activity_main);
+
+        /**初始化facebook 图片加载器*/
+        Fresco.initialize(MainActivity.this);
+
         mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
         mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
         mWorkTV= (TextView) findViewById(R.id.tv_bottom_work);
         mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
         mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
 
+        initViewPager();
+
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initListener() {
         mMessageTV.setOnClickListener(this);
         mNoticeTV.setOnClickListener(this);
         mWorkTV.setOnClickListener(this);
         mContactTV.setOnClickListener(this);
         mUserInfoTV.setOnClickListener(this);
         mMessageTV.setSelected(true);
-
-        initViewPager();
-
     }
 
     public void initViewPager(){

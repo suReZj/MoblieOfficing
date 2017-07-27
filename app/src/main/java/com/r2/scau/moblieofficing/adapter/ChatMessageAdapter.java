@@ -2,7 +2,6 @@ package com.r2.scau.moblieofficing.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.chat_message_Bean;
-import com.r2.scau.moblieofficing.bean.message_Bean;
 import com.sqk.emojirelease.EmojiUtil;
 
 import java.io.IOException;
@@ -22,11 +20,11 @@ import java.util.List;
  * Created by 张子健 on 2017/7/23 0023.
  */
 
-public class chat_message_Adapter extends RecyclerView.Adapter<chat_message_Adapter.chatHolder> {
+public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.chatHolder> {
     private List<chat_message_Bean> chatMessageList;
     private Context mContext;
 
-    public chat_message_Adapter(List<chat_message_Bean> chatMessageList, Context mContext) {
+    public ChatMessageAdapter(List<chat_message_Bean> chatMessageList, Context mContext) {
         this.chatMessageList = chatMessageList;
         this.mContext = mContext;
     }
@@ -53,7 +51,7 @@ public class chat_message_Adapter extends RecyclerView.Adapter<chat_message_Adap
     }
 
     @Override
-    public chat_message_Adapter.chatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ChatMessageAdapter.chatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final chatHolder holder = new chatHolder(LayoutInflater.from(
                 parent.getContext()).inflate(R.layout.chat_message_item, parent,
                 false));
@@ -61,7 +59,7 @@ public class chat_message_Adapter extends RecyclerView.Adapter<chat_message_Adap
     }
 
     @Override
-    public void onBindViewHolder(chat_message_Adapter.chatHolder holder, int position) {
+    public void onBindViewHolder(ChatMessageAdapter.chatHolder holder, int position) {
         chat_message_Bean chat_message_bean = chatMessageList.get(position);
         if(position%2==0){
             holder.rightLayout.setVisibility(View.VISIBLE);

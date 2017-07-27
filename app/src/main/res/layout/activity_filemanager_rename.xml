@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <com.r2.scau.moblieofficing.widge.EDCToolBar
+        android:id="@+id/filemanage_rename_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="?attr/actionBarSize"
+        app:title="新建文件夹"
+        />
+
+    <EditText
+        android:id="@+id/filemanage_rename_newname"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:text="输入文件名"
+        android:textSize="12dp"
+        android:textColor="@color/Gray"
+        android:layout_below="@id/filemanage_rename_title"
+        android:layout_marginTop="12dp"
+        android:paddingLeft="12dp"/>
+
+
+</RelativeLayout>

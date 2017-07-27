@@ -17,6 +17,18 @@
         app:theme="@style/ToolbarTheme"
         app:titleTextColor="@color/messageTitle"/>
 
+
+    <!--<com.r2.scau.moblieofficing.widge.EDCToolBar
+        android:id="@+id/toolbar_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="?attr/actionBarSize"
+        app:rightSecondButtonText="发公告"
+        app:theme="@style/ToolbarTheme"
+        app:title="公告"
+        />-->
+
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

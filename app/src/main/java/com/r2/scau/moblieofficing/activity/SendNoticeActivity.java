@@ -1,11 +1,10 @@
 package com.r2.scau.moblieofficing.activity;
 
-import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -22,21 +21,17 @@ import okhttp3.Response;
 
 import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
-public class SendNoticeActivity extends AppCompatActivity {
+public class SendNoticeActivity extends BaseActivity {
 
     private EditText titleET;
     private EditText authorET;
     private EditText contentET;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initView(){
         setContentView(R.layout.activity_send_notice);
 
-        initView();
-    }
-
-    public void initView(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_send_notice);
         setSupportActionBar(toolbar);
 
@@ -46,6 +41,16 @@ public class SendNoticeActivity extends AppCompatActivity {
 
         titleET.setSingleLine();
         authorET.setSingleLine();
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initListener() {
+
     }
 
     @Override
@@ -108,5 +113,10 @@ public class SendNoticeActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+
     }
 }

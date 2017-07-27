@@ -2,23 +2,17 @@ package com.r2.scau.moblieofficing.fragement;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.activity.SendNoticeActivity;
 
 /**
  * Created by 嘉进 on 9:21.
@@ -44,7 +38,7 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
     public void initView() {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_notice);
         ((AppCompatActivity) mContext).setSupportActionBar(toolbar);
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);
 
         readTV = (TextView) view.findViewById(R.id.tv_notice_read);
         unReadTV = (TextView) view.findViewById(R.id.tv_notice_unread);
@@ -60,7 +54,7 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
     }
 
 
-    @Override
+   /* @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.toolbar_notice_menu, menu);
     }
@@ -73,7 +67,7 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
            startActivity(intent);
        }
        return true;
-    }
+    }*/
 
     @Override
     public void onClick(View view) {

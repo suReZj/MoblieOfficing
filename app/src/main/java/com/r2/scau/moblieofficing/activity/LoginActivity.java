@@ -3,7 +3,6 @@ package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,43 +25,43 @@ import okhttp3.Response;
 
 import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
     private EditText userET;
     private EditText passwordET;
-    private Button loginButton;
+    private Button loginBtn;
+    private TextView sigUpTV;
     private String loginSessionID;
-    private TextView sigUp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        initView();
     }
 
+    @Override
     public void initView(){
+        setContentView(R.layout.activity_login);
+
         userET = (EditText) findViewById(R.id.input_user_login);
         passwordET = (EditText) findViewById(R.id.input_password_login);
-        loginButton = (Button) findViewById(R.id.btn_login);
-        sigUp = (TextView) findViewById(R.id.link_signup);
-        userET = (EditText) findViewById(R.id.input_user_login);
+        loginBtn = (Button) findViewById(R.id.btn_login);
+        sigUpTV = (TextView) findViewById(R.id.link_signup);
         passwordET = (EditText) findViewById(R.id.input_password_login);
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                login();
-            }
-        });
-
-        sigUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-            }
-        });
     }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initListener() {
+        loginBtn.setOnClickListener(this);
+
+        sigUpTV.setOnClickListener(this);
+    }
+
 
     public void login(){
         //step 1: 同样的需要创建一个OkHttpClick对象
@@ -139,5 +138,18 @@ public class LoginActivity extends AppCompatActivity {
                 Log.e("changePswd", response.body().string());
             }
         });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_login:
+                login();
+                break;
+            case R.id.link_signup:
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+                break;
+        }
     }
 }

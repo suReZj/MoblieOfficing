@@ -16,14 +16,12 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.adapter.chat_message_Adapter;
+import com.r2.scau.moblieofficing.adapter.ChatMessageAdapter;
 import com.r2.scau.moblieofficing.bean.chat_message_Bean;
 import com.sqk.emojirelease.Emoji;
 import com.sqk.emojirelease.FaceFragment;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +30,7 @@ import java.util.List;
  * Created by 张子健 on 2017/7/21 0021.
  */
 
-public class chat_Activity extends AppCompatActivity implements FaceFragment.OnEmojiClickListener {
+public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEmojiClickListener {
     private Button emojiBtn;//表情按钮
     private Button sendBtn;//发送按钮
     private EditText editText;//文字输入框
@@ -59,7 +57,7 @@ public class chat_Activity extends AppCompatActivity implements FaceFragment.OnE
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        chat_message_Adapter adapter = new chat_message_Adapter(chatMessageList, this);
+        ChatMessageAdapter adapter = new ChatMessageAdapter(chatMessageList, this);
         recyclerView.setAdapter(adapter);
 
 

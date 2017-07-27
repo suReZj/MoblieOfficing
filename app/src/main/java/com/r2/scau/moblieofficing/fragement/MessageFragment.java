@@ -16,7 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.adapter.message_Adapter;
+import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.message_Bean;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class MessageFragment extends Fragment {
         LinearLayoutManager layoutManager=new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         initMsg();
-        message_Adapter message_adapter=new message_Adapter(view.getContext(),msgList);
+        MessageAdapter message_adapter=new MessageAdapter(view.getContext(),msgList);
         recyclerView.setAdapter(message_adapter);
 
 
