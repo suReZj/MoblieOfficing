@@ -1,10 +1,10 @@
 package com.r2.scau.moblieofficing.fragement;
 
-import android.app.Fragment;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -16,12 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.adapter.message_Adapter;
+import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.message_Bean;
 
 import java.util.ArrayList;
-
-import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 
 /**
  * Created by 嘉进 on 9:20.
@@ -29,12 +27,13 @@ import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
  */
 
 public class MessageFragment extends Fragment {
+    private View view;
     private ArrayList<message_Bean> msgList=new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_message);
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
@@ -42,7 +41,7 @@ public class MessageFragment extends Fragment {
         LinearLayoutManager layoutManager=new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(layoutManager);
         initMsg();
-        message_Adapter message_adapter=new message_Adapter(view.getContext(),msgList);
+        MessageAdapter message_adapter=new MessageAdapter(view.getContext(),msgList);
         recyclerView.setAdapter(message_adapter);
 
 

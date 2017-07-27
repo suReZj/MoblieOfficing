@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.RecyclerSwipeAdapter;
 import com.daimajia.swipe.implments.SwipeItemRecyclerMangerImpl;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.activity.chat_Activity;
+import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.bean.message_Bean;
 
 import java.util.List;
@@ -27,12 +26,12 @@ import java.util.List;
  * Created by 张子健 on 2017/7/20 0020.
  */
 
-public class message_Adapter extends RecyclerSwipeAdapter<message_Adapter.messageHolder> {
+public class MessageAdapter extends RecyclerSwipeAdapter<MessageAdapter.messageHolder> {
     private List<message_Bean> messageList;
     private Context mContext;
     protected SwipeItemRecyclerMangerImpl mItemManager = new SwipeItemRecyclerMangerImpl(this);
 
-    public message_Adapter(Context context, List<message_Bean> list) {
+    public MessageAdapter(Context context, List<message_Bean> list) {
         messageList = sortMessage(list);
         mContext = context;
     }
@@ -109,7 +108,7 @@ public class message_Adapter extends RecyclerSwipeAdapter<message_Adapter.messag
         holder.superTextView.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onSuperTextViewClick() {
-                Intent intent = new Intent(mContext, chat_Activity.class);
+                Intent intent = new Intent(mContext, ChatActivity.class);
                 mContext.startActivity(intent);
                 mItemManager.closeAllItems();
             }

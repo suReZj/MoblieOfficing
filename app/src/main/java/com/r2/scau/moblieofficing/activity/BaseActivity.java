@@ -3,6 +3,7 @@ package com.r2.scau.moblieofficing.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import java.util.Stack;
@@ -15,7 +16,7 @@ import java.util.Stack;
  * 2、Intent 意图也已经包含在BaseActivity中
  */
 
-public abstract class BaseActivity extends Activity implements View.OnClickListener{
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
     /** 用来保存所有已打开的Activity */
     private static Stack<Activity> listActivity = new Stack<Activity>();
     /** 记录上次点击按钮的时间 **/
@@ -71,8 +72,8 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
      *
      * activity跳转方法
      */
-    public void openActivity(Class<?> targetActivity,Bundle bundle){
-        Intent intent = new Intent(this,targetActivity);
+    public void openActivity(Class<?> targetActivity, Bundle bundle){
+        Intent intent = new Intent(this, targetActivity);
         if (bundle != null){
             intent.putExtras(bundle);
         }
@@ -80,7 +81,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
     }
 
     public void openActivity(Class<?> targetActivity){
-        openActivity(targetActivity,null);
+        openActivity(targetActivity, null);
     }
 
     public void openActivityForResult(Class<?> targetActivity,Bundle bundle,int requestCode){
@@ -91,7 +92,7 @@ public abstract class BaseActivity extends Activity implements View.OnClickListe
         startActivityForResult(intent,requestCode);
     }
 
-    public void openActivityForResult(Class<?> targetActivity,int requestCode){
+    public void openActivityForResult(Class<?> targetActivity, int requestCode){
         openActivityForResult(targetActivity,null,requestCode);
     }
 

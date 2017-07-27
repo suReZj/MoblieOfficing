@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.r2.scau.moblieofficing.activity.SendNoticeActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_send_notice"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorBottomBar"
+        android:title="发公告"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        app:theme="@style/ToolbarTheme"
+        app:titleTextColor="@color/messageTitle"/>
+
+   <EditText
+       android:id="@+id/et_notice_title"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@null"
+       android:maxLength="20"
+       android:padding="10dp"
+       android:hint="公告标题"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray"
+        />
+
+    <EditText
+        android:id="@+id/et_notice_author"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:maxLength="15"
+        android:padding="10dp"
+        android:hint="作者"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/colorGray"
+        />
+
+    <EditText
+        android:id="@+id/et_notice_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:padding="10dp"
+        android:inputType="textMultiLine"
+        android:hint="公告内容"/>
+
+</LinearLayout>

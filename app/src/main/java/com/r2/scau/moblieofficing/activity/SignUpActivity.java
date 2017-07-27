@@ -1,10 +1,8 @@
 package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,12 +23,12 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpHelper.okHttpClient;
+import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends BaseActivity {
 
-    private TextView login;
-    private Button signUpButton;
+    private TextView loginTV;
+    private Button signUpBtn;
     private Handler mHandler;
     private EditText nameET;
     private EditText phoneET;
@@ -39,10 +37,12 @@ public class SignUpActivity extends AppCompatActivity {
     private String verCodeKey;
     private ImageView verCodeImageView;
     public static final int VERCODE = 1;
+
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void initView(){
         setContentView(R.layout.activity_sign_up);
+
         mHandler = new Handler(){
             @Override
             public void handleMessage(Message msg) {
@@ -55,19 +55,16 @@ public class SignUpActivity extends AppCompatActivity {
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .into(verCodeImageView);
 
+
                         break;
                     default:
                         break;
                 }
             }
         };
-        initView();
-    }
 
-    public void initView(){
-
-        login = (TextView) findViewById(R.id.link_login);
-        signUpButton = (Button) findViewById(R.id.btn_sign_up);
+        loginTV = (TextView) findViewById(R.id.link_login);
+        signUpBtn = (Button) findViewById(R.id.btn_sign_up);
         verCodeET = (EditText) findViewById(R.id.input_ver_code);
         nameET = (EditText) findViewById(R.id.input_name_sign_up);
         phoneET = (EditText) findViewById(R.id.input_phone_sign_up);
@@ -76,20 +73,18 @@ public class SignUpActivity extends AppCompatActivity {
 
         getVerCode();
 
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signUp();
-            }
-        });
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initListener() {
+        loginTV.setOnClickListener(this);
+        signUpBtn.setOnClickListener(this);
     }
 
     public void getVerCode(){
@@ -173,4 +168,16 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.link_login:
+                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.btn_sign_up:
+                signUp();
+                break;
+        }
+    }
 }

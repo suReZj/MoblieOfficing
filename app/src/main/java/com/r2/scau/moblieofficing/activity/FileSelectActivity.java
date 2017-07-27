@@ -10,7 +10,7 @@ import com.r2.scau.moblieofficing.R;
  * Created by EdwinCheng on 2017/7/25.
  */
 
-public class FileSelect_Avtivity extends BaseActivity {
+public class FileSelectActivity extends BaseActivity {
     private Button personalFile,sharedFile;
     private Bundle bundle;
 
@@ -29,8 +29,8 @@ public class FileSelect_Avtivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        personalFile.setOnClickListener(FileSelect_Avtivity.this);
-        sharedFile.setOnClickListener(FileSelect_Avtivity.this);
+        personalFile.setOnClickListener(FileSelectActivity.this);
+        sharedFile.setOnClickListener(FileSelectActivity.this);
     }
 
     @Override
@@ -39,13 +39,13 @@ public class FileSelect_Avtivity extends BaseActivity {
             case R.id.filemanager_myfileBtn:
                 bundle.clear();
                 bundle.putString("intenttype","personalfile");
-                openActivity(FileList_Activity.class,bundle);
+                openActivity(FileListActivity.class,bundle);
                 break;
 
             case R.id.filemanager_sharedfileBtn:
                 bundle.clear();
                 bundle.putString("intenttype","sharedfile");
-                openActivity(FileList_Activity.class,bundle);
+                openActivity(FileListActivity.class,bundle);
                 break;
         }
     }

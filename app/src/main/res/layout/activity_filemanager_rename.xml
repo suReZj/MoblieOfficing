@@ -11,9 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:minHeight="?attr/actionBarSize"
-
         app:title="新建文件夹"
-
         />
 
     <EditText
