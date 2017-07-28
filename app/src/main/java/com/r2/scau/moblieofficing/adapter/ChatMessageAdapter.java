@@ -59,7 +59,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     }
 
     @Override
-    public ChatMessageAdapter.chatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public chatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final chatHolder holder = new chatHolder(LayoutInflater.from(
                 parent.getContext()).inflate(R.layout.chat_message_item, parent,
                 false));
@@ -67,7 +67,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ChatMessageAdapter.chatHolder holder, int position) {
+    public void onBindViewHolder(chatHolder holder, int position) {
         ChatMessage chat_message_bean = chatMessageList.get(position);
         if (chat_message_bean.isMeSend()){
             holder.rightLayout.setVisibility(View.VISIBLE);

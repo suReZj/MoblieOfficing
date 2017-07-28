@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical" >
+    <LinearLayout
+        android:id="@+id/pop_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center_horizontal"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/popwindow_pressfilename"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="显示选中文件名字"
+            android:textSize="12dp"
+            android:gravity="center"
+            android:textColor="@color/colorLightBlue"
+            android:background="@drawable/filemanager_more_popwindow"/>
+
+        <Button
+            android:id="@+id/popwindow_delete"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:text="@string/filelist_delete"
+            android:textColor="@color/colorRed"
+            android:background="@drawable/filemanager_more_popwindow"/>
+
+        <Button
+            android:id="@+id/popwindow_shareto"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/filelist_shareto"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/colorLightBlue"
+            android:background="@drawable/filemanager_more_popwindow"/>
+
+        <Button
+            android:id="@+id/popwindow_rename"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/filelist_rename"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/colorLightBlue"
+            android:background="@drawable/filemanager_more_popwindow"/>
+
+        <Button
+            android:id="@+id/popwindow_move"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/filelist_move"
+            android:layout_marginTop="2dp"
+            android:textColor="@color/colorLightBlue"
+            android:background="@drawable/filemanager_more_popwindow"/>
+
+        <Button
+            android:id="@+id/popwindow_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="取消"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/filemanager_more_popwindow"
+            android:textColor="@color/colorLightBlue"
+             />
+    </LinearLayout>
+
+</RelativeLayout>

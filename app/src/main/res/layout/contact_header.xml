@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="10dp"
-    android:background="@color/notice_Catagory_bule"
-    android:textSize="18sp"
+    android:background="@color/colorLightGray"
+    android:textSize="14sp"
     android:textStyle="bold"
-    android:textColor="@android:color/white"
+    android:textColor="@color/colorGray"
     tools:text="A"
     tools:context=".activity.MainActivity"
     />

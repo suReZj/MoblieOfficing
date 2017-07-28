@@ -24,6 +24,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    // TinyPinyin核心包，约80KB
+    // 可选，适用于Android的中国地区词典
+
+    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
+    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
@@ -31,26 +36,27 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
-    compile "com.daimajia.swipelayout:library:1.2.0@aar"
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'jp.wasabeef:recyclerview-animators:1.0.3@aar'
     compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.facebook.fresco:fresco:0.12.0'
     compile 'com.bigkoo:quicksidebar:1.0.3'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
     compile 'com.tb.emoji:yykEmoji:1.0.0'
-    testCompile 'junit:junit:4.12'
-
-    compile "org.igniterealtime.smack:smack-android-extensions:4.1.9"
-    compile "org.igniterealtime.smack:smack-tcp:4.1.9"
-    compile "org.igniterealtime.smack:smack-android:4.1.9"
-    compile "org.igniterealtime.smack:smack-android-extensions:4.1.9"
-    compile "org.igniterealtime.smack:smack-experimental:4.1.9"
+    compile 'com.github.promeg:tinypinyin:2.0.3'
+    compile 'com.github.promeg:tinypinyin-lexicons-android-cncity:2.0.3'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.9'
+    compile 'org.igniterealtime.smack:smack-android:4.1.9'
+    compile 'org.igniterealtime.smack:smack-experimental:4.1.9'
     compile 'org.igniterealtime.smack:smack-core:4.1.9'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
-
+    testCompile 'junit:junit:4.12'
 }
+
+
 
 
 

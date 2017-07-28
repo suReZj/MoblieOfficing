@@ -1,44 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+
+    <include layout="@layout/toolbar" />
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/st_contact_friend"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-    <!-- 这个是浮动的提示 ，配合字母栏实现放大浮动提示滑动到哪个字母-->
-    <!--下面的自定义属性都是默认的,可以不写-->
-    <!--app:sidebarBackgroundColor 浮动框颜色-->
-    <!--app:sidebarTextColor 字母颜色-->
-    <!--app:sidebarTextSize 字母尺寸-->
-    <com.bigkoo.quicksidebar.QuickSideBarTipsView
-        android:id="@+id/quickSideBarTipsView"
-        android:layout_width="@dimen/height_quicksidebartips"
-        android:layout_height="match_parent"
-        android:layout_toLeftOf="@+id/quickSideBarView"
-        app:sidebarBackgroundColor="@color/colorPrimary"
-        app:sidebarTextColor="@android:color/white"
-        app:sidebarTextSize="@dimen/textSize_quicksidebartips" />
-    <!-- 这个是字母栏的提示 -->
-    <!--下面的自定义属性都是默认的,可以不写-->
-    <!--app:sidebarItemHeight 每个字母的高度-->
-    <!--app:sidebarTextColor 正常状态下字母颜色-->
-    <!--app:sidebarTextColorChoose 选中了的字母颜色-->
-    <!--app:sidebarTextSize 正常状态字母尺寸-->
-    <!--app:sidebarTextSizeChoose 选中字母尺寸-->
-    <com.bigkoo.quicksidebar.QuickSideBarView
-        android:id="@id/quickSideBarView"
-        android:layout_width="20dp"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:layout_marginTop="45dp"
-        app:sidebarItemHeight="@dimen/height_quicksidebaritem"
-        app:sidebarTextColor="@color/colorGray"
-        app:sidebarTextColorChoose="@color/colorPrimary"
-        app:sidebarTextSize="16sp"
-        app:sidebarTextSizeChoose="@dimen/textSize_quicksidebar_choose" />
+        android:layout_height="60dp"
+        app:sLeftIconRes="@mipmap/ic_friend"
+        app:sLeftTextString="@string/friend"
+        app:sUseRipple="true"
+        app:sLineShow="both"
+        app:sLineColor="@color/colorGray">
+    </com.allen.library.SuperTextView>
 
-</RelativeLayout>
+    <com.allen.library.SuperTextView
+        android:id="@+id/st_contact_group"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftIconRes="@mipmap/ic_group"
+        app:sLeftTextString="@string/group"
+        app:sUseRipple="true"
+        app:sLineShow="bottom"
+        app:sLineColor="@color/colorGray">
+    </com.allen.library.SuperTextView>
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/st_contact_personal"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftIconRes="@mipmap/ic_my_contact"
+        app:sLeftTextString="@string/personal_contact"
+        app:sUseRipple="true"
+        app:sLineShow="bottom"
+        app:sLineColor="@color/colorGray">
+    </com.allen.library.SuperTextView>
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/st_contact_public"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftIconRes="@mipmap/ic_public_contact"
+        app:sLeftTextString="@string/public_contact"
+        app:sUseRipple="true"
+        app:sLineShow="bottom"
+        app:sLineColor="@color/colorGray">
+    </com.allen.library.SuperTextView>
+
+</LinearLayout>

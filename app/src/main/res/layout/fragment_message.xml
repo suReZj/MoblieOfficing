@@ -15,7 +15,8 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/padding_top"
             android:background="@color/colorBottomBar"
             toolbar:titleTextColor="@color/messageTitle"
             app:layout_scrollFlags="scroll|enterAlways|snap"
