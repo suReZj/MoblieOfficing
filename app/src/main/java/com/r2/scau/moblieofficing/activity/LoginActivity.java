@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity {
 
 
         //step 3: 创建请求
-        Request request = new Request.Builder().url("http://192.168.13.19:8080/u/mobileLogin.shtml")
+        Request request = new Request.Builder().url("http://192.168.13.23:8080/u/mobileLogin.shtml")
                 .post(formBody)
                 .build();
 
@@ -119,7 +119,7 @@ public class LoginActivity extends BaseActivity {
 
 
         //step 3: 创建请求
-        Request request = new Request.Builder().url("http://192.168.13.32:8080/user/mobileUpdatePswd.shtml")
+        Request request = new Request.Builder().url("http://192.168.13.23:8080/user/mobileUpdatePswd.shtml")
                 .addHeader("cookie", loginSessionID)
                 .post(formBody)
                 .build();

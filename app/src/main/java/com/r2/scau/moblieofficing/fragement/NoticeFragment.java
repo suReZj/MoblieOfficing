@@ -2,17 +2,19 @@ package com.r2.scau.moblieofficing.fragement;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.SendNoticeActivity;
+import com.r2.scau.moblieofficing.widge.EDCToolBar;
 
 /**
  * Created by 嘉进 on 9:21.
@@ -23,6 +25,8 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private Context mContext;
+    private Button sendNoticeBtn;
+    private EDCToolBar mEDCToolBar;
     private TextView readTV;
     private TextView unReadTV;
 
@@ -36,16 +40,15 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
     }
 
     public void initView() {
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_notice);
-        ((AppCompatActivity) mContext).setSupportActionBar(toolbar);
-        //setHasOptionsMenu(true);
 
         readTV = (TextView) view.findViewById(R.id.tv_notice_read);
         unReadTV = (TextView) view.findViewById(R.id.tv_notice_unread);
+        mEDCToolBar = (EDCToolBar)  view.findViewById(R.id.toolbar_notice);
 
         readTV.setOnClickListener(this);
         unReadTV.setOnClickListener(this);
         unReadTV.setSelected(true);
+        mEDCToolBar.getRightSecondButton().setOnClickListener(this);
     }
 
     public void selected() {
@@ -54,24 +57,15 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
     }
 
 
-   /* @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.toolbar_notice_menu, menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-       if (item.getItemId() == R.id.menu_send_notice){
-           Log.e("notice", "send");
-           Intent intent = new Intent(mContext, SendNoticeActivity.class);
-           startActivity(intent);
-       }
-       return true;
-    }*/
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.toolbar_rightSecondButton:
+                Intent intent = new Intent(mContext, SendNoticeActivity.class);
+                startActivity(intent);
+                break;
             case R.id.tv_notice_read:
                 selected();
                 readTV.setSelected(true);

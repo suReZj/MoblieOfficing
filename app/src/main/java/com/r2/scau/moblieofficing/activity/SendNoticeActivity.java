@@ -1,15 +1,13 @@
 package com.r2.scau.moblieofficing.activity;
 
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.widge.EDCToolBar;
 
 import java.io.IOException;
 
@@ -26,18 +24,17 @@ public class SendNoticeActivity extends BaseActivity {
     private EditText titleET;
     private EditText authorET;
     private EditText contentET;
+    private EDCToolBar mEDCToolBar;
 
 
     @Override
-    public void initView(){
+    public void initView() {
         setContentView(R.layout.activity_send_notice);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_send_notice);
-        setSupportActionBar(toolbar);
 
         titleET = (EditText) findViewById(R.id.et_notice_title);
         authorET = (EditText) findViewById(R.id.et_notice_author);
         contentET = (EditText) findViewById(R.id.et_notice_content);
+        mEDCToolBar = (EDCToolBar) findViewById(R.id.toolbar_send_notice);
 
         titleET.setSingleLine();
         authorET.setSingleLine();
@@ -50,40 +47,11 @@ public class SendNoticeActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_send_notice_menu, menu);
-        return true;
+        mEDCToolBar.getRightSecondButton().setOnClickListener(this);
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_notice_send){
-            String title = titleET.getText().toString();
-            String author = authorET.getText().toString();
-            String content = contentET.getText().toString();
-
-            Log.e("notice", "send");
-            if (title.equals("") || author.equals("") || content.equals("")){
-                Toast toast=Toast.makeText(getApplicationContext(), "标题、作者、内容都不能为空", Toast.LENGTH_SHORT);
-                toast.show();
-                return true;
-            }
-
-            Toast toast=Toast.makeText(getApplicationContext(), "合格", Toast.LENGTH_SHORT);
-            toast.show();
-
-            send(title, author, content);
-        }
-
-        return true;
-    }
-
-    public void send(String title, String author, String content){
+    public void send(String title, String author, String content) {
         FormBody formBody = new FormBody.Builder()
                 .add("aTitle", title)
                 .add("aContent", content)
@@ -117,6 +85,22 @@ public class SendNoticeActivity extends BaseActivity {
 
     @Override
     public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.toolbar_rightSecondButton:
+                String title = titleET.getText().toString();
+                String author = authorET.getText().toString();
+                String content = contentET.getText().toString();
 
+                Log.e("notice", "send");
+                if (title.equals("") || author.equals("") || content.equals("")) {
+                    Toast toast = Toast.makeText(getApplicationContext(), "标题、作者、内容都不能为空", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    Toast toast = Toast.makeText(getApplicationContext(), "合格", Toast.LENGTH_SHORT);
+                    toast.show();
+                    send(title, author, content);
+                }
+                break;
+        }
     }
 }

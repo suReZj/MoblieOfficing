@@ -5,14 +5,18 @@ import android.net.Uri;
 import android.provider.ContactsContract;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.View;
 
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ContactAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.widge.EDCToolBar;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
@@ -21,10 +25,13 @@ import java.util.List;
 
 public class PersonalContactActivity extends BaseActivity implements OnQuickSideBarTouchListener {
 
-    private RecyclerView mRecyclerView;
+
     private ContactAdapter adapter;
+    private EDCToolBar mToolBar;
+    private RecyclerView mRecyclerView;
+    private SearchView mSearchView;
     private List<Contact> mContactList = new ArrayList<>();
-    private HashMap<String,Integer> letters = new HashMap<>();
+    private HashMap<String, Integer> letters = new HashMap<>();
     private QuickSideBarView mQuickSideBarView;
     private QuickSideBarTipsView mQuickSideBarTipsView;
 
@@ -33,15 +40,15 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         setContentView(R.layout.activity_personal_contact);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
+        mSearchView = (SearchView)findViewById(R.id.sv_personal_contact);
         mQuickSideBarView = (QuickSideBarView) findViewById(R.id.quickSideBarView);
         mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.quickSideBarTipsView);
 
+        mToolBar = (EDCToolBar) findViewById(R.id.toolbar_contact_personal);
+        mToolBar.getLeftButton().setOnClickListener(this);
 
-
-
-
-
-
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setQueryHint("请输入搜索内容");
 
     }
 
@@ -52,20 +59,20 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         getContact();
         ArrayList<String> customLetters = new ArrayList<>();
         int position = 0;
-        for (Contact contact : mContactList){
+        for (Contact contact : mContactList) {
             String letter = contact.getFirstLetter();
-            if(!letters.containsKey(letter)){
+            if (!letters.containsKey(letter)) {
                 letters.put(letter, position);
                 customLetters.add(letter);
             }
-            position ++;
+            position++;
         }
 
         initRV(customLetters);
     }
 
 
-    public void initRV(ArrayList<String> customLetters){
+    public void initRV(ArrayList<String> customLetters) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
@@ -88,14 +95,18 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.toolbar_leftButton:
+                finish();
+                break;
+        }
     }
 
     @Override
     public void onLetterChanged(String letter, int position, float y) {
         mQuickSideBarTipsView.setText(letter, position, y);
         //有此key则获取位置并滚动到该位置
-        if(letters.containsKey(letter)) {
+        if (letters.containsKey(letter)) {
             mRecyclerView.scrollToPosition(letters.get(letter));
         }
     }
@@ -103,9 +114,8 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
     @Override
     public void onLetterTouching(boolean touching) {
         //可以自己加入动画效果渐显渐隐
-        mQuickSideBarTipsView.setVisibility(touching? View.VISIBLE:View.INVISIBLE);
+        mQuickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
-
 
 
     /**
@@ -122,8 +132,8 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
             // 然后在根据"sort-key"排序
             cursor = getContentResolver().query(
                     uri,
-                    new String[] { "display_name", "sort_key", "contact_id",
-                            "data1" }, null, null, "sort_key");
+                    new String[]{"display_name", "sort_key", "contact_id",
+                            "data1"}, null, null, "sort_key");
 
             if (cursor.moveToFirst()) {
                 do {
@@ -151,7 +161,8 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
     }
 
     private static String getSortKey(String sortKeyString) {
-        String key = sortKeyString.substring(0, 1).toUpperCase();
+        String key = Pinyin.toPinyin(sortKeyString.charAt(0)).substring(0, 1).toUpperCase();
+        Log.e(sortKeyString, key);
         if (key.matches("[A-Z]")) {
             return key;
         }

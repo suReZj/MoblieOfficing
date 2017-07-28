@@ -6,17 +6,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <android.support.v7.widget.Toolbar
+    <com.r2.scau.moblieofficing.widge.EDCToolBar
         android:id="@+id/toolbar_notice"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorBottomBar"
-        android:title="公告"
-        app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextColor="@color/messageTitle"/>
-
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:minHeight="?attr/actionBarSize"
+        app:rightSecondButtonText="@string/send_notice"
+        app:title="@string/notice"
+        />
 
     <!--<com.r2.scau.moblieofficing.widge.EDCToolBar
         android:id="@+id/toolbar_notice"
@@ -43,7 +41,7 @@
           android:gravity="center_horizontal|center_vertical"
           android:textColor="@drawable/notice_read_status"
           android:textSize="18sp"
-          android:text="未读"
+          android:text="@string/unread"
       />
 
       <View
@@ -61,7 +59,7 @@
           android:gravity="center_horizontal|center_vertical"
           android:textColor="@drawable/notice_read_status"
           android:textSize="18sp"
-          android:text="已读"
+          android:text="@string/read"
           />
 
   </LinearLayout>

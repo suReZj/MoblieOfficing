@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:minHeight="?attr/actionBarSize"
-        app:rightSecondButtonText="添加"
-        app:title="联系人"
+        app:title="@string/contact"
         />
 
     <com.allen.library.SuperTextView
@@ -21,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_friend"
-        app:sLeftTextString="好友"
+        app:sLeftTextString="@string/friend"
         app:sUseRipple="true"
         app:sLineShow="both"
         app:sLineColor="@color/colorGray">
@@ -32,7 +31,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_group"
-        app:sLeftTextString="我的群组"
+        app:sLeftTextString="@string/group"
+        app:sUseRipple="true"
         app:sLineShow="bottom"
         app:sLineColor="@color/colorGray">
     </com.allen.library.SuperTextView>
@@ -42,7 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_my_contact"
-        app:sLeftTextString="手机通讯录"
+        app:sLeftTextString="@string/personal_contact"
+        app:sUseRipple="true"
         app:sLineShow="bottom"
         app:sLineColor="@color/colorGray">
     </com.allen.library.SuperTextView>
@@ -52,7 +53,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_public_contact"
-        app:sLeftTextString="公共通讯录"
+        app:sLeftTextString="@string/public_contact"
+        app:sUseRipple="true"
         app:sLineShow="bottom"
         app:sLineColor="@color/colorGray">
     </com.allen.library.SuperTextView>

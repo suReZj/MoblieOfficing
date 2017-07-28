@@ -1,15 +1,21 @@
 package com.r2.scau.moblieofficing.fragement;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.R;
@@ -26,6 +32,7 @@ public class ContactFragment extends Fragment
     private View view;
     private Context mContext;
     private SuperTextView personalContactST;
+    public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 1;
 
 
     @Nullable
@@ -44,10 +51,40 @@ public class ContactFragment extends Fragment
         personalContactST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
             @Override
             public void onSuperTextViewClick() {
-                Intent intent = new Intent(mContext, PersonalContactActivity.class);
-                startActivity(intent);
+                if(ContextCompat.checkSelfPermission(mContext, Manifest.permission.READ_CONTACTS)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(getActivity() ,
+                            new String[]{Manifest.permission.READ_CONTACTS},
+                            MY_PERMISSIONS_REQUEST_READ_CONTACT);
+                }else {
+                    openActivity();
+                }
+
             }
         });
     }
+
+    public void openActivity(){
+        Intent intent = new Intent(mContext, PersonalContactActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == MY_PERMISSIONS_REQUEST_READ_CONTACT){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.e("permission", "accept");
+                openActivity();
+            } else
+            {
+                // Permission Denied
+                Toast.makeText(mContext, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
 
 }
