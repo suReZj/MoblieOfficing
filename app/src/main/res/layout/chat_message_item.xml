@@ -7,7 +7,7 @@
     android:weightSum="1">
 
     <TextView
-        android:id="@+id/tv_chat_msg_time"
+        android:id="@+id/chat_msg_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

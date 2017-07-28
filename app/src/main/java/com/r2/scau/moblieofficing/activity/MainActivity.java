@@ -21,6 +21,9 @@ import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
+import com.r2.scau.moblieofficing.smack.SmackListenerManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -46,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initView();
+
     }
 
     public void initView(){
@@ -210,4 +214,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
+
 }

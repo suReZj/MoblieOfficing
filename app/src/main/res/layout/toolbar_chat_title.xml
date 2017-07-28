@@ -4,7 +4,7 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/chat_title_toolbar"
+        android:id="@+id/chat_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/colorBottomBar"
@@ -23,7 +23,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/headtitle"
+            android:id="@+id/chat_toolbar_title"
             android:text="标题栏"
             android:textSize="18sp"
             android:textColor="@color/colorBlack"
