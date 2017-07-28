@@ -30,7 +30,7 @@
             android:gravity="center"
             android:drawableTop="@drawable/bottom_bar__message"
             android:textColor="@drawable/bottom_bar_text"
-            android:text="消息"
+            android:text="@string/message"
             android:textSize="12sp"
             android:layout_weight="1"/>
 
@@ -41,7 +41,7 @@
             android:gravity="center"
             android:drawableTop="@drawable/bottom_bar_notice"
             android:textColor="@drawable/bottom_bar_text"
-            android:text="公告"
+            android:text="@string/notice"
             android:textSize="12sp"
             android:layout_weight="1"/>
 
@@ -54,7 +54,7 @@
             android:gravity="center"
             android:drawableTop="@drawable/bottom_bar_work"
             android:textColor="@drawable/bottom_bar_text"
-            android:text="工作"
+            android:text="@string/work"
             android:textSize="12sp"
             android:layout_weight="1"/>
 
@@ -66,7 +66,7 @@
             android:gravity="center"
             android:drawableTop="@drawable/bottom_bar_contact"
             android:textColor="@drawable/bottom_bar_text"
-            android:text="联系人"
+            android:text="@string/contact"
             android:textSize="12sp"
             android:layout_weight="1"/>
 
@@ -77,17 +77,17 @@
             android:gravity="center"
             android:drawableTop="@drawable/bottom_bar_user"
             android:textColor="@drawable/bottom_bar_text"
-            android:text="我的"
+            android:text="@string/my"
             android:textSize="12sp"
             android:layout_weight="1"/>
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottom_bar">
-    </FrameLayout>
+    </android.support.v4.view.ViewPager>
 
 </RelativeLayout>

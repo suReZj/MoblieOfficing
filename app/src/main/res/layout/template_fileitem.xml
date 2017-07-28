@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="12dp"
+    android:paddingBottom="12dp"
+    android:paddingTop="12dp"
+    >
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/filelist_image"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"/>
+
+    <ImageButton
+        android:id="@+id/filelist_filemore"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@mipmap/ic_filelist_more"
+        android:background="@color/transparent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/filelist_image"
+        android:layout_toLeftOf="@id/filelist_filemore"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/filelist_filename"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="filename"
+            />
+        <TextView
+            android:id="@+id/filelist_filesize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/filelist_filename"
+            android:layout_marginTop="6dp"
+
+            android:text="filedetails"/>
+        <TextView
+            android:id="@+id/filelist_filedate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/filelist_filename"
+            android:layout_toRightOf="@id/filelist_filesize"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="6dp"
+            android:text="201721312"/>
+
+    </RelativeLayout>
+</RelativeLayout>

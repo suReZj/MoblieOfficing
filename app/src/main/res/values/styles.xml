@@ -1,14 +1,25 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorBlack</item>
         <item name="colorAccent">@color/colorLightBlue</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="popwindow_anim_style">
+        <item name="android:windowEnterAnimation">@anim/popwindow_show_anim</item>
+        <item name="android:windowExitAnimation">@anim/popwindow_hide_anim</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
 
+    <!-- ToolBar菜单样式 -->
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="actionMenuTextColor">@color/messageTitle</item> <!--  敲定颜色-->
+    </style>
 
 
         <style name="line_style">
@@ -26,9 +37,10 @@
     <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="android:colorBackground">@color/colorBottomBar</item>
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+        <item name="actionMenuTextColor">@color/messageTitle</item> <!--颜色-->
         <item name="colorPrimaryDark">@color/colorBlack</item>
-        <item name="actionMenuTextColor">@color/colorBlack</item> <!--  敲定颜色-->
     </style>
+
     <!--修改Toolbar popup menu 弹出位置-->
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
         <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->

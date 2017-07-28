@@ -11,6 +11,21 @@
         android:text="userFragment"/>
 
     <Button
+        android:id="@+id/filemanageBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="按钮1"
+        />
+
+    <Button
+        android:id="@+id/filemanage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="文件管理"
+        />
+
+
+    <Button
         android:id="@+id/button_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
