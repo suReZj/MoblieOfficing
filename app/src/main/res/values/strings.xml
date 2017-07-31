@@ -51,4 +51,7 @@
     <string name="notice_content">公告内容</string>
     <string name="read">已读</string>
     <string name="unread">未读</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -4,10 +4,11 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorBlack</item>
+        <item name="colorPrimaryDark">@color/colorLightBlue</item>
         <item name="colorAccent">@color/colorLightBlue</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
     </style>
 
     <style name="popwindow_anim_style">
@@ -19,6 +20,8 @@
     <!-- ToolBar菜单样式 -->
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="actionMenuTextColor">@color/messageTitle</item> <!--  敲定颜色-->
+        <item name="colorControlNormal">@color/messageTitle</item>
+        <item name="android:actionBarSize">46dp</item>
     </style>
 
 

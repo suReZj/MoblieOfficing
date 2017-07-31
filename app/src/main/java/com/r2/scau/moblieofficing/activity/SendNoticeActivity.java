@@ -1,13 +1,16 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
-import com.r2.scau.moblieofficing.widge.EDCToolBar;
 
 import java.io.IOException;
 
@@ -24,20 +27,28 @@ public class SendNoticeActivity extends BaseActivity {
     private EditText titleET;
     private EditText authorET;
     private EditText contentET;
-    private EDCToolBar mEDCToolBar;
+    private TextView titleTV;
+    private Toolbar toolbar;
 
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_send_notice);
 
+        titleTV = (TextView) findViewById(R.id.toolbar_title);
         titleET = (EditText) findViewById(R.id.et_notice_title);
         authorET = (EditText) findViewById(R.id.et_notice_author);
         contentET = (EditText) findViewById(R.id.et_notice_content);
-        mEDCToolBar = (EDCToolBar) findViewById(R.id.toolbar_send_notice);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        titleTV.setText("发公告");
+        toolbar.setTitle("");
 
         titleET.setSingleLine();
         authorET.setSingleLine();
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -47,7 +58,7 @@ public class SendNoticeActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        mEDCToolBar.getRightSecondButton().setOnClickListener(this);
+
     }
 
 
@@ -84,9 +95,18 @@ public class SendNoticeActivity extends BaseActivity {
     }
 
     @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.toolbar_rightSecondButton:
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_send_notice_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+            case R.id.menu_notice_send:
                 String title = titleET.getText().toString();
                 String author = authorET.getText().toString();
                 String content = contentET.getText().toString();
@@ -100,7 +120,11 @@ public class SendNoticeActivity extends BaseActivity {
                     toast.show();
                     send(title, author, content);
                 }
-                break;
         }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View view) {
     }
 }
