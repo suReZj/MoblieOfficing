@@ -49,7 +49,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by 张子健 on 2017/7/21 0021.
  */
 
-public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEmojiClickListener {
+public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiClickListener {
     private Button emojiBtn;//表情按钮
     private Button sendBtn;//发送按钮
     private EditText editText;//文字输入框
@@ -62,21 +62,44 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
     private ChatMessageAdapter adapter;
     private TextView titleText;
     private LinearLayoutManager layoutManager;
-    public Boolean isLive=false;
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+        super.onCreate(savedInstanceState);
 
-        isLive=true;
 
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                smack = SmackManager.getInstance();
+//                smack.login("test", "test");
+                ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+                mChat = smack.createChat(chatRecord.getmChatJid());
+            }
+        }).start();
+        SmackListenerManager.addGlobalListener();
+
+
+
+        String whereClause = "test1";
+        ArrayList<ChatRecord> msgList= new ArrayList<>(DataSupport.where("mmeusername=?",whereClause).find(ChatRecord.class));
+//        Log.d("number",msgList.get(0).getmUnReadMessageCount()+"");
+
+    }
+
+    @Override
+    protected void initView() {
         emojiBtn = (Button) findViewById(R.id.emoji_button);
         sendBtn = (Button) findViewById(R.id.senMsg_button);
         editText = (EditText) findViewById(R.id.chat_editText);
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
+        toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         titleText=(TextView)findViewById(R.id.chat_toolbar_title);
 
         setSupportActionBar(toolbar);
@@ -95,20 +118,15 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
 
         ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
         titleText.setText(chatRecord.getmFriendNickname());
+    }
 
+    @Override
+    protected void initData() {
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                smack = SmackManager.getInstance();
-//                smack.login("test", "test");
-                ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-                mChat = smack.createChat(chatRecord.getmChatJid());
-            }
-        }).start();
-        SmackListenerManager.addGlobalListener();
+    }
 
-
+    @Override
+    protected void initListener() {
         emojiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,14 +140,7 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
             public void onClick(View v) {
                 if (editText.getText().toString().length() != 0) {
                     String text = editText.getText().toString();
-//                    ChatMessage msg = new ChatMessage(1,true);
-//                    msg.setContent(text);
-//                    msg.setMeNickname("子健");//设置自己的昵称
-//                    msg.setMeUsername("test1");
-//                    chatMessageList.add(msg);
                     send(text);//发送消息
-//                    recyclerView.getAdapter().notifyDataSetChanged();
-//                    recyclerView.scrollToPosition(chatMessageList.size() - 1);
                     editText.setText(null);
                 }
             }
@@ -177,10 +188,10 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
                 return false;
             }
         });
+    }
 
-        String whereClause = "test1";
-        ArrayList<ChatRecord> msgList= new ArrayList<>(DataSupport.where("mmeusername=?",whereClause).find(ChatRecord.class));
-//        Log.d("number",msgList.get(0).getmUnReadMessageCount()+"");
+    @Override
+    public void onClick(View v) {
 
     }
 
@@ -195,7 +206,6 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        isLive=false;
         super.onDestroy();
     }
 

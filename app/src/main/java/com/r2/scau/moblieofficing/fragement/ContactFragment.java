@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
@@ -26,11 +27,11 @@ import com.r2.scau.moblieofficing.activity.PersonalContactActivity;
  * 底部导航栏中联系人的Fragment
  */
 
-public class ContactFragment extends Fragment
-        /* implements OnQuickSideBarTouchListener*/ {
+public class ContactFragment extends Fragment {
 
     private View view;
     private Context mContext;
+    private TextView titleTV;
     private SuperTextView personalContactST;
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 1;
 
@@ -46,6 +47,9 @@ public class ContactFragment extends Fragment
     }
 
     private void initView(){
+
+        titleTV = (TextView) view .findViewById(R.id.toolbar_title);
+        titleTV.setText("联系人");
 
         personalContactST = (SuperTextView) view.findViewById(R.id.st_contact_personal);
         personalContactST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){

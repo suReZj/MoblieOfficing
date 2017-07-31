@@ -6,8 +6,11 @@ import android.provider.ContactsContract;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
@@ -16,7 +19,6 @@ import com.github.promeg.pinyinhelper.Pinyin;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ContactAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
-import com.r2.scau.moblieofficing.widge.EDCToolBar;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
@@ -26,10 +28,11 @@ import java.util.List;
 public class PersonalContactActivity extends BaseActivity implements OnQuickSideBarTouchListener {
 
 
-    private ContactAdapter adapter;
-    private EDCToolBar mToolBar;
-    private RecyclerView mRecyclerView;
+    private Toolbar mToolBar;
+    private TextView mTitleTV;
     private SearchView mSearchView;
+    private ContactAdapter adapter;
+    private RecyclerView mRecyclerView;
     private List<Contact> mContactList = new ArrayList<>();
     private HashMap<String, Integer> letters = new HashMap<>();
     private QuickSideBarView mQuickSideBarView;
@@ -43,13 +46,15 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         mSearchView = (SearchView)findViewById(R.id.sv_personal_contact);
         mQuickSideBarView = (QuickSideBarView) findViewById(R.id.quickSideBarView);
         mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.quickSideBarTipsView);
-
-        mToolBar = (EDCToolBar) findViewById(R.id.toolbar_contact_personal);
-        mToolBar.getLeftButton().setOnClickListener(this);
-
+        mTitleTV = (TextView) findViewById(R.id.toolbar_title);
+        mToolBar = (Toolbar) findViewById(R.id.toolbar);
+        mToolBar.setTitle("");
+        mTitleTV.setText("电话联系人");
         mSearchView.setIconifiedByDefault(false);
         mSearchView.setQueryHint("请输入搜索内容");
 
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -100,6 +105,17 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
                 finish();
                 break;
         }
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

@@ -8,15 +8,7 @@
     android:orientation="vertical"
     tools:context="com.r2.scau.moblieofficing.activity.SendNoticeActivity">
 
-    <com.r2.scau.moblieofficing.widge.EDCToolBar
-        android:id="@+id/toolbar_send_notice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minHeight="?attr/actionBarSize"
-        app:rightSecondButtonText="@string/send"
-        app:title="@string/send_notice"
-        />
+   <include layout="@layout/toolbar"/>
 
    <EditText
        android:id="@+id/et_notice_title"

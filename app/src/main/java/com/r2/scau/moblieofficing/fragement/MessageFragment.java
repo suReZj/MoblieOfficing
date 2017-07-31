@@ -66,7 +66,8 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.toolbar_message_menu);
+        toolbar.setTitle("消息");
         setHasOptionsMenu(true);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
