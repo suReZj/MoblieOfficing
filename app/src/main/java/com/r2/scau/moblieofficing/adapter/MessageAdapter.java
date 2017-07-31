@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,16 +23,19 @@ import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.sqk.emojirelease.EmojiUtil;
 
+import org.litepal.crud.DataSupport;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Handler;
 
 
 /**
  * Created by 张子健 on 2017/7/20 0020.
  */
 
-public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageHolder> {
     private List<ChatRecord> messageList;
     private Context mContext;
     public int mPosition = 0;
@@ -48,12 +52,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.inflater = LayoutInflater.from(context);
     }
 
-    public void setItemClickListener(OnRecyclerViewOnClickListener listener) {
-        this.mListener = listener;
-    }
-
-    public class messageHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        //        SuperTextView superTextView;
+    static class messageHolder extends RecyclerView.ViewHolder {
         LinearLayout linearLayout;
         SwipeLayout swipeLayout;
         RecyclerView recyclerView;
@@ -62,13 +61,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView chatContent;
         TextView chatTime;
         TextView unRead;
-        private OnRecyclerViewOnClickListener listener;
+        CardView cardView;
 
 
-        public messageHolder(final View view, OnRecyclerViewOnClickListener listener) {
+        public messageHolder(final View view) {
             super(view);
-//            superTextView = (SuperTextView) view.findViewById(R.id.superText);
-//            swipeLayout = (SwipeLayout) view.findViewById(R.id.swipe);
             linearLayout = (LinearLayout) view.findViewById(R.id.chatRecod);
             recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
             icon = (ImageView) view.findViewById(R.id.chat_friend_avatar);
@@ -76,22 +73,43 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             chatContent = (TextView) view.findViewById(R.id.chat_message);
             chatTime = (TextView) view.findViewById(R.id.chat_time);
             unRead = (TextView) view.findViewById(R.id.chat_message_count);
-            this.listener = listener;
-            view.setOnClickListener(this);
+            cardView = (CardView) view;
+
         }
 
-        @Override
-        public void onClick(View v) {
-            if (listener != null) {
-                listener.OnItemClick(v, getLayoutPosition());
-            }
-        }
     }
 
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new messageHolder(inflater.inflate(R.layout.chat_record_item_layout, parent, false), mListener);
+    public messageHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (mContext == null) {
+            mContext = parent.getContext();
+        }
+        View view = LayoutInflater.from(mContext).inflate(R.layout.chat_record_item_layout, parent, false);
+        final messageHolder holder = new messageHolder(view);
+        holder.linearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                ChatRecord updateRecord = messageList.get(position);
+//                if(updateRecord.isSaved()){
+//                    Log.d("save","save");
+//                }
+                updateRecord.setmUnReadMessageCount();
+                updateRecord.save();
+                update(updateRecord);
+//                if(updateRecord.isSaved()){
+//                    Log.e("save1","save1");
+//                }
+//                ChatRecord newChatRecord=new ChatRecord();
+//                newChatRecord.setmUnReadMessageCount();
+//                Log.d(updateRecord.getmChatJid(), updateRecord.getmFriendUsername());
+//                Log.d("eeeeee", newChatRecord.getmUnReadMessageCount());
+//                updateRecord.updateAll("mchatjid= ?", updateRecord.getmChatJid());
+                startChat(mContext, updateRecord);
+            }
+        });
+        return holder;
     }
 
 
@@ -100,7 +118,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(messageHolder holder, final int position) {
 
 
         ChatRecord msg = messageList.get(position);
@@ -108,13 +126,19 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         Drawable drawable = resources.getDrawable(R.drawable.ic_launcher_round);
 
 
-
-        ((messageHolder) holder).linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startChat(mContext, position);
-            }
-        });
+//        ((messageHolder) holder).cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                ChatRecord updateRecord=messageList.get(position);
+////                updateRecord.setUnReadMsgZero();
+////                updateRecord.setmUnReadMessageCount(0);
+////                update(updateRecord);
+////                Log.d(updateRecord.getmChatJid(),updateRecord.getmFriendUsername());
+////                Log.d("eeeeee","eeeeee");
+////                updateRecord.updateAll("mchatjid=? and mfriendusername=?",updateRecord.getmChatJid(), updateRecord.getmFriendUsername());
+//////                startChat(mContext, position);
+//            }
+//        });
 
         ((messageHolder) holder).linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -128,26 +152,42 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 //设置置顶状态
         if (messageList.get(position).getSetTopFlag()) {
             try {
-                ((messageHolder) holder).linearLayout.setBackgroundColor(resources.getColor(R.color.notice_Catagory_gray));
-                EmojiUtil.handlerEmojiText(((messageHolder) holder).chatContent, msg.getLastMessage(), this.mContext);
-                ((messageHolder) holder).chatTitle.setText(msg.getFriendNickname());
-                ((messageHolder) holder).chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getChatTime()));
-                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-                Log.d("messageCount",messageCount);
-                ((messageHolder) holder).unRead.setText(messageCount);
+                holder.cardView.setBackgroundColor(resources.getColor(R.color.notice_Catagory_gray));
+                EmojiUtil.handlerEmojiText(holder.chatContent, msg.getmLastMessage(), this.mContext);
+                holder.chatTitle.setText(msg.getmFriendNickname());
+                holder.chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getmChatTime()));
+//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
+//                ((messageHolder) holder).unRead.setText(messageCount);
+                if ((msg.getmUnReadMessageCount() > 0)&&(msg.getmUnReadMessageCount()<=99)) {
+                    holder.unRead.setVisibility(View.VISIBLE);
+                    holder.unRead.setText(String.valueOf(msg.getmUnReadMessageCount()));
+                }if(msg.getmUnReadMessageCount()>99){
+                    holder.unRead.setVisibility(View.VISIBLE);
+                    holder.unRead.setText("...");
+                } if(msg.getmUnReadMessageCount() < 0){
+                    holder.unRead.setVisibility(View.GONE);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         } else {
             try {
-                ((messageHolder) holder).linearLayout.setBackgroundColor(resources.getColor(R.color.white));
-                EmojiUtil.handlerEmojiText(((messageHolder) holder).chatContent, msg.getLastMessage(), this.mContext);
-                ((messageHolder) holder).chatTitle.setText(msg.getFriendNickname());
-                ((messageHolder) holder).chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getChatTime()));
-                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-                Log.d("messageCount",messageCount);
-                ((messageHolder) holder).unRead.setText(messageCount);
+                holder.cardView.setBackgroundColor(resources.getColor(R.color.white));
+                EmojiUtil.handlerEmojiText(holder.chatContent, msg.getmLastMessage(), this.mContext);
+                holder.chatTitle.setText(msg.getmFriendNickname());
+                holder.chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getmChatTime()));
+//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
+//                ((messageHolder) holder).unRead.setText(messageCount);
+                if ((msg.getmUnReadMessageCount() > 0)&&(msg.getmUnReadMessageCount()<=99)) {
+                    holder.unRead.setVisibility(View.VISIBLE);
+                    holder.unRead.setText(String.valueOf(msg.getmUnReadMessageCount()));
+                }if(msg.getmUnReadMessageCount()>99){
+                    holder.unRead.setVisibility(View.VISIBLE);
+                    holder.unRead.setText("...");
+                } if(msg.getmUnReadMessageCount() < 0){
+                    holder.unRead.setVisibility(View.GONE);
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -202,8 +242,16 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return msgs;
     }
 
-    public void startChat(Context context, int position) {
+    public void startChat(Context context, ChatRecord updateRecord) {
         Intent intent = new Intent(context, ChatActivity.class);
+        String whereClause = "test1";
+        ArrayList msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause).find(ChatRecord.class));
+        intent.putExtra("chatrecord", updateRecord);
+//        intent.putExtra("聊天jid",messageList.get(position).getmChatJid());
+//        intent.putExtra("对方username",messageList.get(position).getmFriendUsername());
+//        intent.putExtra("对方nicname",messageList.get(position).getmFriendNickname());
+//        intent.putExtra("我的username",messageList.get(position).getmMeUsername());
+//        intent.putExtra("我的nicname",messageList.get(position).getmMeNickname());
         context.startActivity(intent);
     }
 

@@ -38,7 +38,8 @@
             android:layout_height="match_parent"
             android:scrollbars="vertical"
             android:scrollbarFadeDuration="1"
-            android:fadeScrollbars="true"/>
+            android:fadeScrollbars="true"
+            />
         </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 

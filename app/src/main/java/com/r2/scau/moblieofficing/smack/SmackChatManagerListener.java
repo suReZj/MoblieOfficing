@@ -60,6 +60,7 @@ public class SmackChatManagerListener implements ChatManagerListener {
                         chatMessage.setContent(json.optString(ChatMessage.KEY_MESSAGE_CONTENT));
                         chatMessage.setMulti(false);
 
+                        chatMessage.save();
 //                        DBHelper.getInstance().getSQLiteDB().save(chatMessage);
                         Log.e("sendMessage", "send");
                         EventBus.getDefault().post(new MessageEvent(chatMessage));
