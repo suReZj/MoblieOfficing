@@ -9,11 +9,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.bean.chat_message_Bean;
+import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.sqk.emojirelease.EmojiUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,29 +23,35 @@ import java.util.List;
  */
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.chatHolder> {
-    private List<chat_message_Bean> chatMessageList;
+    private List<ChatMessage> chatMessageList;
     private Context mContext;
 
-    public ChatMessageAdapter(List<chat_message_Bean> chatMessageList, Context mContext) {
+    public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context mContext) {
         this.chatMessageList = chatMessageList;
         this.mContext = mContext;
     }
 
     static class chatHolder extends RecyclerView.ViewHolder {
-        TextView rtextView;
-        ImageView ricon;
-        TextView ltextView;
-        ImageView licon;
+        TextView rTextView;
+        ImageView rIcon;
+        TextView lTextView;
+        ImageView lIcon;
+        TextView lUserName;
+        TextView rUserName;
+        TextView timeText;
         RecyclerView recyclerView;
         RelativeLayout rightLayout;
         RelativeLayout leftLayout;
 
         public chatHolder(View view) {
             super(view);
-            ltextView = (TextView) view.findViewById(R.id.left_chat_msg);
-            licon = (ImageView) view.findViewById(R.id.left_chat_icon);
-            rtextView=(TextView)view.findViewById(R.id.right_chat_msg);
-            ricon = (ImageView) view.findViewById(R.id.right_chat_icon);
+            lTextView = (TextView) view.findViewById(R.id.left_chat_msg);
+            lIcon = (ImageView) view.findViewById(R.id.left_chat_icon);
+            rTextView=(TextView)view.findViewById(R.id.right_chat_msg);
+            rIcon = (ImageView) view.findViewById(R.id.right_chat_icon);
+            lUserName=(TextView)view.findViewById(R.id.left_chat_username);
+            rUserName=(TextView)view.findViewById(R.id.right_chat_username);
+            timeText=(TextView)view.findViewById(R.id.chat_msg_time);
             recyclerView = (RecyclerView) view.findViewById(R.id.chat_recycler);
             rightLayout=(RelativeLayout)view.findViewById(R.id.right_chat_user_layout);
             leftLayout=(RelativeLayout)view.findViewById(R.id.left_chat_user_layout);
@@ -51,7 +59,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     }
 
     @Override
-    public ChatMessageAdapter.chatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public chatHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final chatHolder holder = new chatHolder(LayoutInflater.from(
                 parent.getContext()).inflate(R.layout.chat_message_item, parent,
                 false));
@@ -59,34 +67,55 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     }
 
     @Override
-    public void onBindViewHolder(ChatMessageAdapter.chatHolder holder, int position) {
-        chat_message_Bean chat_message_bean = chatMessageList.get(position);
-        if(position%2==0){
+    public void onBindViewHolder(chatHolder holder, int position) {
+        ChatMessage chat_message_bean = chatMessageList.get(position);
+        if (chat_message_bean.isMeSend()){
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
-            holder.ricon.setImageResource(R.mipmap.ic_launcher_round);
+            holder.rUserName.setText(chat_message_bean.getMeNickname());
+            holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
+
+
+            //设置头像
+            holder.rIcon.setImageResource(R.mipmap.ic_launcher_round);
+
             try {
-                EmojiUtil.handlerEmojiText(holder.rtextView, chat_message_bean.getMsg(), this.mContext);
+                EmojiUtil.handlerEmojiText(holder.rTextView, chat_message_bean.getContent(), this.mContext);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }else {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
-            holder.licon.setImageResource(R.mipmap.ic_launcher_round);
+            holder.lUserName.setText(chat_message_bean.getMeNickname());
+            holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
+
+
+            //设置头像
+            holder.lIcon.setImageResource(R.mipmap.ic_launcher_round);
+
             try {
-                EmojiUtil.handlerEmojiText(holder.ltextView, chat_message_bean.getMsg(), this.mContext);
+                EmojiUtil.handlerEmojiText(holder.lTextView, chat_message_bean.getContent(), this.mContext);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     @Override
     public int getItemCount() {
 
-        return chatMessageList.size();
+        return chatMessageList == null ? 0 : chatMessageList.size();
 
+    }
+
+    public void add(ChatMessage item) {
+
+        if(chatMessageList == null) {
+            chatMessageList = new ArrayList<>(1);
+        }
+        int size = getItemCount();
+        chatMessageList.add(item);
+        notifyDataSetChanged();
     }
 }

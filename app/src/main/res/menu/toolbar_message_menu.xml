@@ -2,37 +2,37 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/first"
-        android:icon="@mipmap/ic_launcher_round"
+        android:id="@+id/searchBtn"
+        android:icon="@drawable/search"
         android:title="first"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/second"
-        android:icon="@mipmap/ic_launcher_round"
-        android:title="second"
-        app:showAsAction="always"/>
-    <item
-        android:id="@+id/third"
+        android:id="@+id/message_fragment_more"
         android:icon="@mipmap/message_toolbar_more"
-        android:title="third"
+        android:title="more"
         app:showAsAction="ifRoom">
         <menu>
             <group>
                 <item
-                    android:id="@+id/fourth"
-                    android:icon="@mipmap/ic_launcher_round"
-                    android:title="aaaaa"
+                    android:id="@+id/scan"
+                    android:icon="@drawable/scan"
+                    android:title="扫一扫"
                     app:showAsAction="ifRoom"
                     />
                 <item
-                    android:id="@+id/fiveth"
-                    android:icon="@mipmap/ic_launcher_round"
-                    android:title="aaaaa"
+                    android:id="@+id/multiChat"
+                    android:icon="@drawable/group"
+                    android:title="发起群聊"
                     app:showAsAction="ifRoom"/>
                 <item
-                    android:id="@+id/sixth"
-                    android:icon="@mipmap/ic_launcher_round"
-                    android:title="aaaaa"
+                    android:id="@+id/addFriend"
+                    android:icon="@drawable/addpeople"
+                    android:title="添加好友"
+                    app:showAsAction="ifRoom"/>
+                <item
+                    android:id="@+id/cloud"
+                    android:icon="@drawable/cloudpan"
+                    android:title="云盘"
                     app:showAsAction="ifRoom"/>
             </group>
         </menu>

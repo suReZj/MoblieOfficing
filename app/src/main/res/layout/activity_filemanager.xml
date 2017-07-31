@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
     <TextView
         android:id="@+id/filemanager_title"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:text="标题栏"
         android:gravity="center"
+        android:text="标题栏"
         />
-    
+
     <ScrollView
         android:id="@+id/filemanager_scroller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/filemanager_title">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -28,9 +30,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/basebutton_pressed"
                 android:drawableLeft="@mipmap/ic_personalfile"
-                android:paddingLeft="12dp"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"
+                android:paddingLeft="12dp"
                 android:text="@string/my_file"
                 />
 
@@ -38,12 +40,12 @@
                 android:id="@+id/filemanager_sharedfileBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/basebutton_pressed"
                 android:layout_below="@id/filemanager_myfileBtn"
+                android:background="@drawable/basebutton_pressed"
                 android:drawableLeft="@mipmap/ic_sharedfile"
-                android:paddingLeft="12dp"
                 android:drawablePadding="12dp"
                 android:gravity="center_vertical"
+                android:paddingLeft="12dp"
                 android:text="@string/shared_file"/>
 
         </RelativeLayout>

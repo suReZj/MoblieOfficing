@@ -4,14 +4,15 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
-        android:id="@+id/chat_title_toolbar"
+        android:id="@+id/chat_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/padding_top"
         android:background="@color/colorBottomBar"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ToolbarPopupTheme"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:navigationIcon="@mipmap/toolbarreturn"
+        app:navigationIcon="@mipmap/ic_toolbar_return"
         android:weightSum="1">
 
         <!--<Button-->
@@ -23,7 +24,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/headtitle"
+            android:id="@+id/chat_toolbar_title"
             android:text="标题栏"
             android:textSize="18sp"
             android:textColor="@color/colorBlack"

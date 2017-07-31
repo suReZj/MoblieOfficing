@@ -7,29 +7,24 @@
     android:orientation="vertical">
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_notice"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorBottomBar"
-        android:title="公告"
-        app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:theme="@style/ToolbarTheme"
-        app:titleTextColor="@color/messageTitle"/>
+    <include layout="@layout/toolbar" />
 
-
-    <!--<com.r2.scau.moblieofficing.widge.EDCToolBar
-        android:id="@+id/toolbar_notice"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:minHeight="?attr/actionBarSize"
-        app:rightSecondButtonText="发公告"
-        app:theme="@style/ToolbarTheme"
-        app:title="公告"
-        />-->
+        app:tabIndicatorColor="@color/colorLightBlue"
+        app:tabSelectedTextColor="@color/colorLightBlue" />
 
-  <LinearLayout
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_notice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>
+
+<!--
+<LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal">
@@ -43,7 +38,7 @@
           android:gravity="center_horizontal|center_vertical"
           android:textColor="@drawable/notice_read_status"
           android:textSize="18sp"
-          android:text="未读"
+          android:text="@string/unread"
       />
 
       <View
@@ -61,7 +56,7 @@
           android:gravity="center_horizontal|center_vertical"
           android:textColor="@drawable/notice_read_status"
           android:textSize="18sp"
-          android:text="已读"
+          android:text="@string/read"
           />
 
   </LinearLayout>
@@ -70,5 +65,4 @@
         android:layout_height="1px"
         android:background="@color/colorGray"
         />
-
-</LinearLayout>
+-->

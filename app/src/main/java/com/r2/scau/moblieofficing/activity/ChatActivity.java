@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,12 +20,26 @@ import android.widget.EditText;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ChatMessageAdapter;
-import com.r2.scau.moblieofficing.bean.chat_message_Bean;
+import com.r2.scau.moblieofficing.bean.ChatMessage;
+import com.r2.scau.moblieofficing.event.MessageEvent;
+import com.r2.scau.moblieofficing.smack.SmackListenerManager;
+import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.sqk.emojirelease.Emoji;
 import com.sqk.emojirelease.FaceFragment;
 
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import org.jivesoftware.smack.chat.Chat;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Created by 张子健 on 2017/7/21 0021.
@@ -36,8 +51,11 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
     private EditText editText;//文字输入框
     private RecyclerView recyclerView;//消息recycle
     private SwipeRefreshLayout swipeRefreshLayout;//刷新layout
-    private List<chat_message_Bean> chatMessageList = new ArrayList<>();//消息list
+    private List<ChatMessage> chatMessageList = new ArrayList<>();//消息list
     private FaceFragment faceFragment;//表情fragment
+    private SmackManager smack;
+    private Chat mChat;
+    private ChatMessageAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +67,7 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
         editText = (EditText) findViewById(R.id.chat_editText);
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_title_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
 
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.toolbar_chat_title_menu);
@@ -57,7 +75,7 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        ChatMessageAdapter adapter = new ChatMessageAdapter(chatMessageList, this);
+        adapter = new ChatMessageAdapter(chatMessageList, this);
         recyclerView.setAdapter(adapter);
 
 
@@ -66,11 +84,22 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
         getSupportFragmentManager().beginTransaction().hide(faceFragment).commit();
 
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                smack = SmackManager.getInstance();
+//                smack.login("test", "test");
+//                mChat = smack.createChat("test3@192.168.13.30");
+            }
+        }).start();
+        SmackListenerManager.addGlobalListener();
+
+
         emojiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFaceFragment();
                 closeKeyBoard();
+                showFaceFragment();
             }
         });
 
@@ -79,8 +108,12 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
             public void onClick(View v) {
                 if (editText.getText().toString().length() != 0) {
                     String text = editText.getText().toString();
-                    chat_message_Bean msg = new chat_message_Bean(getResources().getDrawable(R.mipmap.ic_launcher_round), text);
+                    ChatMessage msg = new ChatMessage(1,true);
+                    msg.setContent(text);
+                    msg.setMeNickname("子健");//设置自己的昵称
+                    msg.setMeUsername("test");
                     chatMessageList.add(msg);
+                    send(text);//发送消息
                     recyclerView.getAdapter().notifyDataSetChanged();
                     recyclerView.scrollToPosition(chatMessageList.size() - 1);
                     editText.setText(null);
@@ -105,9 +138,9 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
         editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     hideFaceFragment();
-                }else {
+                } else {
 
                 }
             }
@@ -133,6 +166,28 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
 
 
     }
+
+    @Override
+    protected void onStart() {
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+        super.onStart();
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent message) {
+        Log.e("MessageEvent", "accept");
+        adapter.add(message.getChatMessage());
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -223,5 +278,22 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
         getSupportFragmentManager().beginTransaction().show(faceFragment).commit();
     }
 
+    public void send(final String message) {
+        Observable.just(message)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String message) {
+                        try {
+                            JSONObject json = new JSONObject();
+                            json.put("fromNickName", "子健");
+                            json.put("messageContent", message);
+                            mChat.sendMessage(json.toString());
+                        } catch (Exception e) {
+                            Log.d("send message failure", e.toString());
+                        }
+                    }
+                });
+    }
 }
 
