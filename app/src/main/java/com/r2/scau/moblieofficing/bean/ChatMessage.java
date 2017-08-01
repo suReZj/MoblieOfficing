@@ -5,11 +5,13 @@ import android.os.Parcelable;
 
 import com.r2.scau.moblieofficing.untils.DateUtil;
 
+import org.litepal.crud.DataSupport;
+
 import java.util.Date;
 import java.util.UUID;
 
 
-public class ChatMessage implements Parcelable {
+public class ChatMessage extends DataSupport implements Parcelable {
     public static final String KEY_FROM_NICKNAME = "fromNickName";
     public static final String KEY_MESSAGE_CONTENT = "messageContent";
     public static final String KEY_MULTI_CHAT_SEND_USER = "multiChatSendUser";

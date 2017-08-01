@@ -17,13 +17,17 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ChatMessageAdapter;
+import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
+import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.untils.SoftHideKeyBoardUtil;
 import com.sqk.emojirelease.Emoji;
 import com.sqk.emojirelease.FaceFragment;
 
@@ -33,6 +37,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jivesoftware.smack.chat.Chat;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +50,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by 张子健 on 2017/7/21 0021.
  */
 
-public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEmojiClickListener {
+public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiClickListener {
     private Button emojiBtn;//表情按钮
     private Button sendBtn;//发送按钮
     private EditText editText;//文字输入框
@@ -56,32 +61,18 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
     private SmackManager smack;
     private Chat mChat;
     private ChatMessageAdapter adapter;
+    private TextView titleText;
+    private LinearLayoutManager layoutManager;
+    private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
-        emojiBtn = (Button) findViewById(R.id.emoji_button);
-        sendBtn = (Button) findViewById(R.id.senMsg_button);
-        editText = (EditText) findViewById(R.id.chat_editText);
-        recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
-
-        setSupportActionBar(toolbar);
-        toolbar.inflateMenu(R.menu.toolbar_chat_title_menu);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
-        adapter = new ChatMessageAdapter(chatMessageList, this);
-        recyclerView.setAdapter(adapter);
+        super.onCreate(savedInstanceState);
+        SoftHideKeyBoardUtil.assistActivity(this);
 
 
-        faceFragment = FaceFragment.Instance();
-        getSupportFragmentManager().beginTransaction().add(R.id.Container, faceFragment).commit();
-        getSupportFragmentManager().beginTransaction().hide(faceFragment).commit();
 
 
         new Thread(new Runnable() {
@@ -89,12 +80,55 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
             public void run() {
                 smack = SmackManager.getInstance();
 //                smack.login("test", "test");
-//                mChat = smack.createChat("test3@192.168.13.30");
+                ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+                mChat = smack.createChat(chatRecord.getmChatJid());
             }
         }).start();
         SmackListenerManager.addGlobalListener();
 
 
+
+        String whereClause = "test1";
+        ArrayList<ChatRecord> msgList= new ArrayList<>(DataSupport.where("mmeusername=?",whereClause).find(ChatRecord.class));
+//        Log.d("number",msgList.get(0).getmUnReadMessageCount()+"");
+
+    }
+
+    @Override
+    protected void initView() {
+        emojiBtn = (Button) findViewById(R.id.emoji_button);
+        sendBtn = (Button) findViewById(R.id.senMsg_button);
+        editText = (EditText) findViewById(R.id.chat_editText);
+        recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
+        toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
+        titleText=(TextView)findViewById(R.id.chat_toolbar_title);
+
+        setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.toolbar_chat_title_menu);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        refreshData();
+        recyclerView.setAdapter(adapter);
+
+
+        faceFragment = FaceFragment.Instance();
+        getSupportFragmentManager().beginTransaction().add(R.id.Container, faceFragment).commit();
+        getSupportFragmentManager().beginTransaction().hide(faceFragment).commit();
+
+        ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+        titleText.setText(chatRecord.getmFriendNickname());
+    }
+
+    @Override
+    protected void initData() {
+
+    }
+
+    @Override
+    protected void initListener() {
         emojiBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,14 +142,7 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
             public void onClick(View v) {
                 if (editText.getText().toString().length() != 0) {
                     String text = editText.getText().toString();
-                    ChatMessage msg = new ChatMessage(1,true);
-                    msg.setContent(text);
-                    msg.setMeNickname("子健");//设置自己的昵称
-                    msg.setMeUsername("test");
-                    chatMessageList.add(msg);
                     send(text);//发送消息
-                    recyclerView.getAdapter().notifyDataSetChanged();
-                    recyclerView.scrollToPosition(chatMessageList.size() - 1);
                     editText.setText(null);
                 }
             }
@@ -163,7 +190,10 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
                 return false;
             }
         });
+    }
 
+    @Override
+    public void onClick(View v) {
 
     }
 
@@ -184,7 +214,11 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent message) {
         Log.e("MessageEvent", "accept");
-        adapter.add(message.getChatMessage());
+        ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+        if(message.getChatMessage().getFriendNickname().equals(chatRecord.getmFriendNickname())){
+            adapter.add(message.getChatMessage());
+            layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+        }
     }
 
 
@@ -246,7 +280,23 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
             getSupportFragmentManager().beginTransaction().hide(faceFragment).commit();
         } else {
             finish();
-            super.onBackPressed();
+            ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+            String whereClause = chatRecord.getmChatJid();
+            ArrayList msgList = new ArrayList<>(DataSupport.where("mchatjid=?", whereClause).find(ChatRecord.class));
+            chatRecord=(ChatRecord) msgList.get(0);
+            if (chatRecord.isSaved()){
+                Log.e("aaaaaaa","aaaaaaaa");
+            }else {
+                Log.e("bbbbbbb","bbbbbbbb");
+            }
+            chatRecord.setmUnReadMessageCount();
+            chatRecord.save();
+//            ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+//            if (chatRecord.isSaved()){
+//                Log.e("aaaaaaa","aaaaaaaa");
+//            }else {
+//                Log.e("bbbbbbb","bbbbbbbb");
+//            }
         }
     }
 
@@ -289,11 +339,64 @@ public class ChatActivity extends AppCompatActivity implements FaceFragment.OnEm
                             json.put("fromNickName", "子健");
                             json.put("messageContent", message);
                             mChat.sendMessage(json.toString());
+
+                            ChatMessage msg = new ChatMessage(1, true);
+                            ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+//                            msg.setFriendNickname(getIntent().getStringExtra("对方nicname"));
+//                            msg.setFriendUsername(getIntent().getStringExtra("对方username"));
+//                            msg.setMeUsername(getIntent().getStringExtra("我的username"));
+//                            msg.setMeNickname(getIntent().getStringExtra("我的nicname"));
+                            msg.setFriendNickname(chatRecord.getmFriendNickname());
+                            msg.setFriendUsername(chatRecord.getmFriendUsername());
+                            msg.setMeUsername(chatRecord.getmMeUsername());
+                            msg.setMeNickname(chatRecord.getmMeNickname());
+                            msg.setContent(message);
+                            msg.save();
+                            EventBus.getDefault().post(new MessageEvent(msg));
                         } catch (Exception e) {
                             Log.d("send message failure", e.toString());
                         }
                     }
                 });
     }
+
+    public void refreshData() {
+
+//    Observable.create(new Observable.OnSubscribe<List<ChatRecord>>() {
+//        @Override
+//        public void call(Subscriber<? super List<ChatRecord>> subscriber) {
+//
+//            List<ChatRecord> list = DBQueryHelper.queryChatRecord();
+//            subscriber.onNext(list);
+//            subscriber.onCompleted();
+//        }
+//    })
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .doOnError(new Action1<Throwable>() {
+//                @Override
+//                public void call(Throwable throwable) {
+////
+////                    refreshFailed();
+////                    Logger.e(throwable, "get chat record failure");
+//                }
+//            })
+//            .subscribe(new Action1<List<ChatRecord>>() {
+//                @Override
+//                public void call(List<ChatRecord> chatRecords) {
+//
+////                    mAdapter = new ChatRecordAdapter(mContext, chatRecords);
+////                    mRecyclerView.setAdapter(mAdapter);
+////                    refreshSuccess();
+//                }
+//            });
+        ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+        String whereClause = chatRecord.getmFriendNickname();
+//    String[] whereArgs = {LoginHelper.getUser().getUsername()};
+        chatMessageList= new ArrayList<>(DataSupport.where("mfriendusername=?",whereClause).find(ChatMessage.class));
+        adapter = new ChatMessageAdapter(chatMessageList,this);
+        layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+    }
+
 }
 

@@ -2,6 +2,7 @@ package com.r2.scau.moblieofficing.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,7 +88,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         }else {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
-            holder.lUserName.setText(chat_message_bean.getMeNickname());
+            holder.lUserName.setText(chat_message_bean.getFriendNickname());
+            Log.e("nickname",chat_message_bean.getFriendNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
 
 
