@@ -47,7 +47,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
     }
 
     public MessageAdapter(Context context, List<ChatRecord> list) {
-        messageList = sortMessage(list);
+        messageList = list;
         mContext = context;
         this.inflater = LayoutInflater.from(context);
     }
@@ -74,7 +74,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
             chatTime = (TextView) view.findViewById(R.id.chat_time);
             unRead = (TextView) view.findViewById(R.id.chat_message_count);
             cardView = (CardView) view;
-
         }
 
     }
@@ -140,7 +139,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
 //            }
 //        });
 
-        ((messageHolder) holder).linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 mPosition = position;
@@ -194,15 +193,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         }
     }
 
-    public void setMessageTop() {
-        messageList.get(mPosition).setSetTopFlag(true);
-        ChatRecord msg = messageList.get(mPosition);
-        messageList.remove(mPosition);
-        messageList.add(0, msg);
-        notifyItemMoved(mPosition, 0);
-        notifyItemRangeChanged(0, messageList.size());
-//        notifyDataSetChanged();
-    }
+
 
     public void deleteMsg() {
         messageList.remove(mPosition);
@@ -214,14 +205,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         Log.d("mmmm", mPosition + "");
     }
 
-    public void deleteTopMsg() {
-        messageList.get(mPosition).setSetTopFlag(false);
-        ChatRecord msg = messageList.get(mPosition);
-        messageList.remove(mPosition);
-        messageList.add(messageList.size(), msg);
-        notifyItemMoved(mPosition, messageList.size() - 1);
-        notifyDataSetChanged();
-    }
+
 
 
     @Override
@@ -230,17 +214,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
     }
 
 
-    //对消息队列根据是否进行排序
-    public List<ChatRecord> sortMessage(List<ChatRecord> msgs) {
-        for (int i = 0; i < msgs.size(); i++) {
-            if (msgs.get(i).getSetTopFlag()) {
-                ChatRecord msg = msgs.get(i);
-                msgs.remove(i);
-                msgs.add(0, msg);
-            }
-        }
-        return msgs;
-    }
+
 
     public void startChat(Context context, ChatRecord updateRecord) {
         Intent intent = new Intent(context, ChatActivity.class);

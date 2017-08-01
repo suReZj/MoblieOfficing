@@ -27,6 +27,7 @@ import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.untils.SoftHideKeyBoardUtil;
 import com.sqk.emojirelease.Emoji;
 import com.sqk.emojirelease.FaceFragment;
 
@@ -69,6 +70,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_chat);
         super.onCreate(savedInstanceState);
+        SoftHideKeyBoardUtil.assistActivity(this);
 
 
 

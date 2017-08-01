@@ -59,7 +59,9 @@ public class MessageFragment extends Fragment {
     private SmackManager smack;
     private LinearLayoutManager mLayoutManager;
     private RecyclerView recyclerView;
-
+    private ChatRecord chatRecord;
+    private ArrayList<ChatRecord> newList;
+    private String flagOfMulti;
 
     @Nullable
     @Override
@@ -68,36 +70,35 @@ public class MessageFragment extends Fragment {
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.inflateMenu(R.menu.toolbar_message_menu);
         toolbar.setTitle("消息");
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.scan) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            smack = SmackManager.getInstance();
+                            smack.login("test1", "test1");
+//                    Chat mChat = smack.createChat("test3@192.168.13.30");
+                            SmackListenerManager.addGlobalListener();
+                        }
+                    }).start();
+                }return true;
+            }
+        });
         setHasOptionsMenu(true);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
-//        initMsg();
 
-//        message_adapter = new MessageAdapter(view.getContext(), msgList);
         refreshData();
 
-//        message_adapter.setItemClickListener(new OnRecyclerViewOnClickListener() {
-//            @Override
-//            public void OnItemClick(View v, int position) {
-//
-//                Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                getActivity().startActivity(intent);
-//                Log.d("Aaaa","aaaa");
-//            }
-//        });
+
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(recyclerView);
-//        connectButton=(Button)view.findViewById(R.id.first);
-//        connectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                SmackManager smack=SmackManager.getInstance();
-//                smack.login("12345678900","12345678");
-//            }
-//        });
+
         return view;
     }
 
@@ -160,8 +161,9 @@ public class MessageFragment extends Fragment {
             } else {
                 chatRecord.updateUnReadMessageCount();
             }
-            message_adapter.update(chatRecord);
+//            message_adapter.update(chatRecord);
             chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
+            refreshData();
         }
     }
 
@@ -198,8 +200,9 @@ public class MessageFragment extends Fragment {
     }
 
     private void addChatRecord(ChatRecord chatRecord) {
-        message_adapter.add(chatRecord, 0);
+//        message_adapter.add(chatRecord, 0);
         chatRecord.save();
+        refreshData();
         mLayoutManager.scrollToPosition(0);
     }
 
@@ -221,13 +224,38 @@ public class MessageFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case setTopBtn:
-                message_adapter.setMessageTop();
+                chatRecord=message_adapter.getMessageList().get(message_adapter.getmPosition());
+                if(chatRecord.isSaved()){
+                    chatRecord.setSetTopFlag(true);
+                    chatRecord.save();
+                    refreshData();
+                }
                 break;
             case deleteBtn:
-                message_adapter.deleteMsg();
+//                message_adapter.deleteMsg();
+                chatRecord=message_adapter.getMessageList().get(message_adapter.getmPosition());
+                if(chatRecord.isSaved()){
+//                    chatRecord.setSetTopFlag(true);
+//                    chatRecord.save();
+//                    refreshData();
+                    if (chatRecord.ismIsMulti()){
+                        flagOfMulti="1";
+                    }else {
+                        flagOfMulti="0";
+                    }
+                    DataSupport.deleteAll(ChatMessage.class,"mfriendusername=? and mismulti=?",chatRecord.getmFriendUsername(),flagOfMulti);
+                    chatRecord.delete();
+                    refreshData();
+                    Log.e("存在","存在");
+                }
                 break;
             case deleteTopBtn:
-                message_adapter.deleteTopMsg();
+                chatRecord=message_adapter.getMessageList().get(message_adapter.getmPosition());
+                if(chatRecord.isSaved()){
+                    chatRecord.setSetTopFlag(false);
+                    chatRecord.save();
+                    refreshData();
+                }
         }
         return true;
     }
@@ -241,17 +269,17 @@ public class MessageFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.scan) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    smack = SmackManager.getInstance();
-                    smack.login("test1", "test1");
-//                    Chat mChat = smack.createChat("test3@192.168.13.30");
-                    SmackListenerManager.addGlobalListener();
-                }
-            }).start();
-        }
+//        if (item.getItemId() == R.id.scan) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    smack = SmackManager.getInstance();
+//                    smack.login("test1", "test1");
+////                    Chat mChat = smack.createChat("test3@192.168.13.30");
+//                    SmackListenerManager.addGlobalListener();
+//                }
+//            }).start();
+//        }
         if (item.getItemId() == R.id.multiChat) {
             LitePal.getDatabase();
         }
@@ -259,16 +287,6 @@ public class MessageFragment extends Fragment {
         return true;
     }
 
-//    private void initMsg() {
-//        ChatUser chatUser = new ChatUser("sure", "sure");
-//        chatUser.setMeUsername("子健");
-//        for (int i = 0; i < 10; i++) {
-//            ChatRecord msg = new ChatRecord(chatUser);
-//            msg.setmLastMessage("啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊");
-//            msgList.add(msg);
-//        }
-//
-//    }
 
 
     public void refreshData() {
@@ -301,9 +319,20 @@ public class MessageFragment extends Fragment {
 ////                    refreshSuccess();
 //                }
 //            });
+
+
+        //我的用户名
         String whereClause = "test1";
 //    String[] whereArgs = {LoginHelper.getUser().getUsername()};
-        msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause).find(ChatRecord.class));
+        msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
+                .where("settopflag=?","1")
+                .order("mchattime desc")
+                .find(ChatRecord.class));
+        newList=new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
+                .where("settopflag=?","0")
+                .order("mchattime desc")
+                .find(ChatRecord.class));
+        msgList.addAll(newList);
         message_adapter = new MessageAdapter(getContext(), msgList);
         recyclerView.setAdapter(message_adapter);
     }

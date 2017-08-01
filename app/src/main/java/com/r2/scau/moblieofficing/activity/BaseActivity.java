@@ -14,17 +14,23 @@ import java.util.Stack;
 /**
  * Created by EdwinCheng on 2017/7/24.
  * 抽取基类，
- *
+ * <p>
  * 1、其中initView()用来初始化ui，initData()用来处理数据，initListener()用来给控件添加监听器
  * 2、Intent 意图也已经包含在BaseActivity中
  */
 
-public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener{
-    /** 用来保存所有已打开的Activity */
+public abstract class BaseActivity extends AppCompatActivity implements View.OnClickListener {
+    /**
+     * 用来保存所有已打开的Activity
+     */
     private static Stack<Activity> listActivity = new Stack<Activity>();
-    /** 记录上次点击按钮的时间 **/
+    /**
+     * 记录上次点击按钮的时间
+     **/
     private long lastClickTime;
-    /** 按钮连续点击最低间隔时间 单位：毫秒 **/
+    /**
+     * 按钮连续点击最低间隔时间 单位：毫秒
+     **/
     public final static int CLICK_TIME = 500;
 
     @Override
@@ -34,13 +40,18 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         /**
          * 透明状态栏
          */
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0及以上
-            View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-            decorView.setSystemUiVisibility(option);
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4到5.0
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0及以上
+//            View decorView = getWindow().getDecorView();
+//            int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+//                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+//            decorView.setSystemUiVisibility(option);
+//            getWindow().setStatusBarColor(Color.TRANSPARENT);
+//        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4到5.0
+//            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
+//            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
+//        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {//4.4到5.0
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
@@ -58,8 +69,10 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     // 初始化ui
     protected abstract void initView();
+
     // 初始化数据
     protected abstract void initData();
+
     // 添加监听器
     protected abstract void initListener();
 
@@ -88,36 +101,36 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     /**
      * Created by EdwinCheng on 2017/7/24.
-     *
+     * <p>
      * activity跳转方法
      */
-    public void openActivity(Class<?> targetActivity, Bundle bundle){
+    public void openActivity(Class<?> targetActivity, Bundle bundle) {
         Intent intent = new Intent(this, targetActivity);
-        if (bundle != null){
+        if (bundle != null) {
             intent.putExtras(bundle);
         }
         startActivity(intent);
     }
 
-    public void openActivity(Class<?> targetActivity){
+    public void openActivity(Class<?> targetActivity) {
         openActivity(targetActivity, null);
     }
 
-    public void openActivityForResult(Class<?> targetActivity,Bundle bundle,int requestCode){
-        Intent intent = new Intent(this,targetActivity);
-        if (bundle != null){
+    public void openActivityForResult(Class<?> targetActivity, Bundle bundle, int requestCode) {
+        Intent intent = new Intent(this, targetActivity);
+        if (bundle != null) {
             intent.putExtras(bundle);
         }
-        startActivityForResult(intent,requestCode);
+        startActivityForResult(intent, requestCode);
     }
 
-    public void openActivityForResult(Class<?> targetActivity, int requestCode){
-        openActivityForResult(targetActivity,null,requestCode);
+    public void openActivityForResult(Class<?> targetActivity, int requestCode) {
+        openActivityForResult(targetActivity, null, requestCode);
     }
 
     /**
      * Created by EdwinCheng on 2017/7/24.
-     *
+     * <p>
      * 验证按钮的点击时间，防止重复点击造成程序崩溃（eg：在子线程请求数据中）
      */
     public boolean verifyClickTime() {
@@ -130,7 +143,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     /**
      * Created by EdwinCheng on 2017/7/24.
-     *
+     * <p>
      * 获取string的字段
      * 可以获取到res/string的字段
      */
@@ -140,7 +153,7 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
 
     /**
      * Created by EdwinCheng on 2017/7/24.
-     *
+     * <p>
      * 关闭所有(前台、后台)Activity,前置条件：BaseActivity为父类（继承BaseActivity）
      */
     protected static void finishAllActivity() {
