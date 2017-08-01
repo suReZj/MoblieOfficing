@@ -21,7 +21,6 @@
     <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
         <item name="actionMenuTextColor">@color/messageTitle</item> <!--  敲定颜色-->
         <item name="colorControlNormal">@color/messageTitle</item>
-        <item name="android:actionBarSize">46dp</item>
     </style>
 
 

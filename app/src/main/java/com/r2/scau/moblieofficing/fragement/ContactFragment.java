@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.GroupActivity;
 import com.r2.scau.moblieofficing.activity.PersonalContactActivity;
 
 /**
@@ -32,6 +33,7 @@ public class ContactFragment extends Fragment {
     private View view;
     private Context mContext;
     private TextView titleTV;
+    private SuperTextView groupST;
     private SuperTextView personalContactST;
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 1;
 
@@ -51,6 +53,14 @@ public class ContactFragment extends Fragment {
         titleTV = (TextView) view .findViewById(R.id.toolbar_title);
         titleTV.setText("联系人");
 
+        groupST = (SuperTextView) view.findViewById(R.id.st_contact_group);
+        groupST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+            @Override
+            public void onSuperTextViewClick() {
+                openGroupActivity();
+            }
+        });
+
         personalContactST = (SuperTextView) view.findViewById(R.id.st_contact_personal);
         personalContactST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
             @Override
@@ -61,14 +71,20 @@ public class ContactFragment extends Fragment {
                             new String[]{Manifest.permission.READ_CONTACTS},
                             MY_PERMISSIONS_REQUEST_READ_CONTACT);
                 }else {
-                    openActivity();
+                    openPersonalActivity();
                 }
 
             }
         });
     }
 
-    public void openActivity(){
+    public void openGroupActivity(){
+        Intent intent = new Intent(mContext, GroupActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void openPersonalActivity(){
         Intent intent = new Intent(mContext, PersonalContactActivity.class);
         startActivity(intent);
     }
@@ -79,7 +95,7 @@ public class ContactFragment extends Fragment {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
             {
                 Log.e("permission", "accept");
-                openActivity();
+                openPersonalActivity();
             } else
             {
                 // Permission Denied

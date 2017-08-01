@@ -4,7 +4,6 @@ package com.r2.scau.moblieofficing.fragement;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,7 +55,7 @@ public class MessageFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.toolbar_message_menu);
         setHasOptionsMenu(true);
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
