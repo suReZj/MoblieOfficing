@@ -1,5 +1,6 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
@@ -51,7 +52,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
 
     @Override
     protected void initView() {
-        setContentView(R.layout.activity_personal_contact);
+        setContentView(R.layout.activity_contact);
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -164,6 +165,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toobar_friend_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -172,6 +174,12 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                break;
+            case R.id.menu_friend:
+                Intent intent = new Intent(FriendActivity.this, AddFriendActivity.class);
+                startActivity(intent);
+                break;
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);

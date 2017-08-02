@@ -39,7 +39,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     @Override
-    public void initView(){
+    public void initView() {
         setContentView(R.layout.activity_login);
 
         userET = (EditText) findViewById(R.id.input_user_login);
@@ -63,50 +63,13 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    public void login(){
+    public void login() {
         //step 1: 同样的需要创建一个OkHttpClick对象
         //step 2: 创建  FormBody.Builder
         String user = userET.getText().toString();
         String password = passwordET.getText().toString();
         password = user + "#" + password;
         password = MathUtil.getMD5(password);
-        UserUntil.phone = user;
-
-        /*FormBody formBody = new FormBody.Builder()
-                .add("userPhone", user)
-                .add("password", password)
-                .add("isRememberMe", "true")
-                .build();*/
-
-
-        //step 3: 创建请求
-        /*Request request = new Request.Builder().url("http://192.168.13.57:8089/u/mobileLogin.shtml")
-                .post(formBody)
-                .build();
-
-        //step 4： 建立联系 创建Call对象
-        okHttpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-                Log.e("login", "fail");
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                Log.e("login", response.body().string());
-                Headers headers = response.headers();
-                Log.d("info_headers", "header " + headers);
-                List<String> cookies = headers.values("Set-Cookie");
-                String session = cookies.get(0);
-                Log.d("info_cookies", "onResponse-size: " + cookies);
-
-                loginSessionID = session.substring(0, session.indexOf(";"));
-                Log.i("info_s", "session is  :" + loginSessionID);
-                OkHttpUntil.loginSessionID = loginSessionID;
-            }
-
-        });*/
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.13.57:8089/u/")
                 .build();
@@ -116,16 +79,22 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 try {
-                    Log.e("login", response.body().string());
-                    Headers headers = response.headers();
-                    Log.d("info_headers", "header " + headers);
-                    List<String> cookies = headers.values("Set-Cookie");
-                    String session = cookies.get(0);
-                    Log.d("info_cookies", "onResponse-size: " + cookies);
+                    String str = response.body().string();
+                    Log.e("login", str);
+                    if (str.contains("登陆成功")) {
+                        Headers headers = response.headers();
+                        Log.d("info_headers", "header " + headers);
+                        List<String> cookies = headers.values("Set-Cookie");
+                        String session = cookies.get(0);
+                        Log.d("info_cookies", "onResponse-size: " + cookies);
 
-                    loginSessionID = session.substring(0, session.indexOf(";"));
-                    Log.i("info_s", "session is  :" + loginSessionID);
-                    OkHttpUntil.loginSessionID = loginSessionID;
+                        loginSessionID = session.substring(0, session.indexOf(";"));
+                        Log.i("info_s", "session is  :" + loginSessionID);
+                        OkHttpUntil.loginSessionID = loginSessionID;
+                        UserUntil.phone = userET.getText().toString();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -138,7 +107,7 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    public void changePassword(){
+    public void changePassword() {
         //step 1: 同样的需要创建一个OkHttpClick对象
         //step 2: 创建  FormBody.Builder
         /*FormBody formBody = new FormBody.Builder()
@@ -171,7 +140,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_login:
                 login();
                 break;

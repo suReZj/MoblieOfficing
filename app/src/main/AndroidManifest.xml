@@ -33,6 +33,10 @@
         </activity>
         <activity android:name=".activity.FriendActivity">
         </activity>
+        <activity android:name=".activity.AddFriendActivity">
+        </activity>
+        <activity android:name=".activity.SearchPhoneActivity">
+        </activity>
     </application>
 
 </manifest>
