@@ -44,8 +44,8 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
         mSearchView = (SearchView)findViewById(R.id.sv_personal_contact);
-        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.quickSideBarView);
-        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.quickSideBarTipsView);
+        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv_personal);
+        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv_personal);
         mTitleTV = (TextView) findViewById(R.id.toolbar_title);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setTitle("");

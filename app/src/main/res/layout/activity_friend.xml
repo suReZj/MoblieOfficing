@@ -2,14 +2,17 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="com.r2.scau.moblieofficing.activity.FriendActivity">
 
-    <include layout="@layout/toolbar" />
+    <include
+        layout="@layout/toolbar"/>
 
     <android.support.v7.widget.SearchView
-        android:id="@+id/sv_personal_contact"
+        android:id="@+id/sv_friend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
@@ -26,7 +29,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_personal_contact"
+            android:id="@+id/rv_friend"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <!-- 这个是浮动的提示 ，配合字母栏实现放大浮动提示滑动到哪个字母-->
@@ -36,10 +39,10 @@
         <!--app:sidebarTextSize 字母尺寸-->
 
         <com.bigkoo.quicksidebar.QuickSideBarTipsView
-            android:id="@+id/qsbtv_personal"
+            android:id="@+id/qsbtv_friend"
             android:layout_width="@dimen/height_quicksidebartips"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/qsbv_personal"
+            android:layout_toLeftOf="@+id/qsbv_friend"
             app:sidebarBackgroundColor="@color/colorPrimary"
             app:sidebarTextColor="@android:color/white"
             app:sidebarTextSize="@dimen/textSize_quicksidebartips"/>
@@ -51,7 +54,7 @@
         <!--app:sidebarTextSize 正常状态字母尺寸-->
         <!--app:sidebarTextSizeChoose 选中字母尺寸-->
         <com.bigkoo.quicksidebar.QuickSideBarView
-            android:id="@id/qsbv_personal"
+            android:id="@+id/qsbv_friend"
             android:layout_width="20dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -61,4 +64,5 @@
             app:sidebarTextSize="16sp"
             app:sidebarTextSizeChoose="@dimen/textSize_quicksidebar_choose"/>
     </RelativeLayout>
+
 </LinearLayout>

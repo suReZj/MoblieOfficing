@@ -12,7 +12,8 @@ import android.widget.TextView;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.untils.MathUtil;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,6 +70,7 @@ public class LoginActivity extends BaseActivity {
         String password = passwordET.getText().toString();
         password = user + "#" + password;
         password = MathUtil.getMD5(password);
+        UserUntil.phone = user;
 
         /*FormBody formBody = new FormBody.Builder()
                 .add("userPhone", user)
@@ -100,7 +102,7 @@ public class LoginActivity extends BaseActivity {
 
                 loginSessionID = session.substring(0, session.indexOf(";"));
                 Log.i("info_s", "session is  :" + loginSessionID);
-                OkHttpClientManager.loginSessionID = loginSessionID;
+                OkHttpUntil.loginSessionID = loginSessionID;
             }
 
         });*/
@@ -123,7 +125,7 @@ public class LoginActivity extends BaseActivity {
 
                     loginSessionID = session.substring(0, session.indexOf(";"));
                     Log.i("info_s", "session is  :" + loginSessionID);
-                    OkHttpClientManager.loginSessionID = loginSessionID;
+                    OkHttpUntil.loginSessionID = loginSessionID;
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

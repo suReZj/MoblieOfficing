@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 
 import java.io.IOException;
 
@@ -20,7 +20,7 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
+import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
 
 public class SendNoticeActivity extends BaseActivity {
 
@@ -73,7 +73,7 @@ public class SendNoticeActivity extends BaseActivity {
 
         //step 3: 创建请求
         Request request = new Request.Builder().url("http://192.168.13.19:8080/permission/publicAnnouncement.shtml")
-                .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .post(formBody)
                 .build();
 

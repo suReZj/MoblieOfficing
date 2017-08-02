@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.FriendActivity;
 import com.r2.scau.moblieofficing.activity.GroupActivity;
 import com.r2.scau.moblieofficing.activity.PersonalContactActivity;
 
@@ -33,6 +34,7 @@ public class ContactFragment extends Fragment {
     private View view;
     private Context mContext;
     private TextView titleTV;
+    private SuperTextView friendST;
     private SuperTextView groupST;
     private SuperTextView personalContactST;
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 1;
@@ -52,6 +54,14 @@ public class ContactFragment extends Fragment {
 
         titleTV = (TextView) view .findViewById(R.id.toolbar_title);
         titleTV.setText("联系人");
+
+        friendST = (SuperTextView) view.findViewById(R.id.st_contact_friend);
+        friendST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+            @Override
+            public void onSuperTextViewClick() {
+                openFriendActivity();
+            }
+        });
 
         groupST = (SuperTextView) view.findViewById(R.id.st_contact_group);
         groupST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
@@ -77,6 +87,12 @@ public class ContactFragment extends Fragment {
             }
         });
     }
+
+    public void openFriendActivity(){
+        Intent intent = new Intent(mContext, FriendActivity.class);
+        startActivity(intent);
+    }
+
 
     public void openGroupActivity(){
         Intent intent = new Intent(mContext, GroupActivity.class);
