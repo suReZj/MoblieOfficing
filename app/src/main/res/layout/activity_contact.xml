@@ -12,7 +12,6 @@
         android:id="@+id/sv_personal_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar_contact_personal"
         android:iconifiedByDefault="false"
         />
 
@@ -37,10 +36,10 @@
         <!--app:sidebarTextSize 字母尺寸-->
 
         <com.bigkoo.quicksidebar.QuickSideBarTipsView
-            android:id="@+id/quickSideBarTipsView"
+            android:id="@+id/qsbtv_personal"
             android:layout_width="@dimen/height_quicksidebartips"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/quickSideBarView"
+            android:layout_toLeftOf="@+id/qsbv_personal"
             app:sidebarBackgroundColor="@color/colorPrimary"
             app:sidebarTextColor="@android:color/white"
             app:sidebarTextSize="@dimen/textSize_quicksidebartips"/>
@@ -52,7 +51,7 @@
         <!--app:sidebarTextSize 正常状态字母尺寸-->
         <!--app:sidebarTextSizeChoose 选中字母尺寸-->
         <com.bigkoo.quicksidebar.QuickSideBarView
-            android:id="@id/quickSideBarView"
+            android:id="@id/qsbv_personal"
             android:layout_width="20dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"

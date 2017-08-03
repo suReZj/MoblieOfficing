@@ -8,11 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,12 +51,23 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
 
         titleTV = (TextView) view.findViewById(R.id.toolbar_title);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(mToolbar);
+        mToolbar.inflateMenu(R.menu.toobar_notice_menu);
+        mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.menu_notice:
+                        Intent intent = new Intent(mContext, SendNoticeActivity.class);
+                        startActivity(intent);
+                        break;
+                }
+                return true;
+            }
+        });
         setHasOptionsMenu(true);
 
         mToolbar.setTitle("");
         titleTV.setText("公告");
-
         initViewPage();
 
     }
@@ -87,7 +95,7 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
         tableLayout.setupWithViewPager(viewPage);
     }
 
-    @Override
+   /*@Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.toobar_notice_menu, menu);
@@ -103,7 +111,7 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
         }
 
         return true;
-    }
+    }*/
 
     @Override
     public void onClick(View view) {

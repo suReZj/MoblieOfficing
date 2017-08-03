@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
@@ -31,8 +32,17 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+import org.reactivestreams.Subscriber;
+
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -47,55 +57,62 @@ public class MessageFragment extends Fragment {
     final private int deleteBtn = 1;
     final private int deleteTopBtn = 2;
     private SmackManager smack;
-    private HashMap<String, Integer> mMap = new HashMap<>();//聊天用户的用户名与用户聊天记录Position的映射关系
     private LinearLayoutManager mLayoutManager;
-
+    private RecyclerView recyclerView;
+    private ChatRecord chatRecord;
+    private ArrayList<ChatRecord> newList;
+    private String flagOfMulti;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.inflateMenu(R.menu.toolbar_message_menu);
+        toolbar.setTitle("消息");
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener(){
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (item.getItemId() == R.id.scan) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            smack = SmackManager.getInstance();
+                            smack.login("test1", "test1");
+//                    Chat mChat = smack.createChat("test3@192.168.13.30");
+                            SmackListenerManager.addGlobalListener();
+                        }
+                    }).start();
+                }return true;
+            }
+        });
         setHasOptionsMenu(true);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(mLayoutManager);
-//        initMsg();
+
+        refreshData();
 
 
-        message_adapter = new MessageAdapter(view.getContext(), msgList);
-//        message_adapter.setItemClickListener(new OnRecyclerViewOnClickListener() {
-//            @Override
-//            public void OnItemClick(View v, int position) {
-//
-//                Intent intent = new Intent(getActivity(), ChatActivity.class);
-//                getActivity().startActivity(intent);
-//                Log.d("Aaaa","aaaa");
-//            }
-//        });
-        recyclerView.setAdapter(message_adapter);
+
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(recyclerView);
-//        connectButton=(Button)view.findViewById(R.id.first);
-//        connectButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                SmackManager smack=SmackManager.getInstance();
-//                smack.login("12345678900","12345678");
-//            }
-//        });
-
 
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshData();
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
+        Log.e("creat","creat");
         EventBus.getDefault().register(this);
     }
 
@@ -105,7 +122,6 @@ public class MessageFragment extends Fragment {
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
         message_adapter = null;
-//        mMap.clear();
     }
 
 
@@ -124,29 +140,33 @@ public class MessageFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChatMessageEvent(MessageEvent message) {
         //收到发送的消息时接收到的事件(包括别人发送的和自己发送的消息)
-        Log.d("chatRecord","chatRecord");
+        Log.d("chatRecord", "chatRecord");
         if (isRemoving() || message_adapter == null) {
-            Log.d("chatRecord1","chatRecord1");
             return;
         }
-
         ChatRecord chatRecord = getChatRecord(message.getChatMessage());
 //        chatRecord.setSetTopFlag(false);
         if (chatRecord == null) {//还没有创建此朋友的聊天记录
-            Log.d("chatRecord2","chatRecord2");
+            Log.d("chatRecord1", "chatRecord1");
             chatRecord = new ChatRecord(message.getChatMessage());
             chatRecord.setSetTopFlag(false);
             addChatRecord(chatRecord);
         } else {
-            Log.d("chatRecord3","chatRecord3");
-            chatRecord.setChatTime(message.getChatMessage().getDatetime());
-            chatRecord.setLastMessage(message.getChatMessage().getContent());
+            Log.d("chatRecord2", "chatRecord2");
+            chatRecord.setmChatTime(message.getChatMessage().getDatetime());
+            chatRecord.setmLastMessage(message.getChatMessage().getContent());
             chatRecord.setSetTopFlag(false);
-            chatRecord.updateUnReadMessageCount();
-            message_adapter.update(chatRecord);
-//            DBHelper.getInstance().getSQLiteDB().update(chatRecord);//更新数据库中的记录
+            if (message.getChatMessage().isMeSend()) {
+//                chatRecord.updateUnReadMessageCount();
+            } else {
+                chatRecord.updateUnReadMessageCount();
+            }
+//            message_adapter.update(chatRecord);
+            chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
+            refreshData();
         }
     }
+
 
     /**
      * 根据消息获取聊天记录窗口对象
@@ -166,35 +186,24 @@ public class MessageFragment extends Fragment {
 //        if (mMap.containsKey(message.getFriendUsername())) {
 //            chatRecord = message_adapter.getMessageList().get(mMap.get(message.getFriendUsername()));
 //        } else {
-            for (int i = 0; i < message_adapter.getMessageList().size(); i++) {
-                chatRecord = message_adapter.getMessageList().get(i);
-                if (chatRecord.getMeUsername().equals(message.getMeUsername()) &&
-                        chatRecord.getFriendUsername().equals(message.getFriendUsername())) {
-//                    mMap.put(message.getFriendUsername(), i);
-                    break;
-                } else {
-                    chatRecord = null;
-                }
+        for (int i = 0; i < message_adapter.getMessageList().size(); i++) {
+            chatRecord = message_adapter.getMessageList().get(i);
+            if (chatRecord.getmMeUsername().equals(message.getMeUsername()) &&
+                    chatRecord.getmFriendUsername().equals(message.getFriendUsername())) {
+                return chatRecord;
+            } else {
+                chatRecord = null;
+            }
         }
 //    }
         return chatRecord;
     }
 
     private void addChatRecord(ChatRecord chatRecord) {
-        Log.d("add","add");
-//        if (message_adapter != null) {
-            message_adapter.add(chatRecord, 0);
-//            msgList.add(chatRecord);
-//        }else {
-//            msgList.add(chatRecord);
-//            message_adapter = new MessageAdapter(getActivity().getApplicationContext(), msgList);
-////        }
-//        DBHelper.getInstance().getSQLiteDB().save(chatRecord);
+//        message_adapter.add(chatRecord, 0);
+        chatRecord.save();
+        refreshData();
         mLayoutManager.scrollToPosition(0);
-//        for (String key : mMap.keySet()) {//创建新的聊天记录之后，需要将之前的映射关系进行更新
-//            mMap.put(key, mMap.get(key) + 1);
-//            Log.d("key",key);
-//        }
     }
 
 
@@ -215,14 +224,38 @@ public class MessageFragment extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case setTopBtn:
-                message_adapter.setMessageTop();
+                chatRecord=message_adapter.getMessageList().get(message_adapter.getmPosition());
+                if(chatRecord.isSaved()){
+                    chatRecord.setSetTopFlag(true);
+                    chatRecord.save();
+                    refreshData();
+                }
                 break;
             case deleteBtn:
-                message_adapter.deleteMsg();
-//                mMap.remove(message_adapter.getMessageList().get(message_adapter.getmPosition()).getFriendUsername());
+//                message_adapter.deleteMsg();
+                chatRecord=message_adapter.getMessageList().get(message_adapter.getmPosition());
+                if(chatRecord.isSaved()){
+//                    chatRecord.setSetTopFlag(true);
+//                    chatRecord.save();
+//                    refreshData();
+                    if (chatRecord.ismIsMulti()){
+                        flagOfMulti="1";
+                    }else {
+                        flagOfMulti="0";
+                    }
+                    DataSupport.deleteAll(ChatMessage.class,"mfriendusername=? and mismulti=?",chatRecord.getmFriendUsername(),flagOfMulti);
+                    chatRecord.delete();
+                    refreshData();
+                    Log.e("存在","存在");
+                }
                 break;
             case deleteTopBtn:
-                message_adapter.deleteTopMsg();
+                chatRecord=message_adapter.getMessageList().get(message_adapter.getmPosition());
+                if(chatRecord.isSaved()){
+                    chatRecord.setSetTopFlag(false);
+                    chatRecord.save();
+                    refreshData();
+                }
         }
         return true;
     }
@@ -236,30 +269,72 @@ public class MessageFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.scan) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    smack = SmackManager.getInstance();
-                    smack.login("test", "test");
-//                    Chat mChat = smack.createChat("test1@192.168.13.30");
-                    SmackListenerManager.addGlobalListener();
-                }
-            }).start();
+//        if (item.getItemId() == R.id.scan) {
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    smack = SmackManager.getInstance();
+//                    smack.login("test1", "test1");
+////                    Chat mChat = smack.createChat("test3@192.168.13.30");
+//                    SmackListenerManager.addGlobalListener();
+//                }
+//            }).start();
+//        }
+        if (item.getItemId() == R.id.multiChat) {
+            LitePal.getDatabase();
         }
 
         return true;
     }
 
-    private void initMsg() {
-        ChatUser chatUser = new ChatUser("sure", "sure");
-        chatUser.setMeUsername("子健");
-        for (int i = 0; i < 10; i++) {
-            ChatRecord msg = new ChatRecord(chatUser);
-            msg.setLastMessage("aaaaaaaaaaaaaaa");
-            msgList.add(msg);
-        }
 
+
+    public void refreshData() {
+
+//    Observable.create(new Observable.OnSubscribe<List<ChatRecord>>() {
+//        @Override
+//        public void call(Subscriber<? super List<ChatRecord>> subscriber) {
+//
+//            List<ChatRecord> list = DBQueryHelper.queryChatRecord();
+//            subscriber.onNext(list);
+//            subscriber.onCompleted();
+//        }
+//    })
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .doOnError(new Action1<Throwable>() {
+//                @Override
+//                public void call(Throwable throwable) {
+////
+////                    refreshFailed();
+////                    Logger.e(throwable, "get chat record failure");
+//                }
+//            })
+//            .subscribe(new Action1<List<ChatRecord>>() {
+//                @Override
+//                public void call(List<ChatRecord> chatRecords) {
+//
+////                    mAdapter = new ChatRecordAdapter(mContext, chatRecords);
+////                    mRecyclerView.setAdapter(mAdapter);
+////                    refreshSuccess();
+//                }
+//            });
+
+
+        //我的用户名
+        String whereClause = "test1";
+//    String[] whereArgs = {LoginHelper.getUser().getUsername()};
+        msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
+                .where("settopflag=?","1")
+                .order("mchattime desc")
+                .find(ChatRecord.class));
+        newList=new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
+                .where("settopflag=?","0")
+                .order("mchattime desc")
+                .find(ChatRecord.class));
+        msgList.addAll(newList);
+        message_adapter = new MessageAdapter(getContext(), msgList);
+        recyclerView.setAdapter(message_adapter);
     }
 
 

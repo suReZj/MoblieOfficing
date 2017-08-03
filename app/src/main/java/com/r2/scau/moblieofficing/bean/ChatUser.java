@@ -15,7 +15,7 @@ public class ChatUser implements Parcelable {
     /**
      *
      */
-    private Boolean setTopFlag;//设置是否置顶
+
     private String uuid;
     /**
      * 聊天好友的用户名，群聊时为群聊MultiUserChat的room，即jid,格式为：老胡创建的群@conference.121.42.13.79
@@ -37,10 +37,10 @@ public class ChatUser implements Parcelable {
      * 聊天JID，群聊时为群聊jid
      */
     private String mChatJid;
-    /**
-     * 聊天时文件发送JID
-     */
-    private String mFileJid;
+//    /**
+//     * 聊天时文件发送JID
+//     */
+//    private String mFileJid;
     /**
      * 是否为群聊信息
      */
@@ -64,7 +64,7 @@ public class ChatUser implements Parcelable {
         mFriendUsername = friendUsername;
         mFriendNickname = friendNickname;
 
-        setTopFlag=false;
+
 //        mChatJid = SmackManager.getInstance().getChatJid(mFriendUsername);
 //        mFileJid = SmackManager.getInstance().getFileTransferJid(mFriendUsername);
 
@@ -96,14 +96,6 @@ public class ChatUser implements Parcelable {
 //        User user = LoginHelper.getUser();
 //        mMeUsername = user.getUsername();
 //        mMeNickname = user.getNickname();
-    }
-
-    public Boolean getSetTopFlag() {
-        return setTopFlag;
-    }
-
-    public void setSetTopFlag(Boolean setTopFlag) {
-        this.setTopFlag = setTopFlag;
     }
 
     public String getUuid() {
@@ -166,15 +158,15 @@ public class ChatUser implements Parcelable {
         mChatJid = chatJid;
     }
 
-    public String getFileJid() {
-
-        return mFileJid;
-    }
-
-    public void setFileJid(String fileJid) {
-
-        mFileJid = fileJid;
-    }
+//    public String getFileJid() {
+//
+//        return mFileJid;
+//    }
+//
+//    public void setFileJid(String fileJid) {
+//
+//        mFileJid = fileJid;
+//    }
 
     public boolean isMulti() {
 
@@ -202,7 +194,7 @@ public class ChatUser implements Parcelable {
         dest.writeString(this.mMeUsername);
         dest.writeString(this.mMeNickname);
         dest.writeString(this.mChatJid);
-        dest.writeString(this.mFileJid);
+//        dest.writeString(this.mFileJid);
         dest.writeByte(this.mIsMulti ? (byte) 1 : (byte) 0);
     }
 
@@ -214,7 +206,7 @@ public class ChatUser implements Parcelable {
         this.mMeUsername = in.readString();
         this.mMeNickname = in.readString();
         this.mChatJid = in.readString();
-        this.mFileJid = in.readString();
+//        this.mFileJid = in.readString();
         this.mIsMulti = in.readByte() != 0;
     }
 

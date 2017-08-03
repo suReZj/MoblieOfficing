@@ -21,8 +21,8 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
         public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contact_item, parent, false);
-            return new ContactViewHolder(view) {
-            };
+            Log.e("ContactViewHolder", "Create");
+            return new ContactViewHolder(view);
         }
 
         @Override
