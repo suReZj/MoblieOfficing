@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <!--3F51B5-->
+    <!--303F9F-->
+    <color name="colorPrimary">#1296db</color>
+    <color name="colorPrimaryDark">#1296db</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBottomBar">#e6e6e6</color>
     <color name="colorGray">#515151</color>

@@ -57,6 +57,7 @@ dependencies {
     compile 'org.litepal.android:core:1.5.1'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.google.code.gson:gson:2.8.1'
+    compile 'com.roughike:bottom-bar:2.3.1@aar'
     testCompile 'junit:junit:4.12'
     debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
     compile project(':library:smoothcheckbox')

@@ -1,0 +1,22 @@
+<tabs>
+    <tab
+        id="@+id/bottom_message"
+        icon="@drawable/bottom_bar__message"
+        title="@string/message" />
+    <tab
+        id="@+id/bottom_notice"
+        icon="@drawable/bottom_bar_notice"
+        title="@string/notice" />
+    <tab
+        id="@+id/bottom_work"
+        icon="@drawable/bottom_bar_work"
+        title="@string/work" />
+    <tab
+        id="@+id/bottom_contact"
+        icon="@drawable/bottom_bar_contact"
+        title="@string/contact" />
+    <tab
+        id="@+id/bottom_user"
+        icon="@drawable/bottom_bar_user"
+        title="@string/my" />
+</tabs>

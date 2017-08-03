@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/searchBtn"
-        android:icon="@drawable/search"
+        android:icon="@drawable/ic_search_white_24dp"
         android:title="first"
         app:showAsAction="always"/>
     <item
         android:id="@+id/message_fragment_more"
-        android:icon="@mipmap/message_toolbar_more"
+        android:icon="@drawable/ic_add_white_24dp"
         android:title="more"
         app:showAsAction="ifRoom">
         <menu>

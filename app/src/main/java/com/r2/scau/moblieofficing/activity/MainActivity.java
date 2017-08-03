@@ -2,6 +2,7 @@ package com.r2.scau.moblieofficing.activity;
 
 
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -18,9 +19,13 @@ import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.jivesoftware.smackx.filetransfer.FileTransfer.Status.initial;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
 
@@ -32,6 +37,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private ViewPager mViewPager;
     private List<Fragment> mFragmentList;
     private MyFragmentPagerAdapter adapter;
+    private BottomBar bottomBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,33 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
 
         initViewPager();
+        initialBottomView();
+    }
 
+    private void initialBottomView() {
+        bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                switch (tabId){
+                    case R.id.bottom_message:
+                        mViewPager.setCurrentItem(0);
+                        break;
+                    case R.id.bottom_notice:
+                        mViewPager.setCurrentItem(1);
+                        break;
+                    case R.id.bottom_work:
+                        mViewPager.setCurrentItem(2);
+                        break;
+                    case R.id.bottom_contact:
+                        mViewPager.setCurrentItem(3);
+                        break;
+                    case R.id.bottom_user:
+                        mViewPager.setCurrentItem(4);
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -120,6 +152,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     public void onPageScrollStateChanged(int state) {
         //state的状态有三个，0表示什么都没做，1正在滑动，2滑动完毕
         if (state == 2) {
+            bottomBar.selectTabAtPosition(mViewPager.getCurrentItem());
             switch (mViewPager.getCurrentItem()) {
                 case 0:
                     selected();
