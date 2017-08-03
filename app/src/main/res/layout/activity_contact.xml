@@ -9,7 +9,7 @@
     <include layout="@layout/toolbar" />
 
     <android.support.v7.widget.SearchView
-        android:id="@+id/sv_personal_contact"
+        android:id="@+id/sv_contact"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
@@ -26,7 +26,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_personal_contact"
+            android:id="@+id/rv_contact"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <!-- 这个是浮动的提示 ，配合字母栏实现放大浮动提示滑动到哪个字母-->
@@ -36,10 +36,10 @@
         <!--app:sidebarTextSize 字母尺寸-->
 
         <com.bigkoo.quicksidebar.QuickSideBarTipsView
-            android:id="@+id/qsbtv_personal"
+            android:id="@+id/qsbtv"
             android:layout_width="@dimen/height_quicksidebartips"
             android:layout_height="match_parent"
-            android:layout_toLeftOf="@+id/qsbv_personal"
+            android:layout_toLeftOf="@+id/qsbv"
             app:sidebarBackgroundColor="@color/colorPrimary"
             app:sidebarTextColor="@android:color/white"
             app:sidebarTextSize="@dimen/textSize_quicksidebartips"/>
@@ -51,7 +51,7 @@
         <!--app:sidebarTextSize 正常状态字母尺寸-->
         <!--app:sidebarTextSizeChoose 选中字母尺寸-->
         <com.bigkoo.quicksidebar.QuickSideBarView
-            android:id="@id/qsbv_personal"
+            android:id="@id/qsbv"
             android:layout_width="20dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"

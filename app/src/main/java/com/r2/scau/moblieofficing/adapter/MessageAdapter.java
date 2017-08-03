@@ -17,18 +17,15 @@ import android.widget.TextView;
 
 import com.daimajia.swipe.SwipeLayout;
 import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
-import com.r2.scau.moblieofficing.OnRecyclerViewOnClickListener;
+import com.r2.scau.moblieofficing.listener.OnRecyclerViewOnClickListener;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.sqk.emojirelease.EmojiUtil;
 
-import org.litepal.crud.DataSupport;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Handler;
 
 
 /**
