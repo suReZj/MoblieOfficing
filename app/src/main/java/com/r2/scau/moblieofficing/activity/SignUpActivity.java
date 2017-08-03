@@ -1,10 +1,14 @@
 package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,11 +16,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.retrofit.ISignBiz;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
+import com.r2.scau.moblieofficing.widge.CustomVideoView;
 
 import java.util.List;
 
@@ -27,7 +34,7 @@ import retrofit2.Retrofit;
 
 public class SignUpActivity extends BaseActivity {
 
-    private TextView loginTV;
+
     private Button signUpBtn;
     private Handler mHandler;
     private EditText nameET;
@@ -40,9 +47,15 @@ public class SignUpActivity extends BaseActivity {
     private ImageView verCodeImageView;
     public static final int VERCODE = 1;
 
-
+    //创建播放视频的控件对象
+    private CustomVideoView videoview;
     @Override
     public void initView() {
+        //取消标题
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //取消状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up);
 
         mHandler = new Handler() {
@@ -62,8 +75,20 @@ public class SignUpActivity extends BaseActivity {
                 }
             }
         };
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoview);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoview.start();
+            }
+        });
 
-        loginTV = (TextView) findViewById(R.id.link_login);
         signUpBtn = (Button) findViewById(R.id.btn_sign_up);
         verCodeET = (EditText) findViewById(R.id.input_ver_code);
         nameET = (EditText) findViewById(R.id.input_name_sign_up);
@@ -83,7 +108,6 @@ public class SignUpActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        loginTV.setOnClickListener(this);
         signUpBtn.setOnClickListener(this);
     }
 
@@ -93,7 +117,7 @@ public class SignUpActivity extends BaseActivity {
         verCodeKey = MathUtil.getMD5(verCodeKey);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/open/")
+                .baseUrl(Contants.SERVER_BASE_URL+"open/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.getVerCode(verCodeKey);
@@ -128,7 +152,7 @@ public class SignUpActivity extends BaseActivity {
         String password = passwordET.getText().toString();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/u/")
+                .baseUrl(Contants.SERVER_BASE_URL + "u/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.signUp(name, phone, password, verCode, verCodeKey);
@@ -171,13 +195,36 @@ public class SignUpActivity extends BaseActivity {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.link_login:
-                Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
-                startActivity(intent);
-                break;
+
             case R.id.btn_sign_up:
                 signUp();
                 break;
         }
+    }
+
+    //返回重启加载
+    @Override
+    protected void onRestart() {
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoview);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoview.start();
+            }
+        });
+        super.onRestart();
+    }
+
+    //防止锁屏或者切出的时候，音乐在播放
+    @Override
+    protected void onStop() {
+        videoview.stopPlayback();
+        super.onStop();
     }
 }

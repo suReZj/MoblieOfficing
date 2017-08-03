@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonFriend;
@@ -109,7 +110,7 @@ public class LoginActivity extends BaseActivity {
         password = user + "#" + password;
         password = MathUtil.getMD5(password);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/u/")
+                .baseUrl(Contants.SERVER_BASE_URL + "u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
         Call<ResponseBody> call = loginBiz.login(user, password, true);
@@ -246,7 +247,19 @@ public class LoginActivity extends BaseActivity {
     //返回重启加载
     @Override
     protected void onRestart() {
-        initView();
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoview);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoview.start();
+            }
+        });
         super.onRestart();
     }
 
