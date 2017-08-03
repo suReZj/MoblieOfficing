@@ -16,7 +16,7 @@ import android.widget.Toast;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.FMUploadSelectFileAdapter;
 import com.r2.scau.moblieofficing.untils.Contacts;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 
 import java.io.File;
@@ -28,11 +28,11 @@ import java.util.Stack;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
 /**
  * Created by EdwinCheng on 2017/8/1.
@@ -55,6 +55,7 @@ public class UploadSelectFileActivity extends BaseActivity{
     private Toolbar mtoolbar;
     private TextView titltTV;
 
+    private OkHttpClient okHttpClient;
     private Bundle bundle;
     private Handler handler;
     private Message message;
@@ -84,6 +85,7 @@ public class UploadSelectFileActivity extends BaseActivity{
 
     @Override
     protected void initData() {
+        okHttpClient = new OkHttpClient();
         if (uploadFilelist == null){
             bundle = new Bundle();
             uploadFilelist = new ArrayList<>();
@@ -165,13 +167,13 @@ public class UploadSelectFileActivity extends BaseActivity{
                 .addFormDataPart("path",remotePath)
                 .addFormDataPart("fileName",uploadFile.getName())
                 .addFormDataPart("userPhone","123456789010")
-                .addFormDataPart("file",uploadFile.getName(),RequestBody.create(null,uploadFile));
+                .addFormDataPart("file",uploadFile.getName(), RequestBody.create(null,uploadFile));
 
         RequestBody requestBody = builder.build();
 
         Request request = new Request.Builder()
                 .url(Contacts.computer_ip + Contacts.file_Server + Contacts.fileUpload)
-                .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .post(requestBody)
                 .build();
 

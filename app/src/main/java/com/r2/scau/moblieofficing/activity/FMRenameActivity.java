@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.untils.Contacts;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 
 import java.io.IOException;
@@ -22,10 +22,9 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
 /**
  * Created by EdwinCheng on 2017/7/26.
@@ -44,11 +43,11 @@ public class FMRenameActivity extends BaseActivity {
     private String renameType;
     private String oldFileName;
     private String newFileName;
-
     private String basePath;
     private String oldPath;
     private String newPath;
 
+    private OkHttpClient okHttpClient;
     private FormBody formBody;
     private Request request;
     private Message message;
@@ -81,6 +80,7 @@ public class FMRenameActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        okHttpClient = new OkHttpClient();
         mtoolbar.setTitle("");
         message = handler.obtainMessage();
         bundle = getIntent().getExtras();
@@ -129,7 +129,7 @@ public class FMRenameActivity extends BaseActivity {
                                 .add("userPhone", "123456789010")
                                 .build();
                         request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.fileRename)
-                                .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                                .addHeader("cookie", OkHttpUntil.loginSessionID)
                                 .post(formBody)
                                 .build();
                         okHttpClient.newCall(request).enqueue(new Callback() {
@@ -159,7 +159,7 @@ public class FMRenameActivity extends BaseActivity {
                                 .build();
                         request = new Request.Builder()
                                 .url(Contacts.computer_ip + Contacts.file_Server + Contacts.createDir)
-                                .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                                .addHeader("cookie", OkHttpUntil.loginSessionID)
                                 .post(formBody)
                                 .build();
                         okHttpClient.newCall(request).enqueue(new Callback() {

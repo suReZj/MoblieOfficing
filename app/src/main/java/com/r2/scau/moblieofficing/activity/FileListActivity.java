@@ -22,7 +22,7 @@ import com.r2.scau.moblieofficing.bean.FileBean;
 import com.r2.scau.moblieofficing.bean.GsonFileJsonBean;
 import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.DateUtils;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 
 import java.io.IOException;
@@ -33,10 +33,11 @@ import java.util.Stack;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
+import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
 
 /**
  * Created by EdwinCheng on 2017/7/24.
@@ -52,7 +53,7 @@ public class FileListActivity extends BaseActivity {
     private Button filelist_editBtn, filelist_newfolderBtn;
     private Toolbar mtoolbar;
     private TextView titleTV;
-
+    private OkHttpClient okhttpClient;
     private GsonFileJsonBean fileJson;
     private List<FileBean> fileList;
     private String rootPath;
@@ -105,6 +106,7 @@ public class FileListActivity extends BaseActivity {
         mtoolbar.setTitle("");
         FileListActivity.this.setSupportActionBar(mtoolbar);
         FileListActivity.this.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        okhttpClient = new OkHttpClient();
 
         if (fileJson == null) {
             initState = true;
@@ -202,7 +204,7 @@ public class FileListActivity extends BaseActivity {
                     .add("userPhone", "123456789010")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.filedownload)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }else {
@@ -211,7 +213,7 @@ public class FileListActivity extends BaseActivity {
                     .add("groupId", "123456789010")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.downLoadGroupFile)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }
@@ -321,7 +323,7 @@ public class FileListActivity extends BaseActivity {
                     .add("userPhone", "123456789010")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.getDir)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }else {
@@ -329,7 +331,7 @@ public class FileListActivity extends BaseActivity {
                     .add("groupId", "123456789010")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.getGroupDir)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }

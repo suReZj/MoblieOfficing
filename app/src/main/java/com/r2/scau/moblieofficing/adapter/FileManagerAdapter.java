@@ -24,7 +24,7 @@ import com.r2.scau.moblieofficing.activity.OnItemClickLitener;
 import com.r2.scau.moblieofficing.bean.FileBean;
 import com.r2.scau.moblieofficing.bean.GsonFileJsonBean;
 import com.r2.scau.moblieofficing.untils.Contacts;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.widge.BottomView;
 
 import java.io.IOException;
@@ -35,10 +35,10 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
 
 /**
  * Created by EdwinCheng on 2017/7/24.
@@ -62,6 +62,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Bundle bundle;
     private String fileSelectType;
 
+    private OkHttpClient okHttpClient;
     private FormBody formBody;
     private Request request;
     private Message message;
@@ -124,6 +125,8 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.fileSelectType = fileSelectType;
         this.currentDirPath = currentDirPath;
         gson = new Gson();
+        okHttpClient = new OkHttpClient();
+
     }
 
     @Override
@@ -259,7 +262,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     .add("userPhone", "123456789010")
                     .build();
             request = new Request.Builder().url(posturl)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }else if(fileSelectType.equals("sharedfile")){
@@ -268,7 +271,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     .add("groupId","111")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.deleteGroupFile)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }
@@ -321,7 +324,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     .add("userPhone", "123456789010")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.getDir)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }else {
@@ -329,7 +332,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     .add("groupId", "123456789010")
                     .build();
             request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.getGroupDir)
-                    .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
         }
