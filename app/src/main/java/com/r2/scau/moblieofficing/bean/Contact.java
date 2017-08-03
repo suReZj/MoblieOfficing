@@ -10,20 +10,23 @@ public class Contact implements Comparable<Contact> {
     private String name;
     private String phone;
     private String firstLetter;
+    private boolean isSelect;
 
 
     public Contact(){
-
+        isSelect = false;
     }
     public Contact(String name, String phone) {
         this.name = name;
         this.phone = phone;
+        isSelect = false;
     }
 
     public Contact(String name, String phone, String firstLetter) {
         this.name = name;
         this.phone = phone;
         this.firstLetter = firstLetter;
+        isSelect = false;
     }
 
     public String getName() {
@@ -50,6 +53,13 @@ public class Contact implements Comparable<Contact> {
         this.firstLetter = firstLetter;
     }
 
+    public boolean isSelect() {
+        return isSelect;
+    }
+
+    public void setSelect(boolean select) {
+        isSelect = select;
+    }
 
     @Override
     public int compareTo(@NonNull Contact contact) {

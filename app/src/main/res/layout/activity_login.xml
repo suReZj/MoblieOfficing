@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/colorLightBlue">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,13 +27,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/colorWhite">
 
             <EditText
                 android:id="@+id/input_user_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_phone"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
                 android:inputType="textEmailAddress"/>
         </android.support.design.widget.TextInputLayout>
 
@@ -41,13 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            android:textColorHint="@color/colorWhite">
 
             <EditText
                 android:id="@+id/input_password_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_password"
+                android:textColor="@color/colorWhite"
+                android:textColorHint="@color/colorWhite"
                 android:inputType="textPassword"/>
         </android.support.design.widget.TextInputLayout>
 

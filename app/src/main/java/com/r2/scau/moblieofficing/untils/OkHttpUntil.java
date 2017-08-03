@@ -20,34 +20,49 @@ import okhttp3.Response;
 public class OkHttpUntil {
 
     public static String loginSessionID = null;
-    public static OkHttpClient okHttpClient = new OkHttpClient.Builder()
-            .cookieJar(new CookieJar() {
-                private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
 
-                @Override
-                public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-                    cookieStore.put(url, cookies);
+    public static OkHttpClient okHttpClient = null;
+
+    public static OkHttpClient getInstance() {
+        if (okHttpClient == null){
+            synchronized (OkHttpUntil.class){
+                if (okHttpClient == null){
+                    CreateOkHttpClient();
                 }
-
-                @Override
-                public List<Cookie> loadForRequest(HttpUrl url) {
-                    List<Cookie> cookies = cookieStore.get(url);
-                    return cookies != null ? cookies : new ArrayList<Cookie>();
-                }
-            })
-            .addInterceptor(new Interceptor() {
-                @Override
-                public Response intercept(Chain chain) throws IOException {
-                    Request original = chain.request();
-
-                    // Request customization: add request headers
-                    Request.Builder requestBuilder = original.newBuilder()
-                            .addHeader("cookie", loginSessionID);
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                }
-            })
-            .build();
+            }
+        }
+        return okHttpClient;
+    }
 
 
+    public static void CreateOkHttpClient(){
+        okHttpClient = new OkHttpClient.Builder()
+                .cookieJar(new CookieJar() {
+                    private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
+
+                    @Override
+                    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+                        cookieStore.put(url, cookies);
+                    }
+
+                    @Override
+                    public List<Cookie> loadForRequest(HttpUrl url) {
+                        List<Cookie> cookies = cookieStore.get(url);
+                        return cookies != null ? cookies : new ArrayList<Cookie>();
+                    }
+                })
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        Request original = chain.request();
+
+                        // Request customization: add request headers
+                        Request.Builder requestBuilder = original.newBuilder()
+                                .addHeader("cookie", loginSessionID);
+                        Request request = requestBuilder.build();
+                        return chain.proceed(request);
+                    }
+                })
+                .build();
+    }
 }

@@ -39,6 +39,10 @@
         </activity>
         <activity android:name=".activity.SearchPhoneActivity">
         </activity>
+        <activity android:name=".activity.EditGroupActivity">
+        </activity>
+        <activity android:name=".activity.SelectMemberActivity">
+        </activity>
     </application>
 
 </manifest>
