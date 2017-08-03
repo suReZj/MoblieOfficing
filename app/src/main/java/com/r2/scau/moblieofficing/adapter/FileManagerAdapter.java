@@ -22,7 +22,7 @@ import com.r2.scau.moblieofficing.activity.FMRenameActivity;
 import com.r2.scau.moblieofficing.activity.FileListActivity;
 import com.r2.scau.moblieofficing.activity.OnItemClickLitener;
 import com.r2.scau.moblieofficing.bean.FileBean;
-import com.r2.scau.moblieofficing.bean.GsonFileJsonBean;
+import com.r2.scau.moblieofficing.gson.GsonFileJsonBean;
 import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.widge.BottomView;

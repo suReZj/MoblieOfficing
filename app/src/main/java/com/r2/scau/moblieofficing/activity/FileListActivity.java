@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.FileManagerAdapter;
 import com.r2.scau.moblieofficing.bean.FileBean;
-import com.r2.scau.moblieofficing.bean.GsonFileJsonBean;
+import com.r2.scau.moblieofficing.gson.GsonFileJsonBean;
 import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.DateUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
