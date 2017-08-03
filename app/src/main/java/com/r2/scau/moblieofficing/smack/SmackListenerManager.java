@@ -15,24 +15,24 @@ public class SmackListenerManager {
      * 单聊消息监听管理器
      */
     private SmackChatManagerListener mChatManagerListener;
-//    /**
-//     * 群聊邀请监听
-//     */
-//    private MultiChatInvitationListener mInvitationListener;
-//    /**
-//     * 群聊消息监听
-//     */
-//    private MultiChatMessageListener mMultiChatMessageListener;
-//    /**
-//     * 群聊信息
-//     */
+    /**
+     * 群聊邀请监听
+     */
+    private MultiChatInvitationListener mInvitationListener;
+    /**
+     * 群聊消息监听
+     */
+    private MultiChatMessageListener mMultiChatMessageListener;
+    /**
+     * 群聊信息
+     */
     private HashMap<String, MultiUserChat> mMultiUserChatHashMap = new HashMap<>();
 
     private SmackListenerManager() {
 
         mChatManagerListener = new SmackChatManagerListener();
-//        mInvitationListener = new MultiChatInvitationListener();
-//        mMultiChatMessageListener = new MultiChatMessageListener();
+        mInvitationListener = new MultiChatInvitationListener();
+        mMultiChatMessageListener = new MultiChatMessageListener();
     }
 
     public static SmackListenerManager getInstance() {
@@ -47,11 +47,11 @@ public class SmackListenerManager {
         return sSmackListenerManager;
     }
 
-    public static void addGlobalListener() {
+    public static void addGlobalListener() throws Exception {
 
         addMessageListener();
-//        addInvitationListener();
-//        addAllMultiChatMessageListener();
+        addInvitationListener();
+        addAllMultiChatMessageListener();
     }
 
     /**
@@ -62,36 +62,36 @@ public class SmackListenerManager {
         SmackManager.getInstance().getChatManager().addChatListener(getInstance().mChatManagerListener);
     }
 
-//    /**
-//     * 添加群聊邀请监听
-//     */
-//    static void addInvitationListener() {
-//
-//        SmackManager.getInstance().getMultiUserChatManager().addInvitationListener(getInstance().mInvitationListener);
-//    }
-//
-//    /**
-//     * 为所有已存在的群添加消息监听
-//     */
-//    static void addAllMultiChatMessageListener() {
-//
-//        //因Smack+openfire群聊在用户退出登陆后，群聊无法保存已加入的用户信息，所以手动添加该群中的用户
-//        SmackMultiChatManager.bindJoinMultiChat();
-//    }
-//
-//    /**
-//     * 为指定群聊添加消息监听
-//     *
-//     * @param multiUserChat
-//     */
-//    public static void addMultiChatMessageListener(MultiUserChat multiUserChat) {
-//
-//        if(multiUserChat == null) {
-//            return;
-//        }
-//        getInstance().mMultiUserChatHashMap.put(multiUserChat.getRoom(), multiUserChat);
-//        multiUserChat.addMessageListener(getInstance().mMultiChatMessageListener);
-//    }
+    /**
+     * 添加群聊邀请监听
+     */
+    static void addInvitationListener() {
+
+        SmackManager.getInstance().getMultiUserChatManager().addInvitationListener(getInstance().mInvitationListener);
+    }
+
+    /**
+     * 为所有已存在的群添加消息监听
+     */
+    static void addAllMultiChatMessageListener() throws Exception {
+
+        //因Smack+openfire群聊在用户退出登陆后，群聊无法保存已加入的用户信息，所以手动添加该群中的用户
+        SmackMultiChatManager.bindJoinMultiChat();
+    }
+
+    /**
+     * 为指定群聊添加消息监听
+     *
+     * @param multiUserChat
+     */
+    public static void addMultiChatMessageListener(MultiUserChat multiUserChat) {
+
+        if(multiUserChat == null) {
+            return;
+        }
+        getInstance().mMultiUserChatHashMap.put(multiUserChat.getRoom(), multiUserChat);
+        multiUserChat.addMessageListener(getInstance().mMultiChatMessageListener);
+    }
 
     public void destroy() {
 

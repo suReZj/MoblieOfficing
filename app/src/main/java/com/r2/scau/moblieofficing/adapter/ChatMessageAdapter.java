@@ -1,14 +1,21 @@
 package com.r2.scau.moblieofficing.adapter;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
 import com.r2.scau.moblieofficing.R;
@@ -48,14 +55,14 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             super(view);
             lTextView = (TextView) view.findViewById(R.id.left_chat_msg);
             lIcon = (ImageView) view.findViewById(R.id.left_chat_icon);
-            rTextView=(TextView)view.findViewById(R.id.right_chat_msg);
+            rTextView = (TextView) view.findViewById(R.id.right_chat_msg);
             rIcon = (ImageView) view.findViewById(R.id.right_chat_icon);
-            lUserName=(TextView)view.findViewById(R.id.left_chat_username);
-            rUserName=(TextView)view.findViewById(R.id.right_chat_username);
-            timeText=(TextView)view.findViewById(R.id.chat_msg_time);
+            lUserName = (TextView) view.findViewById(R.id.left_chat_username);
+            rUserName = (TextView) view.findViewById(R.id.right_chat_username);
+            timeText = (TextView) view.findViewById(R.id.chat_msg_time);
             recyclerView = (RecyclerView) view.findViewById(R.id.chat_recycler);
-            rightLayout=(RelativeLayout)view.findViewById(R.id.right_chat_user_layout);
-            leftLayout=(RelativeLayout)view.findViewById(R.id.left_chat_user_layout);
+            rightLayout = (RelativeLayout) view.findViewById(R.id.right_chat_user_layout);
+            leftLayout = (RelativeLayout) view.findViewById(R.id.left_chat_user_layout);
         }
     }
 
@@ -68,9 +75,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     }
 
     @Override
-    public void onBindViewHolder(chatHolder holder, int position) {
+    public void onBindViewHolder(final chatHolder holder, int position) {
         ChatMessage chat_message_bean = chatMessageList.get(position);
-        if (chat_message_bean.isMeSend()){
+        if (chat_message_bean.isMeSend()) {
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
             holder.rUserName.setText(chat_message_bean.getMeNickname());
@@ -85,11 +92,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else {
+        } else {
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
             holder.lUserName.setText(chat_message_bean.getFriendNickname());
-            Log.e("nickname",chat_message_bean.getFriendNickname());
+//            Log.e("nickname",chat_message_bean.getFriendNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
 
 
@@ -102,6 +109,73 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                 e.printStackTrace();
             }
         }
+        holder.rTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "aaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+//                holder.rTextView.showContextMenu();
+                //        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                ActionMode.Callback actionMode=new ActionMode.Callback(){
+                    @Override
+                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                        MenuInflater menuInflater = mode.getMenuInflater();
+                        menuInflater.inflate(R.menu.message_longclick_menu, menu);
+                        return true;//返回false则不会显示弹窗
+                    }
+
+                    @Override
+                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                        return false;
+                    }
+
+                    @Override
+                    public void onDestroyActionMode(ActionMode mode) {
+
+                    }
+                };
+//                holder.rTextView.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+//                    @Override
+//                    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+//                        MenuInflater menuInflater = mode.getMenuInflater();
+//                        menuInflater.inflate(R.menu.message_longclick_menu, menu);
+//                        return true;//返回false则不会显示弹窗
+//                    }
+//
+//                    @Override
+//                    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public void onDestroyActionMode(ActionMode mode) {
+//
+//                    }
+//                });
+//        }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    holder.rTextView.startActionMode(actionMode,ActionMode.TYPE_FLOATING);
+                }
+                return true;
+            }
+        });
+
+        holder.lTextView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Toast.makeText(mContext, "aaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
     }
 
     @Override
@@ -113,8 +187,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     public void add(ChatMessage item) {
 
-        if(chatMessageList == null) {
-            chatMessageList = new ArrayList<>(1);
+        if (chatMessageList == null) {
+            chatMessageList = new ArrayList<>();
         }
         int size = getItemCount();
         chatMessageList.add(item);

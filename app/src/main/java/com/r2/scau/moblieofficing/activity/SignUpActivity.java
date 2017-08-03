@@ -101,7 +101,7 @@ public class SignUpActivity extends BaseActivity {
 
 
         //step 3: 创建请求
-        final Request request = new Request.Builder().url("http://192.168.13.23:8080/open/getGifCode.shtml")
+        final Request request = new Request.Builder().url("http://192.168.13.57:8089/open/getGifCode.shtml")
                 .post(formBody)
                 .build();
 
@@ -144,7 +144,7 @@ public class SignUpActivity extends BaseActivity {
 
 
         //step 3: 创建请求
-        final Request request = new Request.Builder().url("http://192.168.13.23:8080/u/mobileRegister.shtml")
+        final Request request = new Request.Builder().url("http://192.168.13.57:8089/u/mobileRegister.shtml")
                 .post(formBody)
                 .build();
 
