@@ -53,9 +53,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/filelist_filename"
             android:layout_toRightOf="@id/filelist_filesize"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="6dp"
-            android:text="201721312"/>
+            android:textSize="10sp"
+            android:text="2017年07月28日11:34"/>
 
     </RelativeLayout>
 </RelativeLayout>
