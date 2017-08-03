@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.r2.scau.moblieofficing.activity.AddFriendActivity">
+
+    <include layout="@layout/toolbar" />
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/sv_search_friend"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftIconRes="@mipmap/ic_search"
+        app:sLeftTextString="@string/search_by_phone"
+        app:sUseRipple="true"
+        app:sLineShow="both"
+        app:sLineColor="@color/colorGray">
+    </com.allen.library.SuperTextView>
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/sv_add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftIconRes="@mipmap/ic_my_contact"
+        app:sLeftTextString="@string/add_by_contact"
+        app:sUseRipple="true"
+        app:sLineShow="bottom"
+        app:sLineColor="@color/colorGray">
+    </com.allen.library.SuperTextView>
+</LinearLayout>
