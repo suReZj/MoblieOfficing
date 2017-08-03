@@ -6,5 +6,7 @@
         <mapping class="com.r2.scau.moblieofficing.bean.ChatRecord"></mapping>
         <mapping class="com.r2.scau.moblieofficing.bean.ChatUser"></mapping>
         <mapping class="com.r2.scau.moblieofficing.bean.ChatMessage"></mapping>
+        <mapping class="com.r2.scau.moblieofficing.bean.MultiChatRoom"></mapping>
+        <mapping class="com.r2.scau.moblieofficing.bean.MultiChatMessage"></mapping>
     </list>
 </litepal>
