@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.r2.scau.moblieofficing.R;
@@ -19,11 +20,14 @@ import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
+import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.jivesoftware.smackx.filetransfer.FileTransfer.Status.initial;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
 
@@ -32,10 +36,11 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private TextView mWorkTV;
     private TextView mContactTV;
     private TextView mUserInfoTV;
-    private ViewPager mViewPager;
+    private NoScrollViewPager mViewPager;
     private List<Fragment> mFragmentList;
     private MyFragmentPagerAdapter adapter;
     private BottomBar bottomBar;
+    private long backLastPressedTimestamp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +119,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mFragmentList.add(mContactFragment);
         mFragmentList.add(mUserInfoFragment);
 
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mViewPager = (NoScrollViewPager) findViewById(R.id.view_pager);
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(0);
@@ -245,11 +250,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
 
     }
-
     @Override
     public void onBackPressed() {
-        destoryAllActivity();
-        super.onBackPressed();
+        if (System.currentTimeMillis() - backLastPressedTimestamp > 2 * 1000) {
+            Toast.makeText(MainActivity.this, R.string.press_back_again_to_exit, Toast.LENGTH_SHORT).show();
+            backLastPressedTimestamp = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
     }
-
 }

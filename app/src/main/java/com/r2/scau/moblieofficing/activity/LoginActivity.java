@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonFriend;
@@ -25,6 +26,7 @@ import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.CustomVideoView;
 import com.r2.scau.moblieofficing.widge.popview.PopField;
@@ -74,7 +76,6 @@ public class LoginActivity extends BaseActivity {
         passwordET = (EditText) findViewById(R.id.input_password_login);
         loginBtn = (Button) findViewById(R.id.btn_login);
         sigUpTV = (TextView) findViewById(R.id.link_signup);
-        passwordET = (EditText) findViewById(R.id.input_password_login);
         //加载视频资源控件
         videoview = (CustomVideoView) findViewById(R.id.videoview);
         //设置播放加载路径
@@ -94,6 +95,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        userET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_USER_PHONE_KEY,""));
+        passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,""));
 
     }
 
@@ -105,15 +108,15 @@ public class LoginActivity extends BaseActivity {
 
 
     public void login() {
-        String user = userET.getText().toString();
-        String password = passwordET.getText().toString();
-        password = user + "#" + password;
-        password = MathUtil.getMD5(password);
+        final String user = userET.getText().toString();
+        final String password = passwordET.getText().toString();
+        String passwordMD5 = user + "#" + password;
+        passwordMD5 = MathUtil.getMD5(passwordMD5);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/u/")
+                .baseUrl(Contants.SERVER_BASE_URL + "u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
-        Call<ResponseBody> call = loginBiz.login(user, password, true);
+        Call<ResponseBody> call = loginBiz.login(user, passwordMD5, true);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -121,6 +124,8 @@ public class LoginActivity extends BaseActivity {
                     String str = response.body().string();
                     Log.e("login", str);
                     if (str.contains("登陆成功")) {
+                        SharedPrefUtil.getInstance().put(Contants.SP_LOGIN_USER_PHONE_KEY, user);
+                        SharedPrefUtil.getInstance().put(Contants.SP_LOGIN_PASSWORD_KEY, password);
                         Headers headers = response.headers();
                         Log.d("info_headers", "header " + headers);
                         List<String> cookies = headers.values("Set-Cookie");
@@ -181,7 +186,7 @@ public class LoginActivity extends BaseActivity {
 
     public void getUserInfo(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/group/")
+                .baseUrl(Contants.SERVER_BASE_URL + "group/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -209,7 +214,7 @@ public class LoginActivity extends BaseActivity {
 
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/user/")
+                .baseUrl(Contants.SERVER_BASE_URL + "/user/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -236,6 +241,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
 
             @Override
@@ -243,6 +249,7 @@ public class LoginActivity extends BaseActivity {
                 Log.e("getFriend", "fail");
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -277,7 +284,19 @@ public class LoginActivity extends BaseActivity {
     //返回重启加载
     @Override
     protected void onRestart() {
-        initView();
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoview);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoview.start();
+            }
+        });
         super.onRestart();
     }
 
