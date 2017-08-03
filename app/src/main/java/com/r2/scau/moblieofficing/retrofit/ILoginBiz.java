@@ -1,5 +1,7 @@
 package com.r2.scau.moblieofficing.retrofit;
 
+import com.r2.scau.moblieofficing.gson.GsonUsers;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -17,5 +19,11 @@ public interface ILoginBiz {
             @Field("userPhone") String userPhone,
             @Field("password") String password,
             @Field("isRememberMe") Boolean isRememberMe
+    );
+
+    @POST("getUserInfo.shtml")
+    @FormUrlEncoded
+    Call<GsonUsers> getUserInfo(
+            @Field("userPhone") String userPhone
     );
 }
