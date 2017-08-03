@@ -1,5 +1,6 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -87,6 +88,10 @@ public class GroupActivity extends BaseActivity {
             case android.R.id.home:
                 finish();
                 break;
+
+            case R.id.menu_group:
+                Intent intent = new Intent(GroupActivity.this, EditGroupActivity.class);
+                startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

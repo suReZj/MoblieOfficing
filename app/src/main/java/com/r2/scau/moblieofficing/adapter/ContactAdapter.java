@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.R;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -28,8 +29,8 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
         @Override
         public void onBindViewHolder(ContactViewHolder holder, int position) {
             Log.e("adapterItem", getItem(position).getName());
-            holder.name.setText(getItem(position).getName());
-            holder.phone.setText(getItem(position).getPhone());
+            holder.contactST.setLeftTopString(getItem(position).getName());
+            holder.contactST.setLeftBottomString(getItem(position).getPhone());
         }
 
         @Override
@@ -53,12 +54,10 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
         }
 
         class ContactViewHolder extends RecyclerView.ViewHolder{
-            TextView name;
-            TextView phone;
+            SuperTextView contactST;
             public ContactViewHolder(View view){
                 super(view);
-                name = (TextView) view.findViewById(R.id.tv_contact_name);
-                phone = (TextView) view.findViewById(R.id.tv_contact_phone);
+                contactST = (SuperTextView) view.findViewById(R.id.st_contact);
             }
 
         }

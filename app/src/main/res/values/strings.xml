@@ -38,7 +38,7 @@
     <string name="my">我的</string>
 
     <!--contact 使用字段 -->
-    <string name="friend">好友</string>
+    <string name="gsonFriends">好友</string>
     <string name="add_friend">添加好友</string>
     <string name="group">我的群组</string>
     <string name="create_group">创建群</string>
@@ -46,6 +46,8 @@
     <string name="public_contact">公共通讯录</string>
     <string name="search_by_phone">通过手机号搜索</string>
     <string name="add_by_contact">通过手机通讯录添加</string>
+    <string name="input_group_name">输入群名称</string>
+    <string name="commit">提交</string>
 
     <!--notice 使用字段 -->
     <string name="send_notice">发公告</string>

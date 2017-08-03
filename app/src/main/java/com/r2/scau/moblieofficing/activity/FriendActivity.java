@@ -21,6 +21,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ContactAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonFriend;
+import com.r2.scau.moblieofficing.gson.GsonFriends;
 import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
@@ -48,6 +49,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
     private HashMap<String, Integer> letters = new HashMap<>();
     private QuickSideBarView mQuickSideBarView;
     private QuickSideBarTipsView mQuickSideBarTipsView;
+    public static final int GET_FRIENDS = 1;
 
 
     @Override
@@ -58,7 +60,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case 1:
+                    case GET_FRIENDS:
                         List<Contact> contacts = new ArrayList<Contact>();
                         contacts = (List<Contact>) msg.obj;
                         ArrayList<String> customLetters = new ArrayList<>();
@@ -73,9 +75,8 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
                         }
                         mQuickSideBarView.setLetters(customLetters);
                         //mQuickSideBarView.invalidate();
-
                         adapter.addAll(contacts);
-                        adapter.notifyDataSetChanged();
+                        UserUntil.friendList = contacts;
                         break;
                 }
             }
@@ -123,36 +124,38 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://192.168.13.57:8089/user/")
-                .callFactory(OkHttpUntil.okHttpClient)
+                .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         IFriendBiz iFriendBiz = retrofit.create(IFriendBiz.class);
-        Call<GsonFriend> call = iFriendBiz.getFriend(UserUntil.phone);
-        call.enqueue(new Callback<GsonFriend>() {
+        Call<GsonFriends> call = iFriendBiz.getFriend("sure1");
+        call.enqueue(new Callback<GsonFriends>() {
             @Override
-            public void onResponse(Call<GsonFriend> call, Response<GsonFriend> response) {
-                GsonFriend gsonFriend = response.body();
-                if (gsonFriend.getCode() == 200) {
-                    List<String> friendList = gsonFriend.getListFriendUserphone();
+            public void onResponse(Call<GsonFriends> call, Response<GsonFriends> response) {
+                GsonFriends gsonFriends = response.body();
+                if (gsonFriends.getCode() == 200) {
+                    List<GsonFriend> friendList = gsonFriends.getListFriends();
                     ArrayList<Contact> contacts = new ArrayList<Contact>();
-                    for (String str : friendList) {
+                    for (GsonFriend myFriend : friendList) {
                         Contact contact = new Contact();
-                        contact.setPhone(str);
-                        contact.setName(str);
-                        contact.setFirstLetter(getSortKey(str));
+                        String name = myFriend.getNickname();
+                        contact.setPhone(myFriend.getUserPhone());
+                        contact.setName(name);
+                        contact.setFirstLetter(getSortKey(name));
                         contacts.add(contact);
                     }
                     Message msg = new Message();
-                    msg.what = 1;
+                    msg.what = GET_FRIENDS;
                     msg.obj = contacts;
                     handler.sendMessage(msg);
+                    Log.e("getFriend", "success");
                 } else {
-                    Log.e("getFriend", "fail");
+                    Log.e("getFriend", gsonFriends.getMsg());
                 }
             }
 
             @Override
-            public void onFailure(Call<GsonFriend> call, Throwable t) {
+            public void onFailure(Call<GsonFriends> call, Throwable t) {
                 Log.e("getFriend", "fail");
             }
         });
@@ -160,7 +163,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
 
     @Override
     protected void initListener() {
-
+        mQuickSideBarView.setOnQuickSideBarTouchListener(this);
     }
 
     @Override

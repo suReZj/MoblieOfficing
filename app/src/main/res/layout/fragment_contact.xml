@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_friend"
-        app:sLeftTextString="@string/friend"
+        app:sLeftTextString="@string/gsonFriends"
         app:sUseRipple="true"
         app:sLineShow="both"
         app:sLineColor="@color/colorGray">

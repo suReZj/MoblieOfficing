@@ -2,22 +2,18 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    >
-
+    android:layout_height="wrap_content">
 
     <com.allen.library.SuperTextView
-        android:id="@+id/st_contact"
+        android:id="@+id/st_group"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_friend"
+        app:sLeftTextString="@string/gsonFriends"
         app:sUseRipple="true"
-        app:sLineShow="both"
-        app:sLineColor="@color/colorGray">
+        >
     </com.allen.library.SuperTextView>
 
 </LinearLayout>
