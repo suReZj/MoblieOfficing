@@ -79,19 +79,19 @@ public class ChatRecord extends DataSupport implements Parcelable{
         setmMeUsername(chatMessage.getMeUsername());
         setmMeNickname(chatMessage.getMeNickname());
 
-//        if(chatMessage.isMulti()) {//群发
-//            int idx = chatMessage.getFriendUsername().indexOf(Constant.MULTI_CHAT_ADDRESS_SPLIT);
-//            String friendNickName = chatMessage.getFriendUsername().substring(0, idx);
-//            setFriendNickname(friendNickName);//群聊记录显示群聊名称
-//            setChatJid(chatMessage.getFriendUsername());
-//            setMulti(chatMessage.isMulti());
-//        } else {
+        if(chatMessage.isMulti()) {//群发
+            int idx = chatMessage.getFriendUsername().indexOf("@conference.");
+            String friendNickName = chatMessage.getFriendUsername().substring(0, idx);
+            setmFriendNickname(friendNickName);//群聊记录显示群聊名称
+            setmChatJid(chatMessage.getFriendUsername());
+            setmIsMulti(chatMessage.isMulti());
+        } else {
         setmFriendNickname(chatMessage.getFriendNickname());
         String chatJid = SmackManager.getInstance().getChatJid(chatMessage.getFriendUsername());
 //            String fileJid = SmackManager.getInstance().getFileTransferJid(chatJid);
         setmChatJid(chatJid);
 //            setFileJid(fileJid);
-//        }
+        }
 
         setmChatTime(chatMessage.getDatetime());
         setmLastMessage(chatMessage.getContent());
@@ -206,17 +206,17 @@ public class ChatRecord extends DataSupport implements Parcelable{
         mUnReadMessageCount=0;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-
-        if (obj == null) {
-            return false;
-        }
-        if (obj instanceof ChatRecord) {
-            return this.getUuid().equals(((ChatRecord) obj).getUuid());
-        }
-        return false;
-    }
+//    @Override
+//    public boolean equals(Object obj) {
+//
+//        if (obj == null) {
+//            return false;
+//        }
+//        if (obj instanceof ChatRecord) {
+//            return this.getUuid().equals(((ChatRecord) obj).getUuid());
+//        }
+//        return false;
+//    }
 
 
     public void writeToParcel(Parcel dest, int flags) {

@@ -33,6 +33,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.json.JSONObject;
 import org.litepal.crud.DataSupport;
 
@@ -61,6 +62,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     private TextView titleText;
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
+    private MultiUserChat mMultiUserChat;//多人聊天对象
 
 
     @Override
@@ -70,24 +72,25 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         SoftHideKeyBoardUtil.assistActivity(this);
 
 
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 smack = SmackManager.getInstance();
-//                smack.login("test", "test");
-                ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-                mChat = smack.createChat(chatRecord.getmChatJid());
+                ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+                if (chatRecord.ismIsMulti()) {
+                    mMultiUserChat = SmackManager.getInstance().getMultiChat(chatRecord.getmFriendUsername());
+                    SmackListenerManager.addMultiChatMessageListener(mMultiUserChat);
+                } else {
+                    mChat = smack.createChat(chatRecord.getmChatJid());
+                    try {
+                        SmackListenerManager.addGlobalListener();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }).start();
-        SmackListenerManager.addGlobalListener();
 
-
-
-        String whereClause = "test1";
-        ArrayList<ChatRecord> msgList= new ArrayList<>(DataSupport.where("mmeusername=?",whereClause).find(ChatRecord.class));
-//        Log.d("number",msgList.get(0).getmUnReadMessageCount()+"");
 
     }
 
@@ -99,7 +102,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
         toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
-        titleText=(TextView)findViewById(R.id.chat_toolbar_title);
+        titleText = (TextView) findViewById(R.id.chat_toolbar_title);
 
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.toolbar_chat_title_menu);
@@ -115,7 +118,8 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         getSupportFragmentManager().beginTransaction().add(R.id.Container, faceFragment).commit();
         getSupportFragmentManager().beginTransaction().hide(faceFragment).commit();
 
-        ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
+        ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+//        if (chatRecord)
         titleText.setText(chatRecord.getmFriendNickname());
     }
 
@@ -138,9 +142,16 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
             @Override
             public void onClick(View v) {
                 if (editText.getText().toString().length() != 0) {
-                    String text = editText.getText().toString();
-                    send(text);//发送消息
-                    editText.setText(null);
+                    ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+                    if (chatRecord.ismIsMulti()) {
+                        String text = editText.getText().toString();
+                        sendMulti(text);
+                        editText.setText(null);
+                    } else {
+                        String text = editText.getText().toString();
+                        send(text);//发送消息
+                        editText.setText(null);
+                    }
                 }
             }
         });
@@ -196,7 +207,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     protected void onStart() {
-        if(!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
         super.onStart();
@@ -211,13 +222,21 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent message) {
         Log.e("MessageEvent", "accept");
-        ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-        if(message.getChatMessage().getFriendNickname().equals(chatRecord.getmFriendNickname())){
-            adapter.add(message.getChatMessage());
-            layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+        ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+        if (!chatRecord.ismIsMulti()) {
+            if (message.getChatMessage().getFriendNickname().equals(chatRecord.getmFriendNickname())) {
+                adapter.add(message.getChatMessage());
+                layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+            }
         }
-    }
+        if (chatRecord.ismIsMulti()) {
+            if ((chatRecord.getUuid()).equals(message.getChatMessage().getUuid())) {
+                adapter.add(message.getChatMessage());
+                layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+            }
+        }
 
+    }
 
 
     @Override
@@ -276,15 +295,21 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         if (!faceFragment.isHidden()) {
             getSupportFragmentManager().beginTransaction().hide(faceFragment).commit();
         } else {
-            finish();
-            ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-            String whereClause = chatRecord.getmChatJid();
-            ArrayList msgList = new ArrayList<>(DataSupport.where("mchatjid=?", whereClause).find(ChatRecord.class));
-            chatRecord=(ChatRecord) msgList.get(0);
-            if (chatRecord.isSaved()){
-                Log.e("aaaaaaa","aaaaaaaa");
-            }else {
-                Log.e("bbbbbbb","bbbbbbbb");
+
+            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+            if (chatRecord.ismIsMulti()) {
+                String whereClause = chatRecord.getmFriendUsername();
+                ArrayList msgList = new ArrayList<>(DataSupport.where("mfriendusername=?", whereClause).find(ChatRecord.class));
+                chatRecord = (ChatRecord) msgList.get(0);
+            } else {
+                String whereClause = chatRecord.getmChatJid();
+                ArrayList msgList = new ArrayList<>(DataSupport.where("mchatjid=?", whereClause).find(ChatRecord.class));
+                chatRecord = (ChatRecord) msgList.get(0);
+            }
+            if (chatRecord.isSaved()) {
+                Log.e("aaaaaaa", "aaaaaaaa");
+            } else {
+                Log.e("bbbbbbb", "bbbbbbbb");
             }
             chatRecord.setmUnReadMessageCount();
             chatRecord.save();
@@ -294,6 +319,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 //            }else {
 //                Log.e("bbbbbbb","bbbbbbbb");
 //            }
+            finish();
         }
     }
 
@@ -333,16 +359,12 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                     public void accept(String message) {
                         try {
                             JSONObject json = new JSONObject();
-                            json.put("fromNickName", "子健");
+                            json.put("fromNickName", "张大爷");
                             json.put("messageContent", message);
                             mChat.sendMessage(json.toString());
 
                             ChatMessage msg = new ChatMessage(1, true);
-                            ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-//                            msg.setFriendNickname(getIntent().getStringExtra("对方nicname"));
-//                            msg.setFriendUsername(getIntent().getStringExtra("对方username"));
-//                            msg.setMeUsername(getIntent().getStringExtra("我的username"));
-//                            msg.setMeNickname(getIntent().getStringExtra("我的nicname"));
+                            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
                             msg.setFriendNickname(chatRecord.getmFriendNickname());
                             msg.setFriendUsername(chatRecord.getmFriendUsername());
                             msg.setMeUsername(chatRecord.getmMeUsername());
@@ -387,12 +409,48 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 ////                    refreshSuccess();
 //                }
 //            });
-        ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-        String whereClause = chatRecord.getmFriendNickname();
+        ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+        String whereClause = chatRecord.getmFriendUsername();
 //    String[] whereArgs = {LoginHelper.getUser().getUsername()};
-        chatMessageList= new ArrayList<>(DataSupport.where("mfriendusername=?",whereClause).find(ChatMessage.class));
-        adapter = new ChatMessageAdapter(chatMessageList,this);
+        if (!chatRecord.ismIsMulti()) {
+            chatMessageList = new ArrayList<>(DataSupport.where("mfriendusername=?", whereClause).find(ChatMessage.class));
+        } else {
+            chatMessageList = new ArrayList<>(DataSupport.where("uuid=?", chatRecord.getUuid()).find(ChatMessage.class));
+        }
+        adapter = new ChatMessageAdapter(chatMessageList, this);
         layoutManager.scrollToPosition(adapter.getItemCount() - 1);
+    }
+
+    public void sendMulti(String message) {
+        Observable.just(message)
+                .observeOn(Schedulers.io())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String message) {
+                        try {
+                            JSONObject json = new JSONObject();
+                            json.put(ChatMessage.KEY_MESSAGE_CONTENT, message);
+                            json.put(ChatMessage.KEY_MULTI_CHAT_SEND_USER, "sure3");//信息后缀必须为用户名
+//                            Log.e(mChatUser.getMeUsername(),mChatUser.getMeUsername());
+                            mMultiUserChat.sendMessage(json.toString());
+
+
+                            ChatMessage msg = new ChatMessage(1, true);
+                            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+                            msg.setFriendNickname(chatRecord.getmFriendNickname());
+                            msg.setFriendUsername(chatRecord.getmFriendUsername());
+                            msg.setMeUsername("sure3");
+                            msg.setMeNickname("张大爷");
+                            msg.setContent(message);
+                            msg.setMulti(true);
+                            msg.setUuid(chatRecord.getUuid());
+                            msg.save();
+                            EventBus.getDefault().post(new MessageEvent(msg));
+                        } catch (Exception e) {
+                            Log.e(e.toString(), "send message failure");
+                        }
+                    }
+                });
     }
 
 }

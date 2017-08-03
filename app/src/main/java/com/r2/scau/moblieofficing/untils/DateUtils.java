@@ -106,6 +106,20 @@ public class DateUtils {
         return times;
 
     }
+
+    /**
+     * 调用此方法输入所要转换的时间戳输入例如（1402733340）输出（"2016年6月16日 17:21"）
+     *
+     * @param time
+     * @return
+     */
+    public static String timete(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy年MM月dd日HH:mm");
+        long lcc = Long.valueOf(time);
+        String times = sdr.format(new Date(lcc));
+        return times;
+    }
+
     /**
      * 输入时间戳转为日期
      * @param time
@@ -127,7 +141,6 @@ public class DateUtils {
         SimpleDateFormat sdr = new SimpleDateFormat("MM月dd日  #  HH:mm");
         return sdr.format(new Date(timeStamp)).replaceAll("#",
                 getWeek(timeStamp));
-
 
     }
 
@@ -203,17 +216,9 @@ public class DateUtils {
      * @return
      */
     public static String getDateTimeByMillisecond(String str, String type) {
-
-
         Date date = new Date(Long.valueOf(str));
-
-
         SimpleDateFormat format = new SimpleDateFormat(type);
-
-
         String time = format.format(date);
-
-
         return time;
     }
 

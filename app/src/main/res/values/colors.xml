@@ -8,7 +8,8 @@
 
     <color name="colorLightGray">#D3D3D3</color>
 
-    <color name="Gray">#BEBEBE</color>
+    <color name="Gray">#BEBEBE</color>‘
+    <color name="topColor">#f3f3f7</color>
 
     <color name="colorLightBlue">#1296db</color>
     <color name="colorRed">#ff3030</color>
