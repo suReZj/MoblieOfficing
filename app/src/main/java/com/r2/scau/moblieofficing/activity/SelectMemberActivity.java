@@ -37,7 +37,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.r2.scau.moblieofficing.activity.FriendActivity.GET_FRIENDS;
 import static com.r2.scau.moblieofficing.untils.UserUntil.friendList;
 
 public class SelectMemberActivity extends BaseActivity implements OnQuickSideBarTouchListener {
@@ -52,6 +51,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     private QuickSideBarTipsView mQuickSideBarTipsView;
     private List<Contact> mContactList = new ArrayList<>();
     private HashMap<String, Integer> letters = new HashMap<>();
+    public static final int SELECT_MEMBER = 2;
 
 
     @Override
@@ -59,9 +59,9 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         setContentView(R.layout.activity_contact);
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
-        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv_personal);
-        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv_personal);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_contact);
+        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv);
+        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTitleTV = (TextView) findViewById(R.id.toolbar_title);
 
@@ -73,7 +73,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
                 switch (msg.what) {
-                    case GET_FRIENDS:
+                    case SELECT_MEMBER:
                         List<Contact> contacts = new ArrayList<Contact>();
                         contacts = (List<Contact>) msg.obj;
                         ArrayList<String> customLetters = new ArrayList<>();
@@ -166,8 +166,8 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                         contact.setFirstLetter(FistLetterUntil.getSortKey(name));
                         contacts.add(contact);
                     }
-                    Message msg = new Message();
-                    msg.what = GET_FRIENDS;
+                    Message msg = Message.obtain();
+                    msg.what = SELECT_MEMBER;
                     msg.obj = contacts;
                     handler.sendMessage(msg);
                     Log.e("getFriend", "success");

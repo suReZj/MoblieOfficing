@@ -60,6 +60,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     public void addAll(Collection<? extends GsonGroup> collection){
         if (collection != null) {
+            groupList.clear();
             groupList.addAll(collection);
             notifyDataSetChanged();
         }

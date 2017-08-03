@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.r2.scau.moblieofficing">
-    <!--添加读取内部系统文件权限-->
+
+    <!-- 添加读取内部系统文件权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
@@ -15,20 +16,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.FileListActivity"/>
         <activity android:name=".activity.FileTypeSelectActivity"/>
         <activity android:name=".activity.FMRenameActivity"/>
         <activity android:name=".activity.UploadSelectFileActivity"/>
         <activity android:name=".activity.ChatActivity"/>
-        <activity android:name=".activity.LoginActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".activity.SignUpActivity"/>
         <activity android:name=".activity.SendNoticeActivity"/>
         <activity android:name=".activity.GroupActivity"/>
@@ -43,6 +46,8 @@
         <activity android:name=".activity.EditGroupActivity">
         </activity>
         <activity android:name=".activity.SelectMemberActivity">
+        </activity>
+        <activity android:name=".activity.ReportActivity">
         </activity>
     </application>
 
