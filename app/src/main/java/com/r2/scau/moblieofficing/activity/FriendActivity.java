@@ -123,7 +123,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
 
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.57:8089/user/")
+                .baseUrl("http://192.168.13.61:8089/user/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

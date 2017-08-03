@@ -51,8 +51,10 @@ public class EditGroupActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_group_edit_commit:
-                if(!mNameET.getText().toString().equals("")){
+                String name = mNameET.getText().toString();
+                if(!name.equals("")){
                     Intent intent = new Intent(EditGroupActivity.this, SelectMemberActivity.class);
+                    intent.putExtra("groupName", name);
                     startActivity(intent);
                 }else {
                     Toast toast = Toast.makeText(getApplicationContext(), "群名称不能为空", Toast.LENGTH_SHORT);

@@ -71,7 +71,7 @@ public class LoginActivity extends BaseActivity {
         password = user + "#" + password;
         password = MathUtil.getMD5(password);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.57:8089/u/")
+                .baseUrl("http://192.168.13.61:8089/u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
         Call<ResponseBody> call = loginBiz.login(user, password, true);
@@ -94,6 +94,8 @@ public class LoginActivity extends BaseActivity {
                         UserUntil.phone = userET.getText().toString();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
+                    }else {
+                        Log.e("login", str);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -102,7 +104,7 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                Log.e("login", "fail");
             }
         });
     }

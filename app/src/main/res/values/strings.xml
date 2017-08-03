@@ -48,6 +48,7 @@
     <string name="add_by_contact">通过手机通讯录添加</string>
     <string name="input_group_name">输入群名称</string>
     <string name="commit">提交</string>
+    <string name="confirm">确定</string>
 
     <!--notice 使用字段 -->
     <string name="send_notice">发公告</string>
