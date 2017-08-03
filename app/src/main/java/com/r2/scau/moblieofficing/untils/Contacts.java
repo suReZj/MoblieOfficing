@@ -42,16 +42,17 @@ public class Contacts {
         public static final int GETDIR_FAILURE = 102;
         public static final int FILEUPLOAD_SUCCESS = 103;
         public static final int FILEUPLOAD_FAILURE = 104;
-        public static final int FILEDOWNLOAD_SUCCESS = 105;
-        public static final int FILEDOWNLOAD_FAILURE = 106;
-        public static final int CREATE_SUCCESS = 107;
-        public static final int CREATE_FAILURE = 108;
-        public static final int MOVEFILE_SUCCESS = 109;
-        public static final int MOVEFILE_FAILURE = 110;
-        public static final int FILERENAME_SUCCESS = 111;
-        public static final int FILERENAME_FAILURE = 112;
-        public static final int DELETE_SUCCESS = 113;
-        public static final int DELETE_FAILURE = 114;
+        public static final int FILEDOWNLOAD_ING = 105;
+        public static final int FILEDOWNLOAD_SUCCESS = 106;
+        public static final int FILEDOWNLOAD_FAILURE = 107;
+        public static final int CREATE_SUCCESS = 108;
+        public static final int CREATE_FAILURE = 109;
+        public static final int MOVEFILE_SUCCESS = 110;
+        public static final int MOVEFILE_FAILURE = 111;
+        public static final int FILERENAME_SUCCESS = 112;
+        public static final int FILERENAME_FAILURE = 113;
+        public static final int DELETE_SUCCESS = 114;
+        public static final int DELETE_FAILURE = 115;
     }
 
     /**
