@@ -1,10 +1,16 @@
 package com.r2.scau.moblieofficing.activity;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +20,8 @@ import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
+import com.r2.scau.moblieofficing.widge.CustomVideoView;
+import com.r2.scau.moblieofficing.widge.popview.PopField;
 
 import java.io.IOException;
 import java.util.List;
@@ -33,6 +41,12 @@ public class LoginActivity extends BaseActivity {
     private TextView sigUpTV;
     private String loginSessionID;
 
+    // 登录特效
+    private PopField mPopField;
+
+    //创建播放视频的控件对象
+    private CustomVideoView videoview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +54,33 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        //取消标题
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //取消状态栏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_login);
+        mPopField = PopField.attach2Window(this);
 
         userET = (EditText) findViewById(R.id.input_user_login);
         passwordET = (EditText) findViewById(R.id.input_password_login);
         loginBtn = (Button) findViewById(R.id.btn_login);
         sigUpTV = (TextView) findViewById(R.id.link_signup);
         passwordET = (EditText) findViewById(R.id.input_password_login);
+        //加载视频资源控件
+        videoview = (CustomVideoView) findViewById(R.id.videoview);
+        //设置播放加载路径
+        videoview.setVideoURI(Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.video));
+        //播放
+        videoview.start();
+        //循环播放
+        videoview.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mediaPlayer) {
+                videoview.start();
+            }
+        });
+
 
     }
 
@@ -58,7 +92,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void initListener() {
         loginBtn.setOnClickListener(this);
-
         sigUpTV.setOnClickListener(this);
     }
 
@@ -71,7 +104,7 @@ public class LoginActivity extends BaseActivity {
         password = user + "#" + password;
         password = MathUtil.getMD5(password);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.57:8089/u/")
+                .baseUrl("http://192.168.13.61:8089/u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
         Call<ResponseBody> call = loginBiz.login(user, password, true);
@@ -142,12 +175,39 @@ public class LoginActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_login:
+                Log.e("jason", "点击登录按钮");
                 login();
+                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View addView = layoutInflater.inflate(R.layout.sampletextview, null);
+                final Button loginBtn2 = (Button) addView.findViewById(R.id.btn_login2);
+                loginBtn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        login();
+                    }
+                });
+                mPopField.popView(loginBtn, addView, true);
+
                 break;
             case R.id.link_signup:
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
                 startActivity(intent);
                 break;
         }
+    }
+
+    //返回重启加载
+    @Override
+    protected void onRestart() {
+        initView();
+        super.onRestart();
+    }
+
+    //防止锁屏或者切出的时候，音乐在播放
+    @Override
+    protected void onStop() {
+        videoview.stopPlayback();
+        super.onStop();
     }
 }
