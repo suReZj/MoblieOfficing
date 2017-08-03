@@ -43,12 +43,20 @@ public class SendNoticeActivity extends BaseActivity {
 
         titleTV.setText("发公告");
         toolbar.setTitle("");
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
 
         titleET.setSingleLine();
         authorET.setSingleLine();
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -103,9 +111,9 @@ public class SendNoticeActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+//            case android.R.id.home:
+//                finish();
+//                break;
             case R.id.menu_notice_send:
                 String title = titleET.getText().toString();
                 String author = authorET.getText().toString();

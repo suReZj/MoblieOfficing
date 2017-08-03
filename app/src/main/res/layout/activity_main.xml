@@ -13,7 +13,19 @@
         android:background="@color/colorGray"
         android:layout_above="@+id/bottom_bar"/>
 
+    <com.roughike.bottombar.BottomBar
+        android:id="@+id/bottomBar"
+        android:background="@android:color/white"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        app:bb_tabXmlResource="@xml/bottombar_tabs"
+        app:bb_behavior="shifting"
+        app:bb_activeTabColor="@color/colorPrimary"
+        app:bb_inActiveTabColor="@android:color/black"/>
+
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

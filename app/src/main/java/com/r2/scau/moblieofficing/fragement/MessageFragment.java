@@ -32,7 +32,8 @@ import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -64,7 +65,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
+import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
 
 
 /**
@@ -80,6 +81,7 @@ public class MessageFragment extends Fragment {
     final private int deleteTopBtn = 2;
     private SmackManager smack;
     private LinearLayoutManager mLayoutManager;
+    private OkHttpClient okHttpClient = new OkHttpClient();
     private RecyclerView recyclerView;
     private ChatRecord chatRecord;
     private ArrayList<ChatRecord> newList;
@@ -128,7 +130,7 @@ public class MessageFragment extends Fragment {
                                 //step 3: 创建请求
                                 final Request request = new Request.Builder().url("http://192.168.13.57:8089/group/getAllGroupByUser.shtml")
                                         .post(formBody)
-                                        .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                                        .addHeader("cookie", OkHttpUntil.loginSessionID)
                                         .build();
                                 //step 4： 建立联系 创建Call对象
                                 okHttpClient.newCall(request).enqueue(new Callback() {

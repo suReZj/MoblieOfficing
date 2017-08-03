@@ -5,11 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context="com.r2.scau.moblieofficing.activity.SendNoticeActivity">
 
    <include layout="@layout/toolbar"/>
-
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
    <EditText
        android:id="@+id/et_notice_title"
        android:layout_width="match_parent"
@@ -18,13 +23,17 @@
        android:maxLength="20"
        android:padding="10dp"
        android:hint="@string/notice_title"/>
-
-    <View
+    </android.support.design.widget.TextInputLayout>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1px"-->
+        <!--android:background="@color/colorGray"-->
+        <!--/>-->
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorGray"
-        />
-
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
     <EditText
         android:id="@+id/et_notice_author"
         android:layout_width="match_parent"
@@ -33,13 +42,17 @@
         android:maxLength="15"
         android:padding="10dp"
         android:hint="@string/author"/>
-
-    <View
+    </android.support.design.widget.TextInputLayout>
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="1px"-->
+        <!--android:background="@color/colorGray"-->
+        <!--/>-->
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorGray"
-        />
-
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp">
     <EditText
         android:id="@+id/et_notice_content"
         android:layout_width="match_parent"
@@ -48,5 +61,6 @@
         android:padding="10dp"
         android:inputType="textMultiLine"
         android:hint="@string/notice_content"/>
+    </android.support.design.widget.TextInputLayout>
 
 </LinearLayout>

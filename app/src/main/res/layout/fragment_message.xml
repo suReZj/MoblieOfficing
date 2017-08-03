@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/padding_top"
-            android:background="@color/colorBottomBar"
-            toolbar:titleTextColor="@color/messageTitle"
+            android:background="@color/colorPrimary"
+            toolbar:titleTextColor="@android:color/white"
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:popupTheme="@style/ToolbarPopupTheme" />
     </android.support.design.widget.AppBarLayout>
