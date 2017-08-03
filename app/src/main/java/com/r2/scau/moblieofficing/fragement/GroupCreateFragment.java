@@ -77,7 +77,7 @@ public class GroupCreateFragment extends Fragment{
 
     public void getGroupInfo(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.57:8089/group/")
+                .baseUrl("http://192.168.13.61:8089/group/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

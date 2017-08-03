@@ -16,8 +16,7 @@
         app:sLeftIconRes="@mipmap/ic_friend"
         app:sLeftTextString="@string/gsonFriends"
         app:sUseRipple="true"
-        app:sLineShow="both"
-        app:sLineColor="@color/colorGray">
+        app:sLineShow="both">
     </com.allen.library.SuperTextView>
 
     <com.allen.library.SuperTextView
@@ -27,8 +26,7 @@
         app:sLeftIconRes="@mipmap/ic_group"
         app:sLeftTextString="@string/group"
         app:sUseRipple="true"
-        app:sLineShow="bottom"
-        app:sLineColor="@color/colorGray">
+        app:sLineShow="bottom">
     </com.allen.library.SuperTextView>
 
     <com.allen.library.SuperTextView
@@ -38,8 +36,7 @@
         app:sLeftIconRes="@mipmap/ic_my_contact"
         app:sLeftTextString="@string/personal_contact"
         app:sUseRipple="true"
-        app:sLineShow="bottom"
-        app:sLineColor="@color/colorGray">
+        app:sLineShow="bottom">
     </com.allen.library.SuperTextView>
 
     <com.allen.library.SuperTextView
@@ -49,8 +46,7 @@
         app:sLeftIconRes="@mipmap/ic_public_contact"
         app:sLeftTextString="@string/public_contact"
         app:sUseRipple="true"
-        app:sLineShow="bottom"
-        app:sLineColor="@color/colorGray">
+        app:sLineShow="bottom">
     </com.allen.library.SuperTextView>
 
 </LinearLayout>

@@ -31,6 +31,8 @@ import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -48,6 +50,9 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
+
 
 
 /**
