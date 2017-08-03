@@ -32,7 +32,8 @@ import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
-import com.r2.scau.moblieofficing.untils.OkHttpClientManager;
+
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,23 +49,18 @@ import org.reactivestreams.Subscriber;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.List;
 import java.util.UUID;
-
-import de.measite.minidns.Client;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
+
 import okhttp3.Response;
 
-import static com.r2.scau.moblieofficing.untils.OkHttpClientManager.okHttpClient;
+
 
 
 /**
@@ -85,7 +81,7 @@ public class MessageFragment extends Fragment {
     private ArrayList<ChatRecord> newList;
     private String flagOfMulti;
     private ArrayList<String> roomNameList;
-
+    private OkHttpClient  okHttpClient = new OkHttpClient();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -109,6 +105,7 @@ public class MessageFragment extends Fragment {
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+
                 if (item.getItemId() == R.id.scan) {
                     new Thread(new Runnable() {
                         @Override
@@ -128,7 +125,7 @@ public class MessageFragment extends Fragment {
                                 //step 3: 创建请求
                                 final Request request = new Request.Builder().url("http://192.168.13.57:8089/group/getAllGroupByUser.shtml")
                                         .post(formBody)
-                                        .addHeader("cookie", OkHttpClientManager.loginSessionID)
+                                        .addHeader("cookie", OkHttpUntil.loginSessionID)
                                         .build();
                                 //step 4： 建立联系 创建Call对象
                                 okHttpClient.newCall(request).enqueue(new Callback() {

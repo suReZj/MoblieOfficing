@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:id="@+id/popup_contianer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <!--<View-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:background="#6c6c6c"/>-->
+
+        <TextView
+            android:id="@+id/copy_message"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="复制"
+            android:background="@drawable/selector_menu_popup"
+            android:textSize="14sp"/>
+
+        <!--<View-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:background="#6c6c6c"/>-->
+
+        <TextView
+            android:id="@+id/transmit_message"
+            android:layout_width="100dp"
+            android:layout_height="30dp"
+            android:gravity="center"
+            android:text="转发"
+            android:background="@drawable/selector_menu_popup"
+            android:textSize="14sp"/>
+
+        <!--<View-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="0.5dp"-->
+            <!--android:background="#6c6c6c"/>-->
+    </LinearLayout>
+
+</RelativeLayout>

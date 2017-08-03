@@ -3,14 +3,16 @@ package com.r2.scau.moblieofficing.activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +23,6 @@ import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ChatMessageAdapter;
-import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
@@ -66,6 +67,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
     private MultiUserChat mMultiUserChat;//多人聊天对象
+    private TextView msgTextView;
 
 
     @Override
@@ -73,6 +75,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         setContentView(R.layout.activity_chat);
         super.onCreate(savedInstanceState);
         SoftHideKeyBoardUtil.assistActivity(this);
+
 
 
         new Thread(new Runnable() {
@@ -94,7 +97,6 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
             }
         }).start();
 
-
     }
 
     @Override
@@ -106,6 +108,8 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
         toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         titleText = (TextView) findViewById(R.id.chat_toolbar_title);
+        msgTextView=(TextView)findViewById(R.id.right_chat_msg);
+
 
         setSupportActionBar(toolbar);
         toolbar.inflateMenu(R.menu.toolbar_chat_title_menu);
@@ -115,6 +119,8 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         recyclerView.setLayoutManager(layoutManager);
         refreshData();
         recyclerView.setAdapter(adapter);
+//        registerForContextMenu(recyclerView);
+//        msgTextView.setOnClickListener(this);
 
 
         faceFragment = FaceFragment.Instance();
@@ -124,6 +130,25 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
 //        if (chatRecord)
         titleText.setText(chatRecord.getmFriendNickname());
+    }
+
+
+    //创建contextmenu
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+//        if (msgList.get(message_adapter.getmPosition()).getSetTopFlag()) {
+            menu.add(Menu.NONE, 1, Menu.NONE, "取消置顶");//groupId, itemId, order, title
+            menu.add(Menu.NONE, 2, Menu.NONE, "删除");
+//        } else {
+//            menu.add(Menu.NONE, setTopBtn, Menu.NONE, "置顶");//groupId, itemId, order, title
+//            menu.add(Menu.NONE, deleteBtn, Menu.NONE, "删除");
+//        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -203,8 +228,10 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         });
     }
 
+
     @Override
     public void onClick(View v) {
+        //创建弹出式菜单对象（最低版本11）
 
     }
 
