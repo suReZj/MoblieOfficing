@@ -1,6 +1,6 @@
 package com.r2.scau.moblieofficing.retrofit;
 
-import com.r2.scau.moblieofficing.gson.GsonFriend;
+import com.r2.scau.moblieofficing.gson.GsonFriends;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -14,7 +14,7 @@ import retrofit2.http.POST;
 public interface IFriendBiz {
     @POST("findfriends.shtml")
     @FormUrlEncoded
-    Call<GsonFriend> getFriend(
+    Call<GsonFriends> getFriend(
             @Field("userPhone") String userPhone
     );
 

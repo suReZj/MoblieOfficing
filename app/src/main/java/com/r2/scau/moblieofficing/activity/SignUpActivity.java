@@ -13,17 +13,17 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.retrofit.ISignBiz;
 import com.r2.scau.moblieofficing.untils.MathUtil;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
-import java.io.IOException;
+import java.util.List;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import retrofit2.Retrofit;
 
 public class SignUpActivity extends BaseActivity {
 
@@ -35,18 +35,20 @@ public class SignUpActivity extends BaseActivity {
     private EditText passwordET;
     private EditText verCodeET;
     private String verCodeKey;
+    private String sessionID;
+    private OkHttpClient okHttpClient = new OkHttpClient();
     private ImageView verCodeImageView;
     public static final int VERCODE = 1;
 
 
     @Override
-    public void initView(){
+    public void initView() {
         setContentView(R.layout.activity_sign_up);
 
-        mHandler = new Handler(){
+        mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what){
+                switch (msg.what) {
                     case VERCODE:
                         Log.e("handle", "set");
                         Glide.with(SignUpActivity.this)
@@ -54,8 +56,6 @@ public class SignUpActivity extends BaseActivity {
                                 .skipMemoryCache(true)
                                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                                 .into(verCodeImageView);
-
-
                         break;
                     default:
                         break;
@@ -87,90 +87,90 @@ public class SignUpActivity extends BaseActivity {
         signUpBtn.setOnClickListener(this);
     }
 
-    public void getVerCode(){
+    public void getVerCode() {
+        Log.e("getVerCode", "fail");
         verCodeKey = String.valueOf(System.currentTimeMillis()) + MathUtil.getRandom620(20);
         verCodeKey = MathUtil.getMD5(verCodeKey);
 
-        String password = passwordET.getText().toString();
-
-        //step 1: 同样的需要创建一个OkHttpClick对象
-        //step 2: 创建  FormBody.Builder
-        FormBody formBody = new FormBody.Builder()
-                .add("vcodeKey", verCodeKey)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.13.61:8089/open/")
                 .build();
-
-
-        //step 3: 创建请求
-        final Request request = new Request.Builder().url("http://192.168.13.57:8089/open/getGifCode.shtml")
-                .post(formBody)
-                .build();
-
-        //step 4： 建立联系 创建Call对象
-        okHttpClient.newCall(request).enqueue(new Callback() {
+        ISignBiz signBiz = retrofit.create(ISignBiz.class);
+        retrofit2.Call<ResponseBody> call = signBiz.getVerCode(verCodeKey);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                // TODO: 17-1-4  请求失败
-                Log.e("getVerCode", "fail");
+            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                try {
+                    Log.e("getVerCode", response.toString());
+                    Message msg = Message.obtain();
+                    msg.what = VERCODE;
+                    msg.obj = response.body().bytes();
+                    mHandler.sendMessage(msg);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // TODO: 17-1-4 请求成功
-                Log.e("getVerCode", "success");
-                Message msg = Message.obtain();
-                msg.what = VERCODE;
-                msg.obj = response.body().bytes();
-                mHandler.sendMessage(msg);
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                Log.e("getVerCode", "fail");
             }
         });
     }
 
-    public void signUp(){
+
+    public void signUp() {
         String name = nameET.getText().toString();
         String phone = phoneET.getText().toString();
         String verCode = verCodeET.getText().toString();
         Log.e("verCode", verCode);
         String password = passwordET.getText().toString();
 
-        //step 1: 同样的需要创建一个OkHttpClick对象
-        //step 2: 创建  FormBody.Builder
-        FormBody formBody = new FormBody.Builder()
-                .add("username", name)
-                .add("userPhone", phone)
-                .add("password", password)
-                .add("vcode", verCode)
-                .add("vcodeKey", verCodeKey)
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.13.61:8089/u/")
                 .build();
-
-
-        //step 3: 创建请求
-        final Request request = new Request.Builder().url("http://192.168.13.57:8089/u/mobileRegister.shtml")
-                .post(formBody)
-                .build();
-
-        //step 4： 建立联系 创建Call对象
-        okHttpClient.newCall(request).enqueue(new Callback() {
+        ISignBiz signBiz = retrofit.create(ISignBiz.class);
+        retrofit2.Call<ResponseBody> call = signBiz.signUp(name, phone, password, verCode, verCodeKey);
+        call.enqueue(new retrofit2.Callback<ResponseBody>() {
             @Override
-            public void onFailure(Call call, IOException e) {
-                // TODO: 17-1-4  请求失败
-                Log.e("register", "fail");
+            public void onResponse(retrofit2.Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                try {
+                    String str = response.body().string();
+                    Log.e("signUp", str);
+                    if (str.contains("注册成功")) {
+                        Headers headers = response.headers();
+                        Log.d("info_headers", "header " + headers);
+                        List<String> cookies = headers.values("Set-Cookie");
+                        String session = cookies.get(0);
+                        Log.d("info_cookies", "onResponse-size: " + cookies);
+                        sessionID = session.substring(0, session.indexOf(";"));
+                        Log.i("info_s", "session is  :" + sessionID);
+                        sessionID = OkHttpUntil.loginSessionID;
+                        UserUntil.phone = phoneET.getText().toString();
+                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    } else {
+                        getVerCode();
+                        Log.e("signUp", str);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // TODO: 17-1-4 请求成功
-                String str = response.body().string();
-                Log.e("register", str);
-                if (str.contains("验证码不正确")){
-                    getVerCode();
-                }
+            public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
+                Log.e("signUp", "fail");
+                getVerCode();
             }
         });
     }
 
+
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.link_login:
                 Intent intent = new Intent(SignUpActivity.this, LoginActivity.class);
                 startActivity(intent);

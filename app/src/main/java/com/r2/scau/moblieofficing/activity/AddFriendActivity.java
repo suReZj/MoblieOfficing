@@ -14,7 +14,7 @@ public class AddFriendActivity extends BaseActivity {
 
     private Toolbar toolbar;
     private TextView titleTV;
-    private SuperTextView searchSV;
+    private SuperTextView searchST;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +26,7 @@ public class AddFriendActivity extends BaseActivity {
         setContentView(R.layout.activity_add_friend);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         titleTV = (TextView) findViewById(R.id.toolbar_title);
-        searchSV = (SuperTextView) findViewById(R.id.sv_search_friend);
+        searchST = (SuperTextView) findViewById(R.id.st_search_friend);
 
         toolbar.setTitle("");
         titleTV.setText("添加好友");
@@ -42,7 +42,7 @@ public class AddFriendActivity extends BaseActivity {
 
     @Override
     protected void initListener() {
-        searchSV.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+        searchST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
             @Override
             public void onSuperTextViewClick() {
                 Intent intent = new Intent(AddFriendActivity.this, SearchPhoneActivity.class);

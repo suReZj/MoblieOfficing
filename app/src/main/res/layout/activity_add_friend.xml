@@ -11,7 +11,7 @@
     <include layout="@layout/toolbar" />
 
     <com.allen.library.SuperTextView
-        android:id="@+id/sv_search_friend"
+        android:id="@+id/st_search_friend"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_search"
@@ -22,7 +22,7 @@
     </com.allen.library.SuperTextView>
 
     <com.allen.library.SuperTextView
-        android:id="@+id/sv_add_friend"
+        android:id="@+id/st_add_friend"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_my_contact"
