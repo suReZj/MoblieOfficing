@@ -60,6 +60,11 @@
         <item name="android:paddingBottom">4dp</item>
     </style>
 
+    <style name="MyButton" parent="Theme.AppCompat.Light">
+        <item name="colorControlHighlight">@color/messageTitle</item>
+        <item name="colorButtonNormal">@color/colorLightBlue</item>
+    </style>
+
 
 
 </resources>
