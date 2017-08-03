@@ -16,18 +16,19 @@ import android.widget.TextView;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
-import com.github.promeg.pinyinhelper.Pinyin;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ContactAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonFriend;
 import com.r2.scau.moblieofficing.gson.GsonFriends;
 import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
+import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,6 +65,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
                         List<Contact> contacts = new ArrayList<Contact>();
                         contacts = (List<Contact>) msg.obj;
                         ArrayList<String> customLetters = new ArrayList<>();
+                        Collections.sort(contacts);
                         int position = 0;
                         for (Contact contact : contacts) {
                             String letter = contact.getFirstLetter();
@@ -81,6 +83,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
                 }
             }
         };
+
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
         mSearchView = (SearchView) findViewById(R.id.sv_personal_contact);
         mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv_personal);
@@ -100,7 +103,23 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
     @Override
     protected void initData() {
         mContactList.clear();
-        getFriend();
+        if (UserUntil.friendList == null){
+            getFriend();
+        }else {
+            mContactList = UserUntil.friendList;
+            ArrayList<String> customLetters = new ArrayList<>();
+            Collections.sort(mContactList);
+            int position = 0;
+            for (Contact contact : mContactList) {
+                String letter = contact.getFirstLetter();
+                if (!letters.containsKey(letter)) {
+                    letters.put(letter, position);
+                    customLetters.add(letter);
+                }
+                position++;
+            }
+            mQuickSideBarView.setLetters(customLetters);
+        }
         initRV();
     }
 
@@ -128,7 +147,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         IFriendBiz iFriendBiz = retrofit.create(IFriendBiz.class);
-        Call<GsonFriends> call = iFriendBiz.getFriend("sure1");
+        Call<GsonFriends> call = iFriendBiz.getFriend(UserUntil.phone);
         call.enqueue(new Callback<GsonFriends>() {
             @Override
             public void onResponse(Call<GsonFriends> call, Response<GsonFriends> response) {
@@ -141,7 +160,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
                         String name = myFriend.getNickname();
                         contact.setPhone(myFriend.getUserPhone());
                         contact.setName(name);
-                        contact.setFirstLetter(getSortKey(name));
+                        contact.setFirstLetter(FistLetterUntil.getSortKey(name));
                         contacts.add(contact);
                     }
                     Message msg = new Message();
@@ -208,15 +227,6 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
         mQuickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
     }
 
-
-    private static String getSortKey(String sortKeyString) {
-        String key = Pinyin.toPinyin(sortKeyString.charAt(0)).substring(0, 1).toUpperCase();
-        Log.e(sortKeyString, key);
-        if (key.matches("[A-Z]")) {
-            return key;
-        }
-        return "#";
-    }
 
 
 }

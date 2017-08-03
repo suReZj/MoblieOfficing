@@ -10,12 +10,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.gson.GsonFriend;
+import com.r2.scau.moblieofficing.gson.GsonFriends;
+import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
+import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Headers;
@@ -24,6 +30,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends BaseActivity {
 
@@ -64,8 +71,6 @@ public class LoginActivity extends BaseActivity {
 
 
     public void login() {
-        //step 1: 同样的需要创建一个OkHttpClick对象
-        //step 2: 创建  FormBody.Builder
         String user = userET.getText().toString();
         String password = passwordET.getText().toString();
         password = user + "#" + password;
@@ -87,13 +92,11 @@ public class LoginActivity extends BaseActivity {
                         List<String> cookies = headers.values("Set-Cookie");
                         String session = cookies.get(0);
                         Log.d("info_cookies", "onResponse-size: " + cookies);
-
                         loginSessionID = session.substring(0, session.indexOf(";"));
                         Log.i("info_s", "session is  :" + loginSessionID);
                         OkHttpUntil.loginSessionID = loginSessionID;
                         UserUntil.phone = userET.getText().toString();
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        getFriend();
                     }else {
                         Log.e("login", str);
                     }
@@ -139,6 +142,47 @@ public class LoginActivity extends BaseActivity {
             }
         });*/
     }
+
+    public void getFriend() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.13.61:8089/user/")
+                .callFactory(OkHttpUntil.getInstance())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IFriendBiz iFriendBiz = retrofit.create(IFriendBiz.class);
+        Call<GsonFriends> call = iFriendBiz.getFriend(UserUntil.phone);
+        call.enqueue(new Callback<GsonFriends>() {
+            @Override
+            public void onResponse(Call<GsonFriends> call, Response<GsonFriends> response) {
+                GsonFriends gsonFriends = response.body();
+                if (gsonFriends.getCode() == 200) {
+                    List<GsonFriend> friendList = gsonFriends.getListFriends();
+                    ArrayList<Contact> contacts = new ArrayList<Contact>();
+                    for (GsonFriend myFriend : friendList) {
+                        Contact contact = new Contact();
+                        String name = myFriend.getNickname();
+                        contact.setPhone(myFriend.getUserPhone());
+                        contact.setName(name);
+                        contact.setFirstLetter(FistLetterUntil.getSortKey(name));
+                        contacts.add(contact);
+                    }
+                    UserUntil.friendList = contacts;
+                } else {
+                    Log.e("getFriend", gsonFriends.getMsg());
+                }
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<GsonFriends> call, Throwable t) {
+                Log.e("getFriend", "fail");
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 
     @Override
     public void onClick(View view) {
