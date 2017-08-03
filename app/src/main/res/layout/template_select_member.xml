@@ -23,7 +23,7 @@
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_friend"
         app:sUseRipple="true"
-        app:sLineShow="both"
+        app:sLineShow="bottom"
         app:sLineColor="@color/colorGray">
     </com.allen.library.SuperTextView>
 

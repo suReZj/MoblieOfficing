@@ -20,6 +20,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonFriend;
 import com.r2.scau.moblieofficing.gson.GsonFriends;
+import com.r2.scau.moblieofficing.gson.GsonUsers;
 import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.untils.FistLetterUntil;
@@ -130,6 +131,7 @@ public class LoginActivity extends BaseActivity {
                         Log.i("info_s", "session is  :" + loginSessionID);
                         OkHttpUntil.loginSessionID = loginSessionID;
                         UserUntil.phone = userET.getText().toString();
+                        getUserInfo();
                         getFriend();
                     }else {
                         Log.e("login", str);
@@ -175,6 +177,35 @@ public class LoginActivity extends BaseActivity {
                 Log.e("changePswd", response.body().string());
             }
         });*/
+    }
+
+
+    public void getUserInfo(){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.13.61:8089/group/")
+                .callFactory(OkHttpUntil.getInstance())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ILoginBiz iLoginBiz = retrofit.create(ILoginBiz.class);
+        Call<GsonUsers> call = iLoginBiz.getUserInfo(UserUntil.phone);
+        call.enqueue(new Callback<GsonUsers>() {
+            @Override
+            public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
+                GsonUsers gsonUsers = response.body();
+                if(gsonUsers.getCode() == 200){
+                    Log.e("getUser", "success");
+                    UserUntil.gsonUser = gsonUsers.getUserInfo();
+
+                }else {
+                    Log.e("getUser", "fail");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GsonUsers> call, Throwable t) {
+                Log.e("getUser", "fail");
+            }
+        });
     }
 
     public void getFriend() {

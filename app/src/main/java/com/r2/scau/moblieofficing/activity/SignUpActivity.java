@@ -1,11 +1,13 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,6 +26,7 @@ import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.CustomVideoView;
+import com.r2.scau.moblieofficing.widge.popview.PopField;
 
 import java.util.List;
 
@@ -47,6 +50,10 @@ public class SignUpActivity extends BaseActivity {
     private ImageView verCodeImageView;
     public static final int VERCODE = 1;
 
+
+    // 注册特效
+    private PopField mPopField;
+
     //创建播放视频的控件对象
     private CustomVideoView videoview;
     @Override
@@ -57,7 +64,7 @@ public class SignUpActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_sign_up);
-
+        mPopField = PopField.attach2Window(this);
         mHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
@@ -198,6 +205,18 @@ public class SignUpActivity extends BaseActivity {
 
             case R.id.btn_sign_up:
                 signUp();
+                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View addView = layoutInflater.inflate(R.layout.sampletextview, null);
+                final Button signUpBtn2 = (Button) addView.findViewById(R.id.btn_login2);
+                signUpBtn2.setText("立即注册");
+                signUpBtn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        signUp();
+                    }
+                });
+                mPopField.popView(signUpBtn, addView, true);
                 break;
         }
     }
