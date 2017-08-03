@@ -12,12 +12,13 @@
         android:layout_height="1px"
         android:background="@color/colorGray"
         android:layout_above="@+id/bottom_bar"/>
-    <android.support.v4.view.ViewPager
+    <com.r2.scau.moblieofficing.widge.NoScrollViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/bottomBar">
-    </android.support.v4.view.ViewPager>
+    </com.r2.scau.moblieofficing.widge.NoScrollViewPager>
+
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
         android:background="@android:color/white"
