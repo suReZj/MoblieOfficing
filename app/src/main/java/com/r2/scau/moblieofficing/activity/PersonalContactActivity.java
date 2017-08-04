@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -15,10 +14,10 @@ import android.widget.TextView;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
-import com.github.promeg.pinyinhelper.Pinyin;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ContactAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
@@ -81,7 +80,7 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter = new ContactAdapter();
+        adapter = new ContactAdapter(getApplicationContext());
         mQuickSideBarView.setLetters(customLetters);
         adapter.addAll(mContactList);
 
@@ -158,7 +157,7 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
                             .getString(cursor
                                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                     String name = cursor.getString(0);
-                    String sortKey = getSortKey(cursor.getString(1));
+                    String sortKey = FistLetterUntil.getSortKey(cursor.getString(1));
                     int contact_id = cursor
                             .getInt(cursor
                                     .getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID));
@@ -174,15 +173,6 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private static String getSortKey(String sortKeyString) {
-        String key = Pinyin.toPinyin(sortKeyString.charAt(0)).substring(0, 1).toUpperCase();
-        Log.e(sortKeyString, key);
-        if (key.matches("[A-Z]")) {
-            return key;
-        }
-        return "#";
     }
 
 }

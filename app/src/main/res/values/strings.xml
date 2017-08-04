@@ -2,27 +2,31 @@
     <string name="app_name">MoblieOfficing</string>
 
     <!-- 文件管理 使用的字段 -->
-    <string name="my_file">个人文档</string>
-    <string name="shared_file">公共文档</string>
-    <string name="filelist_edit">编辑</string>
-    <string name="filelist_newfolder">新建文件夹</string>
-    <string name="filelist_allselect">全选</string>
-    <string name="filelist_allnoneselect">取消全选</string>
-    <string name="filelist_move">移动</string>
-    <string name="filelist_delete">删除</string>
-    <string name="filelist_rename">重命名</string>
+    <string name="my_disk">我的网盘</string>
+    <string name="my_file">个人文件</string>
+    <string name="shared_file">公共文件</string>
+    <string name="edit">编辑</string>
+    <string name="newfolder">新建文件夹</string>
+    <string name="allselect">全选</string>
+    <string name="allnoneselect">取消全选</string>
+    <string name="move">移动</string>
+    <string name="delete">删除</string>
+    <string name="rename">重命名</string>
+    <string name="system_file">系统文件</string>
     <string name="folder">文件夹</string>
 
-    <string name="filelist_shareto">发送给联系人</string>
-    <!---->
+    <string name="shareto">发送给联系人</string>
 
-    <string name="titlebar_back_button">返回</string>
-    <string name="titlebar_commit">完成</string>
+    <string name="back_button">返回</string>
+    <string name="complete">完成</string>
+    <string name="upload">上传</string>
+    <string name="upload_selectfile">选择要上传文件</string>
 
 
     <!--Login 使用字段 -->
-    <string name="login">登录</string>
+    <string name="login">登  录</string>
     <string name="link_sign_up">注册账号</string>
+    <string name="link_forget_password">忘记密码</string>
     <string name="sign_up">立即注册</string>
     <string name="link_logon">立即已经创建账号,请注册注册</string>
     <string name="input_password">请输入密码</string>
@@ -38,7 +42,7 @@
     <string name="my">我的</string>
 
     <!--contact 使用字段 -->
-    <string name="friend">好友</string>
+    <string name="gsonFriends">好友</string>
     <string name="add_friend">添加好友</string>
     <string name="group">我的群组</string>
     <string name="create_group">创建群</string>
@@ -46,6 +50,9 @@
     <string name="public_contact">公共通讯录</string>
     <string name="search_by_phone">通过手机号搜索</string>
     <string name="add_by_contact">通过手机通讯录添加</string>
+    <string name="input_group_name">输入群名称</string>
+    <string name="commit">提交</string>
+    <string name="confirm">确定</string>
 
     <!--notice 使用字段 -->
     <string name="send_notice">发公告</string>

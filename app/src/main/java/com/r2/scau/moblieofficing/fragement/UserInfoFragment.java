@@ -12,9 +12,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.activity.FileSelectActivity;
+import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
 import com.r2.scau.moblieofficing.activity.LoginActivity;
-import com.r2.scau.moblieofficing.widge.BottomView;
 
 /**
  * Created by 嘉进 on 9:23.
@@ -66,12 +65,12 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
         switch (v.getId()){
 
             case R.id.filemanageBtn:
-                BottomView menuWindow = new BottomView(getActivity(), 10000, "s",clickListener);
-                menuWindow.show();
+//                BottomView menuWindow = new BottomView(getActivity(), 10000, "s",clickListener);
+//                menuWindow.show();
                 break;
 
             case R.id.filemanage:
-                Intent intent = new Intent(getActivity(), FileSelectActivity.class);
+                Intent intent = new Intent(getActivity(), FileTypeSelectActivity.class);
                 startActivity(intent);
                 break;
 

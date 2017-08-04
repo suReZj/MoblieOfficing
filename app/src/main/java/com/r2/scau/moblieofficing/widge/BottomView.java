@@ -25,16 +25,18 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
     private Button delete,shareto,rename,move,cancel;
     private View mMenuView;
     private Activity mContext;
-    private View.OnClickListener mOnClickListener;
+    private View.OnClickListener bottomOnClickListener;
     private int fileType;
     private String filename;
+    private String fileSelectType;
 
-    public BottomView(Activity mContext, int fileType, String filename, View.OnClickListener mOnClickListener) {
+    public BottomView(Activity mContext,String filename, int fileType , String fileSelectType, View.OnClickListener bottomOnClickListener) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
-        this.mOnClickListener = mOnClickListener;
+        this.bottomOnClickListener = bottomOnClickListener;
         this.mContext = mContext;
         this.fileType = fileType;
         this.filename = filename;
+        this.fileSelectType = fileSelectType;
         mMenuView = inflater.inflate(R.layout.popwindow_filelist_more, null);
         initView(fileType);
         initData();
@@ -54,16 +56,24 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
     private void initView(int fileType) {
         showfilename = (TextView) mMenuView.findViewById(R.id.popwindow_pressfilename);
         delete = (Button) mMenuView.findViewById(R.id.popwindow_delete);
-        shareto = (Button) mMenuView.findViewById(R.id.popwindow_shareto);
-        rename = (Button) mMenuView.findViewById(R.id.popwindow_rename);
         move = (Button) mMenuView.findViewById(R.id.popwindow_move);
+        rename = (Button) mMenuView.findViewById(R.id.popwindow_rename);
+        shareto = (Button) mMenuView.findViewById(R.id.popwindow_shareto);
         cancel = (Button) mMenuView.findViewById(R.id.popwindow_cancel);
-
-        //如果传输过来的是文件夹的类型，隐藏"分享"的view
-        if (fileType == Contacts.FILEMANAGER.FOLDER_TYPE){
+        if(fileSelectType.equals("sharedfile")){
+            move.setVisibility(View.GONE);
+            rename.setVisibility(View.GONE);
             shareto.setVisibility(View.GONE);
         }else {
+            move.setVisibility(View.VISIBLE);
+            rename.setVisibility(View.VISIBLE);
             shareto.setVisibility(View.VISIBLE);
+            //如果传输过来的是文件夹的类型，隐藏"分享"的view
+            if (fileType == Contacts.FILEMANAGER.FOLDER_TYPE){
+                shareto.setVisibility(View.GONE);
+            }else {
+                shareto.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -73,12 +83,14 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
     }
 
     private void initListenner(int fileType) {
-        if (fileType == Contacts.FILEMANAGER.FILE_TYPE){
-            shareto.setOnClickListener(this);
+        if (fileSelectType.equals("personalfile")){
+            rename.setOnClickListener(this);
+            move.setOnClickListener(this);
+            if (fileType == Contacts.FILEMANAGER.FILE_TYPE){
+                shareto.setOnClickListener(this);
+            }
         }
         delete.setOnClickListener(this);
-        rename.setOnClickListener(this);
-        move.setOnClickListener(this);
         cancel.setOnClickListener(this);
     }
 
@@ -89,7 +101,7 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
             case R.id.popwindow_cancel:
                 break;
             default:
-                mOnClickListener.onClick(view);
+                bottomOnClickListener.onClick(view);
                 break;
         }
     }

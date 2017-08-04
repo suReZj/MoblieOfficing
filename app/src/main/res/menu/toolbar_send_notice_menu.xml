@@ -4,6 +4,7 @@
     <item
         android:id="@+id/menu_notice_send"
         android:title="@string/send"
+        android:icon="@drawable/ic_send_white_24dp"
         app:showAsAction="always"/>
 
 </menu>

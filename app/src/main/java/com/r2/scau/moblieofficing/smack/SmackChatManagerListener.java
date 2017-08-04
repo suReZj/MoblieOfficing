@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.event.MessageEvent;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.chat.Chat;
@@ -12,7 +13,9 @@ import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +28,7 @@ import java.util.regex.Pattern;
  */
 public class SmackChatManagerListener implements ChatManagerListener {
     private static final String PATTERN = "[a-zA-Z0-9_]+@";
-//    private String mMeNickName = LoginHelper.getUser().getNickname();
+    private String mMeNickName = UserUntil.gsonUser.getNickname();
 
     @Override
     public void chatCreated(Chat chat, boolean createdLocally) {
@@ -43,9 +46,15 @@ public class SmackChatManagerListener implements ChatManagerListener {
                 String to = message.getTo();//消息接收人(当前登陆用户)，格式:laohu@171.17.100.201/Smack
                 Matcher matcherFrom = Pattern.compile(PATTERN).matcher(from);
                 Matcher matcherTo = Pattern.compile(PATTERN).matcher(to);
+                String id=message.getStanzaId();
 
+                ArrayList<ChatMessage> multiMsg=new ArrayList<>(DataSupport.where("msgid=?",id).find(ChatMessage.class));
+                if(multiMsg.size()!=0){
+                    return;
+                }
                 if (matcherFrom.find() && matcherTo.find()) {
                     try {
+//                        String id=message.getStanzaId();
                         String fromUser = matcherFrom.group(0);
                         fromUser = fromUser.substring(0, fromUser.length() - 1);//去掉@
                         String toUser = matcherTo.group(0);
@@ -56,12 +65,11 @@ public class SmackChatManagerListener implements ChatManagerListener {
                         chatMessage.setFriendUsername(fromUser);
                         chatMessage.setFriendNickname(json.optString(ChatMessage.KEY_FROM_NICKNAME));
                         chatMessage.setMeUsername(toUser);
-//                        chatMessage.setMeNickname(mMeNickName);
+                        chatMessage.setMeNickname(mMeNickName);
                         chatMessage.setContent(json.optString(ChatMessage.KEY_MESSAGE_CONTENT));
                         chatMessage.setMulti(false);
-
-                        chatMessage.save();
-//                        DBHelper.getInstance().getSQLiteDB().save(chatMessage);
+                        chatMessage.setMsgID(id);
+//                        chatMessage.save();
                         Log.e("sendMessage", "send");
                         EventBus.getDefault().post(new MessageEvent(chatMessage));
                     } catch (Exception e) {
