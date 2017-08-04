@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,42 +26,25 @@ import com.r2.scau.moblieofficing.activity.EditGroupActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
-import com.r2.scau.moblieofficing.bean.ChatUser;
-import com.r2.scau.moblieofficing.bean.MultiChatRoom;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
+import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.DateUtil;
-
-import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
+import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 import org.jivesoftware.smackx.muc.MultiUserChat;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.litepal.LitePal;
 import org.litepal.crud.DataSupport;
-import org.reactivestreams.Subscriber;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.UUID;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-
-import okhttp3.Response;
 
 
 /**
@@ -107,6 +89,8 @@ public class MessageFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
+                    Intent intent = new Intent(getActivity(),CaptureActivity.class);
+                    getActivity().startActivityForResult(intent, Contacts.RequestCode.QRSCAN);
                 }
                 if (item.getItemId() == R.id.multiChat) {
                     Intent multiIntent = new Intent(getActivity().getApplicationContext(), EditGroupActivity.class);
@@ -118,8 +102,6 @@ public class MessageFragment extends Fragment {
                 }
                 if (item.getItemId() == R.id.cloud) {
                 }
-
-//
                 return true;
             }
         });
