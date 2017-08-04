@@ -27,8 +27,6 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.jivesoftware.smackx.filetransfer.FileTransfer.Status.initial;
-
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
 
     private TextView mMessageTV;
