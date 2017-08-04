@@ -56,7 +56,6 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
             holder.contactST.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.e("adapterItem11111", getItem(position).getPhone());
                     Intent intent=new Intent(mContext, ChatActivity.class);
                     Contact contact=new Contact();
                     contact=getItem(position);
@@ -78,6 +77,7 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
                     }
                     EventBus.getDefault().post(record);
                     intent.putExtra("chatrecord", record);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }
             });

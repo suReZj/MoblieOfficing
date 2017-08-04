@@ -107,7 +107,7 @@ public class GroupCreateFragment extends Fragment{
                     EventBus.getDefault().post(new GroupJoinEvent());
                     Message msg = Message.obtain();
                     msg.what = GET_GROUP_CREATE;
-                    msg.obj = groupList;
+                    msg.obj = createGroupList;
                     mHandler.sendMessage(msg);
                 }else {
                     Log.e("getGroup", "fail");

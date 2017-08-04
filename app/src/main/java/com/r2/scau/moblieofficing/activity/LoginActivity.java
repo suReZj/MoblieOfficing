@@ -25,6 +25,7 @@ import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
@@ -286,6 +287,7 @@ public class LoginActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_login:
                 Log.e("jason", "点击登录按钮");
+//                SmackManager.getInstance().logout();
                 login();
                 LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

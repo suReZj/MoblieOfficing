@@ -20,6 +20,8 @@ import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
+import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -27,7 +29,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
+public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
     private TextView mMessageTV;
     private TextView mNoticeTV;
@@ -48,19 +50,19 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     protected void initView() {
-            setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-            /**初始化facebook 图片加载器*/
-            Fresco.initialize(MainActivity.this);
+        /**初始化facebook 图片加载器*/
+        Fresco.initialize(MainActivity.this);
 
-            mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
-            mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
-            mWorkTV= (TextView) findViewById(R.id.tv_bottom_work);
-            mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
-            mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
+        mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
+        mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
+        mWorkTV = (TextView) findViewById(R.id.tv_bottom_work);
+        mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
+        mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
 
-            initViewPager();
-            initialBottomView();
+        initViewPager();
+        initialBottomView();
     }
 
 
@@ -69,7 +71,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                switch (tabId){
+                switch (tabId) {
                     case R.id.bottom_message:
                         mViewPager.setCurrentItem(0);
                         break;
@@ -105,7 +107,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mMessageTV.setSelected(true);
     }
 
-    public void initViewPager(){
+    public void initViewPager() {
         mFragmentList = new ArrayList<>();
         MessageFragment mMessageFragment = new MessageFragment();
         NoticeFragment mNoticeFragment = new NoticeFragment();
@@ -131,7 +133,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
      * 将底部导航栏的TextView的状态设置为未选择
      */
 
-    public void selected(){
+    public void selected() {
         mMessageTV.setSelected(false);
         mNoticeTV.setSelected(false);
         mWorkTV.setSelected(false);
@@ -183,7 +185,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.tv_bottom_message:
                 selected();
                 view.setSelected(true);
@@ -250,13 +252,38 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
 
     }
+
     @Override
     public void onBackPressed() {
         if (System.currentTimeMillis() - backLastPressedTimestamp > 2 * 1000) {
             Toast.makeText(MainActivity.this, R.string.press_back_again_to_exit, Toast.LENGTH_SHORT).show();
             backLastPressedTimestamp = System.currentTimeMillis();
         } else {
+            SmackManager.getInstance().logout();
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+//        SmackManager.getInstance().logout();
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+//        SmackManager.getInstance().login(UserUntil.gsonUser.getUserPhone(),UserUntil.gsonUser.getNickname());
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+//        SmackManager.getInstance().login(UserUntil.gsonUser.getUserPhone(),UserUntil.gsonUser.getNickname());
+        super.onRestart();
     }
 }

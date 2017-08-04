@@ -173,6 +173,7 @@ public class MessageFragment extends Fragment {
 //        chatRecord.setSetTopFlag(false);
         if (chatRecord == null) {//还没有创建此朋友的聊天记录
             Log.d("chatRecord1", "chatRecord1");
+            message.getChatMessage().save();
             chatRecord = new ChatRecord(message.getChatMessage());
             chatRecord.setSetTopFlag(false);
             addChatRecord(chatRecord);
@@ -281,7 +282,7 @@ public class MessageFragment extends Fragment {
                     } else {
                         flagOfMulti = "0";
                     }
-                    DataSupport.deleteAll(ChatMessage.class, "mfriendusername=? and mismulti=?", chatRecord.getmFriendUsername(), flagOfMulti);
+//                    DataSupport.deleteAll(ChatMessage.class, "mfriendusername=? and mismulti=?", chatRecord.getmFriendUsername(), flagOfMulti);
                     chatRecord.delete();
                     refreshData();
                 }

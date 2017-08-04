@@ -236,7 +236,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                             .add("groupName",groupName)
                             .build();
 //                        step 3: 创建请求
-                    Request request = new Request.Builder().url("http://192.168.13.57:8089/group/createGroup.shtml")
+                    Request request = new Request.Builder().url("http://192.168.13.61:8089/group/createGroup.shtml")
                             .post(formBody)
                             .addHeader("cookie", OkHttpUntil.loginSessionID)
                             .build();
@@ -267,7 +267,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                             .add("userPhone",contact.getPhone())
                             .build();
 //                            step 3: 创建请求
-                            request = new Request.Builder().url("http://192.168.13.57:8089/group/joinGroup.shtml")
+                            request = new Request.Builder().url("http://192.168.13.61:8089/group/joinGroup.shtml")
                                     .post(formBody)
                                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                                     .build();
