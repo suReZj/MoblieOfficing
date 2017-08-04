@@ -15,14 +15,18 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.r2.scau.moblieofficing.Constants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.bean.ImageIconBean;
 import com.r2.scau.moblieofficing.gson.GsonUploadPortrait;
 import com.r2.scau.moblieofficing.retrofit.ISignBiz;
 import com.r2.scau.moblieofficing.retrofit.IUploadPortrait;
+import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
@@ -32,12 +36,14 @@ import com.r2.scau.moblieofficing.widge.CustomVideoView;
 import com.r2.scau.moblieofficing.widge.popview.PopField;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -45,6 +51,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.R.attr.path;
 
 public class SignUpActivity extends BaseActivity {
 
@@ -189,13 +197,11 @@ public class SignUpActivity extends BaseActivity {
                         Log.d("info_cookies", "onResponse-size: " + cookies);
                         sessionID = session.substring(0, session.indexOf(";"));
                         Log.i("info_s", "session is  :" + sessionID);
-                        sessionID = OkHttpUntil.loginSessionID;
+                        OkHttpUntil.loginSessionID = sessionID;
                         UserUntil.phone = phoneET.getText().toString();
-                        uploadPortrait(nameET.getText().toString(), phoneET.getText().toString(),
-                                ImageUtils.changeDrawableToFile(ImageUtils.getIcon(nameET.getText().toString(), 23),
-                                        Environment.getExternalStorageDirectory().getPath(), nameET.getText().toString()));
-                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        doUpload(nameET.getText().toString()+".jpg",phoneET.getText().toString(),ImageUtils.changeDrawableToFile(
+                                ImageUtils.getIcon(nameET.getText().toString(), 23),
+                                Environment.getExternalStorageDirectory().getPath(), nameET.getText().toString()));
                     } else {
                         getVerCode();
                         Log.e("signUp", str);
@@ -212,44 +218,35 @@ public class SignUpActivity extends BaseActivity {
             }
         });
     }
+    public void doUpload(String filename, String userPhone, File image){
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("fileName",filename)
+                .addFormDataPart("userPhone",userPhone)
+                .addFormDataPart("file",filename, RequestBody.create(null,image));
 
-    public static void uploadPortrait(String filename, String userPhone, File image) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.SERVER_BASE_URL + "fileServer/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
+        final RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(Constants.SERVER_BASE_URL + "fileServer/uploadPortrait.shtml")
+                .addHeader("cookie", OkHttpUntil.loginSessionID)
+                .post(requestBody)
                 .build();
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("multipart/form-data"), image);
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("image", image.getName(), requestFile);
-        RequestBody filenameBody =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), filename);
-        RequestBody userPhoneBody =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), userPhone);
-        IUploadPortrait upBiz = retrofit.create(IUploadPortrait.class);
-        Call<GsonUploadPortrait> call = upBiz.uploadPortrait(body, filenameBody, userPhoneBody);
-        call.enqueue(new Callback<GsonUploadPortrait>() {
+
+        new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onResponse(Call<GsonUploadPortrait> call, Response<GsonUploadPortrait> response) {
-                GsonUploadPortrait gsonUploadPortrait = response.body();
-                if (gsonUploadPortrait.getCode() == 200) {
-                    String path = gsonUploadPortrait.getPath();
-                    SharedPrefUtil.getInstance().put(Constants.ImageIconURL,path);
-                    Log.d("uploadPortrait", gsonUploadPortrait.getMsg());
-                    Log.d("uploadPortrait_path", path);
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (response.code() == 200){
+                    ImageIconBean imageIconBean = new Gson().fromJson(response.body().string(), ImageIconBean.class);
+                    SharedPrefUtil.getInstance().put(Constants.ImageIconURL,imageIconBean.getPath());
+                    Log.d("onResponse",(String) SharedPrefUtil.getInstance().get(Constants.ImageIconURL,""));
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<GsonUploadPortrait> call, Throwable t) {
-                Log.e("uploadPortrait", "fail");
-            }
-        });
+            }});
     }
-
 
 
     @Override

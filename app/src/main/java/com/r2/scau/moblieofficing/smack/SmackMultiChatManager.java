@@ -6,6 +6,7 @@ import android.util.Log;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.MultiChatRoom;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -81,7 +82,7 @@ public class SmackMultiChatManager {
                         if (idx != -1) {
                             try {
                                 MultiUserChat multiUserChat = SmackManager.getInstance().getMultiChat(chatRoom.getRoomJid());
-                                multiUserChat.join("张大爷");
+                                multiUserChat.join(UserUntil.gsonUser.getNickname());
                                 SmackListenerManager.addMultiChatMessageListener(multiUserChat);
                                 ChatRecord record;
                                 List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", chatRoom.getRoomJid()).find(ChatRecord.class);
@@ -93,17 +94,16 @@ public class SmackMultiChatManager {
                                     record.setUuid(UUID.randomUUID().toString());
                                     record.setmFriendUsername(friendUserName);
                                     record.setmFriendNickname(friendNickName);
-                                    record.setmMeUsername("sure3");
-                                    record.setmMeNickname("张大爷");
+                                    record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+                                    record.setmMeNickname(UserUntil.gsonUser.getNickname());
                                     record.setmChatTime(DateUtil.currentDatetime());
                                     record.setmIsMulti(true);
+                                    record.setmChatJid(friendUserName);
                                     record.save();
-
                                 } else {
                                     record = chatRecords.get(0);
                                 }
                                 EventBus.getDefault().post(record);
-
                             } catch (Exception e) {
                                 Log.e(e.toString(), "join room %s failure");
                             }

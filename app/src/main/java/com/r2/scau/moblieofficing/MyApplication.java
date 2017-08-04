@@ -1,7 +1,7 @@
 package com.r2.scau.moblieofficing;
 
-import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 
 import org.litepal.LitePalApplication;
 
@@ -17,6 +17,7 @@ public class MyApplication extends LitePalApplication {
     public void onCreate() {
         super.onCreate();
         context = this.getApplicationContext();
+        Log.e("context", context.toString());
 
     }
 

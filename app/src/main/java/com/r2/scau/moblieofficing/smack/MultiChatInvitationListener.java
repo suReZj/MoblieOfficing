@@ -1,12 +1,12 @@
 package com.r2.scau.moblieofficing.smack;
 
 
-
 import android.util.Log;
 
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.ChatUser;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.XMPPConnection;
@@ -21,6 +21,7 @@ import java.util.UUID;
 
 /**
  * 多人聊天邀请监听
+ *
  * @author: laohu on 2017/1/24
  * @site: http://ittiger.cn
  */
@@ -29,13 +30,12 @@ public class MultiChatInvitationListener implements InvitationListener {
     @Override
     public void invitationReceived(XMPPConnection conn, MultiUserChat room, String inviter,
                                    String reason, String password, Message message) {
-Log.e("invitationReceived","invitationReceived");
+        Log.e("invitationReceived", "invitationReceived");
         try {
-            room.join("张大爷");
+            room.join(UserUntil.gsonUser.getNickname());
             SmackMultiChatManager.saveMultiChat(room);
             SmackListenerManager.addMultiChatMessageListener(room);
-            Log.e("加入群里","加入群里");
-
+            Log.e("加入群里", "加入群里");
             ChatRecord record;
             List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", room.getRoom()).find(ChatRecord.class);
             if (chatRecords.size() == 0) {
@@ -46,12 +46,12 @@ Log.e("invitationReceived","invitationReceived");
                 record.setUuid(UUID.randomUUID().toString());
                 record.setmFriendUsername(friendUserName);
                 record.setmFriendNickname(friendNickName);
-                record.setmMeUsername("sure3");
-                record.setmMeNickname("张大爷");
+                record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+                record.setmMeNickname(UserUntil.gsonUser.getNickname());
                 record.setmChatTime(DateUtil.currentDatetime());
+                record.setmChatJid(friendUserName);
                 record.setmIsMulti(true);
                 record.save();
-
             } else {
                 record = chatRecords.get(0);
             }

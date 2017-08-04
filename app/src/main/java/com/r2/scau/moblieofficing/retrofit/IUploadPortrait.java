@@ -20,12 +20,6 @@ import retrofit2.http.Part;
  */
 
 public interface IUploadPortrait {
-//    @POST(Contacts.uploadPortrait)
-//    @FormUrlEncoded
-//    Call<GsonUploadPortrait> uploadPortrait(
-//
-//            @Field("file") File file
-//    );
     @Multipart
     @POST(Contacts.uploadPortrait)
     Call<GsonUploadPortrait> uploadPortrait(@Part MultipartBody.Part file,

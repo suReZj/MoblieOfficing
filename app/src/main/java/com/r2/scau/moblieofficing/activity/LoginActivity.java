@@ -23,6 +23,8 @@ import com.r2.scau.moblieofficing.gson.GsonFriends;
 import com.r2.scau.moblieofficing.gson.GsonUsers;
 import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
+import com.r2.scau.moblieofficing.smack.SmackListenerManager;
+import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
@@ -49,6 +51,7 @@ public class LoginActivity extends BaseActivity {
     private EditText passwordET;
     private Button loginBtn;
     private TextView sigUpTV;
+    private String password;
     private String loginSessionID;
 
     // 登录特效
@@ -76,6 +79,7 @@ public class LoginActivity extends BaseActivity {
         passwordET = (EditText) findViewById(R.id.input_password_login);
         loginBtn = (Button) findViewById(R.id.btn_login);
         sigUpTV = (TextView) findViewById(R.id.link_signup);
+        passwordET = (EditText) findViewById(R.id.input_password_login);
         //加载视频资源控件
         videoview = (CustomVideoView) findViewById(R.id.videoview);
         //设置播放加载路径
@@ -95,9 +99,14 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        userET.setText((CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_USER_PHONE_KEY,""));
-        passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_PASSWORD_KEY,""));
-
+        CharSequence userPhone = (CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_USER_PHONE_KEY,"");
+        CharSequence password = (CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_PASSWORD_KEY,"");
+        if (userET != null){
+            userET.setText(userPhone);
+            if (password != null){
+                passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_PASSWORD_KEY,""));
+            }
+        }
     }
 
     @Override
@@ -106,10 +115,26 @@ public class LoginActivity extends BaseActivity {
         sigUpTV.setOnClickListener(this);
     }
 
+    public void loginOpenFire(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SmackManager smack = SmackManager.getInstance();
+                smack.login(UserUntil.phone, password);
+                try {
+                    SmackListenerManager.addGlobalListener();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+    }
 
     public void login() {
         final String user = userET.getText().toString();
-        final String password = passwordET.getText().toString();
+        password = passwordET.getText().toString();
         String passwordMD5 = user + "#" + password;
         passwordMD5 = MathUtil.getMD5(passwordMD5);
         Retrofit retrofit = new Retrofit.Builder()
@@ -137,6 +162,7 @@ public class LoginActivity extends BaseActivity {
                         UserUntil.phone = userET.getText().toString();
                         getUserInfo();
                         getFriend();
+                        loginOpenFire();
                     }else {
                         Log.e("login", str);
                     }
@@ -199,7 +225,6 @@ public class LoginActivity extends BaseActivity {
                 if(gsonUsers.getCode() == 200){
                     Log.e("getUser", "success");
                     UserUntil.gsonUser = gsonUsers.getUserInfo();
-
                 }else {
                     Log.e("getUser", "fail");
                 }
