@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.r2.scau.moblieofficing.R;
@@ -19,8 +20,7 @@ import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
-import com.r2.scau.moblieofficing.smack.SmackListenerManager;
-import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
@@ -36,36 +36,35 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     private TextView mWorkTV;
     private TextView mContactTV;
     private TextView mUserInfoTV;
-    private ViewPager mViewPager;
+    private NoScrollViewPager mViewPager;
     private List<Fragment> mFragmentList;
     private MyFragmentPagerAdapter adapter;
     private BottomBar bottomBar;
+    private long backLastPressedTimestamp = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        try {
-//            SmackListenerManager.addGlobalListener();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
+
 
     @Override
-    public void initView(){
-        setContentView(R.layout.activity_main);
+    protected void initView() {
+            setContentView(R.layout.activity_main);
 
-        /**初始化facebook 图片加载器*/
-        Fresco.initialize(MainActivity.this);
+            /**初始化facebook 图片加载器*/
+            Fresco.initialize(MainActivity.this);
 
-        mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
-        mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
-        mWorkTV= (TextView) findViewById(R.id.tv_bottom_work);
-        mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
-        mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
-        initViewPager();
-        initialBottomView();
+            mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
+            mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
+            mWorkTV= (TextView) findViewById(R.id.tv_bottom_work);
+            mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
+            mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
+
+            initViewPager();
+            initialBottomView();
     }
+
 
     private void initialBottomView() {
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);
@@ -122,7 +121,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         mFragmentList.add(mContactFragment);
         mFragmentList.add(mUserInfoFragment);
 
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mViewPager = (NoScrollViewPager) findViewById(R.id.view_pager);
         adapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), mFragmentList);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(0);
@@ -253,5 +252,13 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         }
 
     }
-
+    @Override
+    public void onBackPressed() {
+        if (System.currentTimeMillis() - backLastPressedTimestamp > 2 * 1000) {
+            Toast.makeText(MainActivity.this, R.string.press_back_again_to_exit, Toast.LENGTH_SHORT).show();
+            backLastPressedTimestamp = System.currentTimeMillis();
+        } else {
+            super.onBackPressed();
+        }
+    }
 }

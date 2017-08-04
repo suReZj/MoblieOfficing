@@ -73,9 +73,9 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         setContentView(R.layout.activity_contact);
 
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
-        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv_personal);
-        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv_personal);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_contact);
+        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv);
+        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mTitleTV = (TextView) findViewById(R.id.toolbar_title);
 

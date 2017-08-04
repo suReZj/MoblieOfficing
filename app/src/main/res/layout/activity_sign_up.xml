@@ -1,133 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/colorLightBlue">
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+
+    <com.r2.scau.moblieofficing.widge.CustomVideoView
+        android:id="@+id/videoview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp"
-        android:paddingTop="56dp">
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
-        <!--<ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/logo"/> -->
 
-        <!--  Name Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/colorWhite">
-
-            <EditText
-                android:id="@+id/input_name_sign_up"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/input_user_name"
-                android:textColor="@color/colorWhite"
-                android:textColorHint="@color/colorWhite"
-                android:inputType="textCapWords"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/colorWhite">
-
-            <EditText
-                android:id="@+id/input_phone_sign_up"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/input_phone"
-                android:textColor="@color/colorWhite"
-                android:textColorHint="@color/colorWhite"
-                android:inputType="textEmailAddress"/>
-        </android.support.design.widget.TextInputLayout>
-
-        <!-- Password Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:textColorHint="@color/colorWhite">
-
-            <EditText
-                android:id="@+id/input_password_sign_up"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/input_password"
-                android:textColor="@color/colorWhite"
-                android:textColorHint="@color/colorWhite"
-                android:inputType="textPassword"/>
-        </android.support.design.widget.TextInputLayout>
-
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!--verification code Label -->
+            android:orientation="vertical"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="50dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="56dp">
+
+            <!--<ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="72dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/logo"/> -->
+
+            <!--  Name Label -->
             <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:textColorHint="@color/colorWhite">
 
                 <EditText
-                    android:id="@+id/input_ver_code"
+                    android:id="@+id/input_name_sign_up"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/input_vercode"
+                    android:hint="@string/input_user_name"
+                    android:inputType="textCapWords"
                     android:textColor="@color/colorWhite"
-                    android:textColorHint="@color/colorWhite"
-                    android:inputType="textPassword"/>
+                    android:textColorHint="@color/colorWhite" />
             </android.support.design.widget.TextInputLayout>
 
-            <ImageView
-                android:id="@+id/iv_ver_code"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                />
+            <!-- Email Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:textColorHint="@color/colorWhite">
+
+                <EditText
+                    android:id="@+id/input_phone_sign_up"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/input_phone"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite" />
+            </android.support.design.widget.TextInputLayout>
+
+            <!-- Password Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:textColorHint="@color/colorWhite">
+
+                <EditText
+                    android:id="@+id/input_password_sign_up"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/input_password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite" />
+            </android.support.design.widget.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!--verification code Label -->
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="2"
+                    android:textColorHint="@color/colorWhite">
+
+                    <EditText
+                        android:id="@+id/input_ver_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/input_vercode"
+                        android:inputType="textPassword"
+                        android:textColor="@color/colorWhite"
+                        android:textColorHint="@color/colorWhite" />
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageView
+                    android:id="@+id/iv_ver_code"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:layout_height="33dp"
+                    android:scaleType="centerCrop"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+
+            <!-- Signup Button -->
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/btn_sign_up"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/colorLightBlue"
+                android:padding="12dp"
+                android:textSize="19sp"
+                android:text="@string/sign_up"
+                android:textColor="#ffffff" />
+
+
         </LinearLayout>
+    </ScrollView>
 
-
-        <!-- Signup Button -->
-        <android.support.v7.widget.AppCompatButton
-            android:id="@+id/btn_sign_up"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/colorLightBlue"
-            android:padding="12dp"
-            android:text="@string/sign_up"
-            android:textColor="@color/colorWhite"/>
-
-        <TextView
-            android:id="@+id/link_login"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            android:gravity="center"
-            android:text="@string/link_sign_up"
-            android:textSize="12sp"/>
-
-    </LinearLayout>
-</ScrollView>
+</FrameLayout>

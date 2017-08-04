@@ -12,6 +12,12 @@
         android:layout_height="1px"
         android:background="@color/colorGray"
         android:layout_above="@+id/bottom_bar"/>
+    <com.r2.scau.moblieofficing.widge.NoScrollViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBar">
+    </com.r2.scau.moblieofficing.widge.NoScrollViewPager>
 
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"
@@ -29,7 +35,6 @@
         android:id="@+id/bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:background="@color/colorBottomBar"
         android:paddingTop="10dp"
         android:paddingBottom="5dp"
@@ -95,11 +100,6 @@
 
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_bar">
-    </android.support.v4.view.ViewPager>
+
 
 </RelativeLayout>

@@ -24,7 +24,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
 
     private View view;
     private Context mContext;
-    private Button mButton;
+
 
     @Nullable
     @Override
@@ -81,13 +81,6 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener{
     }
 
     public void initView(){
-        mButton = (Button) view.findViewById(R.id.button_login);
-        mButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(mContext, LoginActivity.class);
-                startActivity(intent);
-            }
-        });
+
     }
 }
