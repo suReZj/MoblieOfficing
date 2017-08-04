@@ -95,9 +95,14 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        userET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_USER_PHONE_KEY,""));
-        passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,""));
-
+        CharSequence userPhone = (CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_USER_PHONE_KEY,"");
+        CharSequence password = (CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,"");
+        if (userET != null){
+            userET.setText(userPhone);
+            if (password != null){
+                passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,""));
+            }
+        }
     }
 
     @Override
