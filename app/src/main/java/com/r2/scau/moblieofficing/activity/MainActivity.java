@@ -27,8 +27,6 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.jivesoftware.smackx.filetransfer.FileTransfer.Status.initial;
-
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
 
     private TextView mMessageTV;
@@ -47,22 +45,24 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         super.onCreate(savedInstanceState);
     }
 
+
     @Override
-    public void initView(){
-        setContentView(R.layout.activity_main);
+    protected void initView() {
+            setContentView(R.layout.activity_main);
 
-        /**初始化facebook 图片加载器*/
-        Fresco.initialize(MainActivity.this);
+            /**初始化facebook 图片加载器*/
+            Fresco.initialize(MainActivity.this);
 
-        mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
-        mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
-        mWorkTV= (TextView) findViewById(R.id.tv_bottom_work);
-        mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
-        mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
+            mMessageTV = (TextView) findViewById(R.id.tv_bottom_message);
+            mNoticeTV = (TextView) findViewById(R.id.tv_bottom_notice);
+            mWorkTV= (TextView) findViewById(R.id.tv_bottom_work);
+            mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
+            mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
 
-        initViewPager();
-        initialBottomView();
+            initViewPager();
+            initialBottomView();
     }
+
 
     private void initialBottomView() {
         bottomBar = (BottomBar) findViewById(R.id.bottomBar);

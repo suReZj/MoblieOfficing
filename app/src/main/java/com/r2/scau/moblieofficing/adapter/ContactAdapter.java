@@ -1,5 +1,7 @@
 package com.r2.scau.moblieofficing.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +11,20 @@ import android.widget.TextView;
 
 import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.ChatActivity;
+import com.r2.scau.moblieofficing.bean.ChatRecord;
+import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.gson.GsonUser;
+import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
+
+import org.greenrobot.eventbus.EventBus;
+import org.litepal.crud.DataSupport;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by 嘉进 on 11:19.
@@ -17,8 +32,13 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactViewHolder>
         implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
+    private Context mContext;
 
-        @Override
+    public ContactAdapter(Context mContext) {
+        this.mContext = mContext;
+    }
+
+    @Override
         public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.contact_item, parent, false);
@@ -27,10 +47,40 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
         }
 
         @Override
-        public void onBindViewHolder(ContactViewHolder holder, int position) {
+        public void onBindViewHolder(ContactViewHolder holder, final int position) {
             Log.e("adapterItem", getItem(position).getName());
             holder.contactST.setLeftTopString(getItem(position).getName());
             holder.contactST.setLeftBottomString(getItem(position).getPhone());
+
+
+            holder.contactST.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Log.e("adapterItem11111", getItem(position).getPhone());
+                    Intent intent=new Intent(mContext, ChatActivity.class);
+                    Contact contact=new Contact();
+                    contact=getItem(position);
+                    ChatRecord record;
+                    List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", contact.getPhone()).find(ChatRecord.class);
+                    if(chatRecords.size()==0){
+                        record = new ChatRecord();
+                        record.setUuid(UUID.randomUUID().toString());
+                        record.setmFriendUsername(contact.getPhone());
+                        record.setmFriendNickname(contact.getName());
+                        record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+                        record.setmMeNickname(UserUntil.gsonUser.getNickname());
+                        record.setmChatTime(DateUtil.currentDatetime());
+                        record.setmIsMulti(false);
+                        record.setmChatJid(SmackManager.getInstance().getChatJid(contact.getPhone()));
+                        record.save();
+                    }else {
+                        record = chatRecords.get(0);
+                    }
+                    EventBus.getDefault().post(record);
+                    intent.putExtra("chatrecord", record);
+                    mContext.startActivity(intent);
+                }
+            });
         }
 
         @Override

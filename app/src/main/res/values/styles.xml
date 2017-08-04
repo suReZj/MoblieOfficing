@@ -28,7 +28,6 @@
         <item name="colorControlNormal">@color/messageTitle</item>
     </style>
 
-
         <style name="line_style">
             <item name="android:layout_width">match_parent</item>
             <item name="android:layout_height">0.5dp</item>
@@ -47,10 +46,10 @@
         <item name="actionMenuTextColor">@color/messageTitle</item> <!--颜色-->
         <item name="colorPrimaryDark">@color/colorBlack</item>
     </style>
-
     <!--修改Toolbar popup menu 弹出位置-->
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
+        <item name="overlapAnchor">false</item>
+        <!--把该属性改为false即可使menu位置位于toolbar之下-->
     </style>
 
     <style name="SwitchButtonStyle">
@@ -64,6 +63,7 @@
         <item name="colorControlHighlight">@color/messageTitle</item>
         <item name="colorButtonNormal">@color/colorLightBlue</item>
     </style>
+
 
 
 

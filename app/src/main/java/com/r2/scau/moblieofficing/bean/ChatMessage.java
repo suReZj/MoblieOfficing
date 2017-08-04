@@ -15,6 +15,7 @@ public class ChatMessage extends DataSupport implements Parcelable {
     public static final String KEY_FROM_NICKNAME = "fromNickName";
     public static final String KEY_MESSAGE_CONTENT = "messageContent";
     public static final String KEY_MULTI_CHAT_SEND_USER = "multiChatSendUser";
+    private String msgID;
     /**
      *
      */
@@ -72,6 +73,15 @@ public class ChatMessage extends DataSupport implements Parcelable {
 
     public ChatMessage() {
 
+    }
+
+
+    public String getMsgID() {
+        return msgID;
+    }
+
+    public void setMsgID(String msgID) {
+        this.msgID = msgID;
     }
 
     public ChatMessage(int messageType, boolean isMeSend) {

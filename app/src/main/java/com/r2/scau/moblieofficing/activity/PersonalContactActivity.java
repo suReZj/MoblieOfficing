@@ -80,7 +80,7 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter = new ContactAdapter();
+        adapter = new ContactAdapter(getApplicationContext());
         mQuickSideBarView.setLetters(customLetters);
         adapter.addAll(mContactList);
 
