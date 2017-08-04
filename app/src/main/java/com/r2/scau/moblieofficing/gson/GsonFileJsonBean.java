@@ -1,4 +1,4 @@
-package com.r2.scau.moblieofficing.bean;
+package com.r2.scau.moblieofficing.gson;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

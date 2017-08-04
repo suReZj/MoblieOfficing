@@ -29,14 +29,16 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
     private int fileType;
     private String filename;
     private String fileSelectType;
+    private int position;
 
-    public BottomView(Activity mContext,String filename, int fileType , String fileSelectType, View.OnClickListener bottomOnClickListener) {
+    public BottomView(Activity mContext,String filename, int fileType , int position, String fileSelectType, View.OnClickListener bottomOnClickListener) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         this.bottomOnClickListener = bottomOnClickListener;
         this.mContext = mContext;
         this.fileType = fileType;
         this.filename = filename;
         this.fileSelectType = fileSelectType;
+        this.position = position;
         mMenuView = inflater.inflate(R.layout.popwindow_filelist_more, null);
         initView(fileType);
         initData();
@@ -101,6 +103,7 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
             case R.id.popwindow_cancel:
                 break;
             default:
+                view.setTag(position);
                 bottomOnClickListener.onClick(view);
                 break;
         }
