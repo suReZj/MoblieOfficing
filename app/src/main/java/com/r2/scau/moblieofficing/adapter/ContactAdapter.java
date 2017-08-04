@@ -1,14 +1,21 @@
 package com.r2.scau.moblieofficing.adapter;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allen.library.SuperTextView;
+import com.amulyakhare.textdrawable.TextDrawable;
+import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 /**
@@ -31,6 +38,7 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
             Log.e("adapterItem", getItem(position).getName());
             holder.contactST.setLeftTopString(getItem(position).getName());
             holder.contactST.setLeftBottomString(getItem(position).getPhone());
+            holder.icon.setImageDrawable(ImageUtils.getIcon(getItem(position).getName(),23));
         }
 
         @Override
@@ -55,9 +63,11 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
 
         class ContactViewHolder extends RecyclerView.ViewHolder{
             SuperTextView contactST;
+            ImageView icon;
             public ContactViewHolder(View view){
                 super(view);
                 contactST = (SuperTextView) view.findViewById(R.id.st_contact);
+                icon = (ImageView) view.findViewById(R.id.image);
             }
 
         }

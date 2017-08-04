@@ -23,6 +23,7 @@ public class Contacts {
     public static final String DeleteFile = "/DeleteFile.shtml";
     public static final String deleteGroupFile = "/deleteGroupFile.shtml";
     public static final String DeleteDir = "/DeleteDir.shtml";
+    public static final String uploadPortrait = "/uploadPortrait.shtml";
 
     /**
      * Create by edwincheng in 2017/7/28.

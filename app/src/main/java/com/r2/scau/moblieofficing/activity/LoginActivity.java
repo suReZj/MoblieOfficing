@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.r2.scau.moblieofficing.Contants;
+import com.r2.scau.moblieofficing.Constants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonFriend;
@@ -95,8 +95,8 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        userET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_USER_PHONE_KEY,""));
-        passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,""));
+        userET.setText((CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_USER_PHONE_KEY,""));
+        passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_PASSWORD_KEY,""));
 
     }
 
@@ -113,7 +113,7 @@ public class LoginActivity extends BaseActivity {
         String passwordMD5 = user + "#" + password;
         passwordMD5 = MathUtil.getMD5(passwordMD5);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "u/")
+                .baseUrl(Constants.SERVER_BASE_URL + "u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
         Call<ResponseBody> call = loginBiz.login(user, passwordMD5, true);
@@ -124,8 +124,8 @@ public class LoginActivity extends BaseActivity {
                     String str = response.body().string();
                     Log.e("login", str);
                     if (str.contains("登陆成功")) {
-                        SharedPrefUtil.getInstance().put(Contants.SP_LOGIN_USER_PHONE_KEY, user);
-                        SharedPrefUtil.getInstance().put(Contants.SP_LOGIN_PASSWORD_KEY, password);
+                        SharedPrefUtil.getInstance().put(Constants.SP_LOGIN_USER_PHONE_KEY, user);
+                        SharedPrefUtil.getInstance().put(Constants.SP_LOGIN_PASSWORD_KEY, password);
                         Headers headers = response.headers();
                         Log.d("info_headers", "header " + headers);
                         List<String> cookies = headers.values("Set-Cookie");
@@ -186,7 +186,7 @@ public class LoginActivity extends BaseActivity {
 
     public void getUserInfo(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "group/")
+                .baseUrl(Constants.SERVER_BASE_URL + "group/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -214,7 +214,7 @@ public class LoginActivity extends BaseActivity {
 
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "/user/")
+                .baseUrl(Constants.SERVER_BASE_URL + "/user/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
