@@ -1,6 +1,7 @@
 package com.r2.scau.moblieofficing.untils;
 
 import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.gson.GsonUser;
 
 import java.util.List;
@@ -14,4 +15,6 @@ public class UserUntil {
     public static String phone;
     public static List<Contact> friendList;
     public static GsonUser gsonUser;
+    public static List<GsonGroup> createGroupList;
+    public static List<GsonGroup> joinGroupList;
 }

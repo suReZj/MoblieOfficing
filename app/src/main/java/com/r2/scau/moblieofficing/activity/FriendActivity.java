@@ -84,10 +84,10 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
             }
         };
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
-        mSearchView = (SearchView) findViewById(R.id.sv_personal_contact);
-        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv_personal);
-        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv_personal);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_contact);
+        mSearchView = (SearchView) findViewById(R.id.sv_contact);
+        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv);
+        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         titleTV = (TextView) findViewById(R.id.toolbar_title);
 
