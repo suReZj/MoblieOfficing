@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -14,19 +15,25 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.event.SignUpFinishEvent;
 import com.r2.scau.moblieofficing.retrofit.ISignBiz;
+import com.r2.scau.moblieofficing.smack.SmackListenerManager;
+import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.CustomVideoView;
 import com.r2.scau.moblieofficing.widge.popview.PopField;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -45,6 +52,7 @@ public class SignUpActivity extends BaseActivity {
     private EditText passwordET;
     private EditText verCodeET;
     private String verCodeKey;
+    private String password;
     private String sessionID;
     private OkHttpClient okHttpClient = new OkHttpClient();
     private ImageView verCodeImageView;
@@ -56,6 +64,19 @@ public class SignUpActivity extends BaseActivity {
 
     //创建播放视频的控件对象
     private CustomVideoView videoview;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
     @Override
     public void initView() {
         //取消标题
@@ -124,7 +145,7 @@ public class SignUpActivity extends BaseActivity {
         verCodeKey = MathUtil.getMD5(verCodeKey);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL+"open/")
+                .baseUrl(Contants.SERVER_IP + "/open/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.getVerCode(verCodeKey);
@@ -150,16 +171,33 @@ public class SignUpActivity extends BaseActivity {
         });
     }
 
+    public void loginOpenFire(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SmackManager smack = SmackManager.getInstance();
+                smack.login(UserUntil.phone, password);
+                try {
+                    SmackListenerManager.addGlobalListener();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+    }
+
 
     public void signUp() {
         String name = nameET.getText().toString();
         String phone = phoneET.getText().toString();
         String verCode = verCodeET.getText().toString();
         Log.e("verCode", verCode);
-        String password = passwordET.getText().toString();
+        password = passwordET.getText().toString();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "u/")
+                .baseUrl(Contants.SERVER_IP + "/u/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.signUp(name, phone, password, verCode, verCodeKey);
@@ -177,10 +215,11 @@ public class SignUpActivity extends BaseActivity {
                         Log.d("info_cookies", "onResponse-size: " + cookies);
                         sessionID = session.substring(0, session.indexOf(";"));
                         Log.i("info_s", "session is  :" + sessionID);
-                        sessionID = OkHttpUntil.loginSessionID;
+                        OkHttpUntil.loginSessionID = sessionID;
                         UserUntil.phone = phoneET.getText().toString();
-                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                        startActivity(intent);
+                        RetrofitUntil.type = Contants.SIGN_UP_GET_DATA;
+                        RetrofitUntil.getUserInfo();
+                        loginOpenFire();
                     } else {
                         getVerCode();
                         Log.e("signUp", str);
@@ -196,6 +235,14 @@ public class SignUpActivity extends BaseActivity {
                 getVerCode();
             }
         });
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSignUpFinishEvent(SignUpFinishEvent finishEvent) {
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 

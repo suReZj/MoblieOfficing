@@ -48,12 +48,16 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         // 将activity推入栈中
         listActivity.push(this);
         //初始化ui
+        initView(savedInstanceState);
         initView();
         //初始化数据
         initData();
         //初始化监听器
         initListener();
     }
+
+    // 带 Bundle savedInstanceState 的initView
+    protected  void initView(Bundle savedInstanceState){};
 
     // 初始化ui
     protected abstract void initView();

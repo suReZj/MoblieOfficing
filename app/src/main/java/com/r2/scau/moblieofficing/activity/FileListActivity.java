@@ -21,7 +21,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.FileManagerAdapter;
 import com.r2.scau.moblieofficing.bean.FileBean;
 import com.r2.scau.moblieofficing.gson.GsonFileJsonBean;
-import com.r2.scau.moblieofficing.untils.Contacts;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.DateUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
@@ -92,7 +92,7 @@ public class FileListActivity extends BaseActivity {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case Contacts.FILEMANAGER.GETDIR_SUCCESS:
+                    case Contants.FILEMANAGER.GETDIR_SUCCESS:
                         //初始化状态
                         if (fileManagerAdapter == null || initState == true) {
                             initRecycler();
@@ -103,16 +103,16 @@ public class FileListActivity extends BaseActivity {
                         }
                         break;
 
-                    case Contacts.FILEMANAGER.FILEDOWNLOAD_ING:
+                    case Contants.FILEMANAGER.FILEDOWNLOAD_ING:
                         Log.e(TAG, "正在下载进度：" + msg.arg1);
                         break;
 
-                    case Contacts.FILEMANAGER.FILEDOWNLOAD_SUCCESS:
+                    case Contants.FILEMANAGER.FILEDOWNLOAD_SUCCESS:
                         Log.e(TAG, "下载成功");
 
                         break;
 
-                    case Contacts.FILEMANAGER.DELETE_SUCCESS:
+                    case Contants.FILEMANAGER.DELETE_SUCCESS:
                         getFileListFromServer(getPathString(),fileSelectType);
                         break;
 
@@ -176,7 +176,7 @@ public class FileListActivity extends BaseActivity {
             case R.id.menu_upload:
                 bundle.clear();
                 bundle.putString("remotePath", getPathString());
-                FileListActivity.this.openActivityForResult(UploadSelectFileActivity.class, bundle, Contacts.RequestCode.UPLOAD);
+                FileListActivity.this.openActivityForResult(UploadSelectFileActivity.class, bundle, Contants.RequestCode.UPLOAD);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -192,7 +192,7 @@ public class FileListActivity extends BaseActivity {
             public void onItemClick(View view, int position) {
                 FileBean fileBean = fileList.get(position);
                 //对文件的处理
-                if (fileBean.getAttribute() == Contacts.FILEMANAGER.FILE_TYPE) {
+                if (fileBean.getAttribute() == Contants.FILEMANAGER.FILE_TYPE) {
                     ToastUtils.show(FileListActivity.this, "点击的是文件" + fileBean.getName(), Toast.LENGTH_SHORT);
 
                     doDowmload(getPathString(), fileBean.getName());
@@ -224,7 +224,7 @@ public class FileListActivity extends BaseActivity {
                     .add("path", downloadPath)
                     .add("userPhone", "123456789010")
                     .build();
-            request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.filedownload)
+            request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.filedownload)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
@@ -233,7 +233,7 @@ public class FileListActivity extends BaseActivity {
                     .add("fileName", filename)
                     .add("groupId", "123456789010")
                     .build();
-            request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.downLoadGroupFile)
+            request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.downLoadGroupFile)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
@@ -270,14 +270,14 @@ public class FileListActivity extends BaseActivity {
                         int progress = (int) (sum * 1.0f / total * 100);
                         Log.e("h_bl", "progress=" + progress);
                         message = handler.obtainMessage();
-                        message.what = Contacts.FILEMANAGER.FILEDOWNLOAD_ING;
+                        message.what = Contants.FILEMANAGER.FILEDOWNLOAD_ING;
                         message.arg1 = progress;
                         handler.sendMessage(message);
                     }
                     fos.flush();
                     Log.e("h_bl", "文件下载成功");
                     message = handler.obtainMessage();
-                    message.what = Contacts.FILEMANAGER.FILEDOWNLOAD_SUCCESS;
+                    message.what = Contants.FILEMANAGER.FILEDOWNLOAD_SUCCESS;
                     handler.sendMessage(message);
 
                 } catch (Exception e) {
@@ -347,7 +347,7 @@ public class FileListActivity extends BaseActivity {
                  * Create by edwincheng in 2027/7/27.
                  */
                 bundle.putString("path", getPathString());
-                openActivityForResult(FMRenameActivity.class, bundle, Contacts.RequestCode.CREATE);
+                openActivityForResult(FMRenameActivity.class, bundle, Contants.RequestCode.CREATE);
                 break;
         }
     }
@@ -390,12 +390,12 @@ public class FileListActivity extends BaseActivity {
         for (String str : tempJsonBean.getFiles()) {
             String[] fi = str.split(";");
             Log.e(TAG, "fileJsonToObject 文件" + fi.length);
-            tempFileList.add(new FileBean(fi[0], Integer.parseInt(fi[1]), DateUtils.timete(fi[2]), Contacts.FILEMANAGER.FILE_TYPE));
+            tempFileList.add(new FileBean(fi[0], Integer.parseInt(fi[1]), DateUtils.timete(fi[2]), Contants.FILEMANAGER.FILE_TYPE));
         }
         for (String str : tempJsonBean.getFolders()) {
             String[] fo = str.split(";");
             Log.e(TAG, "fileJsonToObject 文件夹" + fo.length);
-            tempFileList.add(new FileBean(fo[0], Integer.parseInt(fo[1]), DateUtils.timete(fo[2]), Contacts.FILEMANAGER.FOLDER_TYPE));
+            tempFileList.add(new FileBean(fo[0], Integer.parseInt(fo[1]), DateUtils.timete(fo[2]), Contants.FILEMANAGER.FOLDER_TYPE));
         }
         Log.e(TAG, "tempFileLists .size " + tempFileList.size());
         return tempFileList;
@@ -406,10 +406,10 @@ public class FileListActivity extends BaseActivity {
         Toast.makeText(FileListActivity.this, "删除按钮 " , Toast.LENGTH_SHORT).show();
         if (fileSelectType.equals("personalfile")){
             String posturl = null;
-            if (fileList.get(bottompos).getAttribute() == Contacts.FILEMANAGER.FOLDER_TYPE){
-                posturl = Contacts.computer_ip + Contacts.file_Server + Contacts.DeleteDir;
-            }else if(fileList.get(bottompos).getAttribute() == Contacts.FILEMANAGER.FILE_TYPE){
-                posturl = Contacts.computer_ip + Contacts.file_Server + Contacts.DeleteFile;
+            if (fileList.get(bottompos).getAttribute() == Contants.FILEMANAGER.FOLDER_TYPE){
+                posturl = Contants.SERVER_IP + Contants.file_Server + Contants.DeleteDir;
+            }else if(fileList.get(bottompos).getAttribute() == Contants.FILEMANAGER.FILE_TYPE){
+                posturl = Contants.SERVER_IP + Contants.file_Server + Contants.DeleteFile;
             }
             Log.e(TAG, "doDelete: -----> 个人文档--删除操作 url" + posturl);
             formBody = new FormBody.Builder()
@@ -425,7 +425,7 @@ public class FileListActivity extends BaseActivity {
                     .add("path",getPathString() + "/"  + fileList.get(bottompos).getName())
                     .add("groupId","111")
                     .build();
-            request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.deleteGroupFile)
+            request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.deleteGroupFile)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
@@ -442,10 +442,10 @@ public class FileListActivity extends BaseActivity {
                 //重新get一次当前文件目录，是在handler做操作 ？还是在这里？
                 message = handler.obtainMessage();
                 if (response.code() == 200){
-                    message.what = Contacts.FILEMANAGER.DELETE_SUCCESS;
+                    message.what = Contants.FILEMANAGER.DELETE_SUCCESS;
                 }else{
                     Log.e(TAG, "网络请求 错误  "+ response.code() + "   " + response.message() );
-                    message.what = Contacts.FILEMANAGER.DELETE_FAILURE;
+                    message.what = Contants.FILEMANAGER.DELETE_FAILURE;
                 }
                 handler.sendMessage(message);
             }
@@ -465,7 +465,7 @@ public class FileListActivity extends BaseActivity {
         bundle.putString("path",getPathString());
         bundle.putString("filename",fileList.get(bottompos).getName());
         intent.putExtras(bundle);
-        this.startActivityForResult(intent,Contacts.RequestCode.RENAME,bundle);
+        this.startActivityForResult(intent, Contants.RequestCode.RENAME,bundle);
     }
 
     private void doMove(int bottompos){
@@ -478,7 +478,7 @@ public class FileListActivity extends BaseActivity {
                     .add("path", path)
                     .add("userPhone", "123456789010")
                     .build();
-            request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.getDir)
+            request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.getDir)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
@@ -486,7 +486,7 @@ public class FileListActivity extends BaseActivity {
             formBody = new FormBody.Builder()
                     .add("groupId", "123456789010")
                     .build();
-            request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.getGroupDir)
+            request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.getGroupDir)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
@@ -506,10 +506,10 @@ public class FileListActivity extends BaseActivity {
                 if (response.code() == 200){
                     fileJson = gson.fromJson(response.body().string(), GsonFileJsonBean.class);
                     fileList = fileJsonToObject(fileJson);
-                    message.what = Contacts.FILEMANAGER.GETDIR_SUCCESS;
+                    message.what = Contants.FILEMANAGER.GETDIR_SUCCESS;
                 }else{
                     Log.e(TAG, "网络请求 错误  "+ response.code() + "   " + response.message() );
-                    message.what = Contacts.FILEMANAGER.GETDIR_FAILURE;
+                    message.what = Contants.FILEMANAGER.GETDIR_FAILURE;
                 }
                 handler.sendMessage(message);
             }
@@ -519,7 +519,7 @@ public class FileListActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case Contacts.RequestCode.RENAME:
+            case Contants.RequestCode.RENAME:
                 if(resultCode == RESULT_OK){
                     ToastUtils.show(FileListActivity.this,"重命名成功", Toast.LENGTH_SHORT);
                     showChange(getPathString());
@@ -530,7 +530,7 @@ public class FileListActivity extends BaseActivity {
                 }
                 break;
 
-            case Contacts.RequestCode.CREATE:
+            case Contants.RequestCode.CREATE:
                 if(resultCode == RESULT_OK){
                     ToastUtils.show(FileListActivity.this,"新建文件成功", Toast.LENGTH_SHORT);
                     showChange(getPathString());
@@ -541,7 +541,7 @@ public class FileListActivity extends BaseActivity {
                 }
                 break;
 
-            case Contacts.RequestCode.UPLOAD:
+            case Contants.RequestCode.UPLOAD:
                 if (resultCode == RESULT_OK){
                     ToastUtils.show(FileListActivity.this,"上传文件成功", Toast.LENGTH_SHORT);
                     showChange(getPathString());

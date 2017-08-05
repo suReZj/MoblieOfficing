@@ -35,7 +35,7 @@ public class OkHttpUntil {
     }
 
 
-    public static void CreateOkHttpClient(){
+    private static void CreateOkHttpClient(){
         okHttpClient = new OkHttpClient.Builder()
                 .cookieJar(new CookieJar() {
                     private final HashMap<HttpUrl, List<Cookie>> cookieStore = new HashMap<>();
@@ -65,4 +65,6 @@ public class OkHttpUntil {
                 })
                 .build();
     }
+
+
 }
