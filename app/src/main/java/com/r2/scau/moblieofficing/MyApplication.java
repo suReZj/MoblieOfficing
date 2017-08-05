@@ -1,6 +1,6 @@
 package com.r2.scau.moblieofficing;
 
-import android.app.Application;
+
 import android.content.Context;
 
 import org.litepal.LitePalApplication;
