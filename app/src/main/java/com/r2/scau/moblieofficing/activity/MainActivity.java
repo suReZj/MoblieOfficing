@@ -1,6 +1,7 @@
 package com.r2.scau.moblieofficing.activity;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -20,6 +21,8 @@ import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
+import com.r2.scau.moblieofficing.untils.Contacts;
+import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;

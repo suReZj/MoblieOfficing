@@ -45,6 +45,7 @@
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
         <item name="actionMenuTextColor">@color/messageTitle</item> <!--颜色-->
         <item name="colorPrimaryDark">@color/colorBlack</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
     <!--修改Toolbar popup menu 弹出位置-->
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">

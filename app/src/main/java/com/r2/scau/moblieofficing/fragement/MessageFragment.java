@@ -71,7 +71,7 @@ public class MessageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar_message_fragment);
         toolbar.inflateMenu(R.menu.toolbar_message_menu);
         toolbar.setTitle("消息");
         setHasOptionsMenu(true);
@@ -208,16 +208,7 @@ public class MessageFragment extends Fragment {
             }
 
         }
-//        for (int i = 0; i < message_adapter.getMessageList().size(); i++) {
-//            chatRecord = message_adapter.getMessageList().get(i);
-//            if (chatRecord.getmMeUsername().equals(message.getMeUsername()) &&
-//                    chatRecord.getmFriendUsername().equals(message.getFriendUsername())) {
-//                return chatRecord;
-//            } else {
-//                chatRecord = null;
-//            }
-//        }
-//    }
+
         return chatRecord;
     }
 
@@ -290,69 +281,14 @@ public class MessageFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.scan) {
-//            new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    smack = SmackManager.getInstance();
-//                    smack.login("test1", "test1");
-////                    Chat mChat = smack.createChat("test3@192.168.13.30");
-//                    SmackListenerManager.addGlobalListener();
-//                }
-//            }).start();
         }
-//        if (item.getItemId() == R.id.multiChat) {
-//            Log.e("发起群聊", "发起群聊");
-//            String chatRoomName = String.format("%s创建的群", "张大爷");
-//            String reason = String.format("%s邀请你入群", "张大爷");
-//            try {
-//                MultiUserChat multiUserChat = SmackManager.getInstance().createChatRoom(chatRoomName, "张大爷", null);
-//                String jid1 = SmackManager.getInstance().getFullJid("test");
-//                multiUserChat.invite(jid1, reason);//邀请入群
-//                String jid2 = SmackManager.getInstance().getFullJid("test3");
-//                multiUserChat.invite(jid2, reason);//邀请入群
-//
-//                SmackListenerManager.addMultiChatMessageListener(multiUserChat);
-//                SmackMultiChatManager.saveMultiChat(multiUserChat);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        }
+
 
         return true;
     }
 
 
     public void refreshData() {
-
-//    Observable.create(new Observable.OnSubscribe<List<ChatRecord>>() {
-//        @Override
-//        public void call(Subscriber<? super List<ChatRecord>> subscriber) {
-//
-//            List<ChatRecord> list = DBQueryHelper.queryChatRecord();
-//            subscriber.onNext(list);
-//            subscriber.onCompleted();
-//        }
-//    })
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .doOnError(new Action1<Throwable>() {
-//                @Override
-//                public void call(Throwable throwable) {
-////
-////                    refreshFailed();
-////                    Logger.e(throwable, "get chat record failure");
-//                }
-//            })
-//            .subscribe(new Action1<List<ChatRecord>>() {
-//                @Override
-//                public void call(List<ChatRecord> chatRecords) {
-//
-////                    mAdapter = new ChatRecordAdapter(mContext, chatRecords);
-////                    mRecyclerView.setAdapter(mAdapter);
-////                    refreshSuccess();
-//                }
-//            });
-
         //我的用户名
         String whereClause = UserUntil.gsonUser.getUserPhone();
 //        String whereClause = "sure1";

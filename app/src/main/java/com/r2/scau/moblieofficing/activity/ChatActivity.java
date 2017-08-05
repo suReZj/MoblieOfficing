@@ -1,6 +1,7 @@
 package com.r2.scau.moblieofficing.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,15 +68,13 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     private LinearLayoutManager layoutManager;
     private Toolbar toolbar;
     private MultiUserChat mMultiUserChat;//多人聊天对象
-    private TextView msgTextView;
-
+    private TextView msgRTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_chat);
         super.onCreate(savedInstanceState);
         SoftHideKeyBoardUtil.assistActivity(this);
-
 
 
         new Thread(new Runnable() {
@@ -88,7 +87,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                     SmackListenerManager.addMultiChatMessageListener(mMultiUserChat);
                 } else {
                     mChat = smack.createChat(chatRecord.getmChatJid());
-                    Log.e(chatRecord.getmChatJid(),chatRecord.getmChatJid());
+                    Log.e(chatRecord.getmChatJid(), chatRecord.getmChatJid());
                     try {
                         SmackListenerManager.addGlobalListener();
                     } catch (Exception e) {
@@ -109,11 +108,12 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
         toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         titleText = (TextView) findViewById(R.id.chat_toolbar_title);
-        msgTextView=(TextView)findViewById(R.id.right_chat_msg);
+        msgRTextView = (TextView) findViewById(R.id.right_chat_msg);
 
 
         setSupportActionBar(toolbar);
-        toolbar.inflateMenu(R.menu.toolbar_chat_title_menu);
+
+
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         layoutManager = new LinearLayoutManager(this);
@@ -131,25 +131,6 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
 //        if (chatRecord)
         titleText.setText(chatRecord.getmFriendNickname());
-    }
-
-
-    //创建contextmenu
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-//        if (msgList.get(message_adapter.getmPosition()).getSetTopFlag()) {
-            menu.add(Menu.NONE, 1, Menu.NONE, "取消置顶");//groupId, itemId, order, title
-            menu.add(Menu.NONE, 2, Menu.NONE, "删除");
-//        } else {
-//            menu.add(Menu.NONE, setTopBtn, Menu.NONE, "置顶");//groupId, itemId, order, title
-//            menu.add(Menu.NONE, deleteBtn, Menu.NONE, "删除");
-//        }
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        return super.onContextItemSelected(item);
     }
 
     @Override
@@ -227,6 +208,8 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                 return false;
             }
         });
+
+
     }
 
 
@@ -273,12 +256,33 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.toolbar_chat_title_menu, menu);
+        ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+        if (!chatRecord.ismIsMulti()) {
+            getMenuInflater().inflate(R.menu.toolbar_chat_title_menu, menu);
+        }else {
+            getMenuInflater().inflate(R.menu.toolbar_chat_title_multi_menu, menu);
+        }
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.personInfo:
+                ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+                Intent intent=new Intent(this,FriendsInfoActivity.class);
+                intent.putExtra("phone",chatRecord.getmFriendUsername());
+                startActivity(intent);
+                break;
+            case R.id.invite_group:
+
+                break;
+            case R.id.notice_group:
+                break;
+            case R.id.file_group:
+                break;
+        }
         return true;
     }
 
@@ -415,10 +419,10 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
         ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
         String whereClause = chatRecord.getmFriendUsername();
-        String whereArgs=UserUntil.gsonUser.getUserPhone();
+        String whereArgs = UserUntil.gsonUser.getUserPhone();
 //    String[] whereArgs = {LoginHelper.getUser().getUsername()};
 //        if (!chatRecord.ismIsMulti()) {
-            chatMessageList = new ArrayList<>(DataSupport.where("mfriendusername=? and mmeusername=? and isdelete=?", whereClause,whereArgs,"0").find(ChatMessage.class));
+        chatMessageList = new ArrayList<>(DataSupport.where("mfriendusername=? and mmeusername=? ", whereClause, whereArgs).find(ChatMessage.class));
 //        } else {
 //            chatMessageList = new ArrayList<>(DataSupport.where("uuid=?", chatRecord.getUuid()).find(ChatMessage.class));
 //        }

@@ -2,30 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/third"
-        android:icon="@mipmap/chat_toolbar_more"
-        android:title="third"
+        android:id="@+id/personInfo"
+        android:icon="@drawable/person"
+        android:title=""
         app:showAsAction="ifRoom">
-        <menu>
-            <group>
-                <item
-                    android:id="@+id/fourth"
-                    android:icon="@mipmap/ic_launcher_round"
-                    android:title="aaaaa"
-                    app:showAsAction="ifRoom"
-                    />
-                <item
-                    android:id="@+id/fiveth"
-                    android:icon="@mipmap/ic_launcher_round"
-                    android:title="aaaaa"
-                    app:showAsAction="ifRoom"/>
-                <item
-                    android:id="@+id/sixth"
-                    android:icon="@mipmap/ic_launcher_round"
-                    android:title="aaaaa"
-                    app:showAsAction="ifRoom"/>
-            </group>
-        </menu>
     </item>
 
 </menu>

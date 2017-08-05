@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/third"
+        android:icon="@mipmap/chat_toolbar_more"
+        android:title="third"
+        app:showAsAction="ifRoom">
+        <menu>
+            <group>
+                <item
+                    android:id="@+id/invite_group"
+                    android:icon="@drawable/invite"
+                    android:title="邀请进群"
+                    app:showAsAction="ifRoom"
+                    />
+                <item
+                    android:id="@+id/notice_group"
+                    android:icon="@drawable/notice"
+                    android:title="发布群公告"
+                    app:showAsAction="ifRoom"/>
+                <item
+                    android:id="@+id/file_group"
+                    android:icon="@drawable/file"
+                    android:title="发送群文件"
+                    app:showAsAction="ifRoom"/>
+            </group>
+        </menu>
+    </item>
+
+</menu>

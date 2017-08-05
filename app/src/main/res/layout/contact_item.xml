@@ -10,7 +10,6 @@
     android:paddingRight="10dp"
     >
 
-
     <com.allen.library.SuperTextView
         android:id="@+id/st_contact"
         android:layout_width="match_parent"
