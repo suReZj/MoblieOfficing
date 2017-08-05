@@ -122,7 +122,7 @@ public class SignUpActivity extends BaseActivity {
         verCodeKey = MathUtil.getMD5(verCodeKey);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_IP + "open/")
+                .baseUrl(Contants.SERVER_IP + "/open/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.getVerCode(verCodeKey);
@@ -157,7 +157,7 @@ public class SignUpActivity extends BaseActivity {
         String password = passwordET.getText().toString();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_IP + "u/")
+                .baseUrl(Contants.SERVER_IP + "/u/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.signUp(name, phone, password, verCode, verCodeKey);

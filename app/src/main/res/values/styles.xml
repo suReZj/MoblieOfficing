@@ -8,12 +8,15 @@
         <item name="colorAccent">@color/colorLightBlue</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
         <!-- AppCompatEditText默认状态状态设置底线颜色 -->
         <item name="colorControlNormal">@color/colorWhite</item>
         <!-- AppCompatEditText选择的底线颜色 -->
         <item name="colorControlActivated">@color/colorWhite</item>
 
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
     </style>
 
     <style name="popwindow_anim_style">
