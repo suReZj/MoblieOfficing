@@ -2,8 +2,10 @@ package com.r2.scau.moblieofficing.adapter;
 
 import android.animation.Animator;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Handler;
@@ -31,10 +33,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.r2.scau.moblieofficing.activity.FriendActivity;
+import com.r2.scau.moblieofficing.activity.PersonalContactActivity;
+import com.r2.scau.moblieofficing.bean.MultiChatMessage;
 import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.sqk.emojirelease.EmojiUtil;
+
+import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,7 +56,7 @@ import razerdp.basepopup.BasePopupWindow;
 public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.chatHolder> {
     private List<ChatMessage> chatMessageList;
     private Context mContext;
-    private int mPosition=0;
+    private int mPosition = 0;
 
     public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context mContext) {
         this.chatMessageList = chatMessageList;
@@ -128,13 +135,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         }
 
 
-
         holder.rTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                MenuPopup MenuPopup=new MenuPopup((Activity)mContext);
+                MenuPopup MenuPopup = new MenuPopup((Activity) mContext);
                 MenuPopup.showPopupWindow(v);
-                mPosition=position;
+                mPosition = position;
                 return true;
             }
         });
@@ -142,22 +148,22 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.lTextView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                MenuPopup MenuPopup=new MenuPopup((Activity)mContext);
+                MenuPopup MenuPopup = new MenuPopup((Activity) mContext);
                 MenuPopup.showPopupWindow(v);
-                mPosition=position;
+                mPosition = position;
                 return true;
             }
         });
         holder.lIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"aaaaaaaaaaaaaa",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
             }
         });
         holder.rIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext,"aaaaaaaaaaaaaa",Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -197,7 +203,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         protected Animation initShowAnimation() {
             AnimationSet set = new AnimationSet(true);
             set.setInterpolator(new DecelerateInterpolator());
-            set.addAnimation(getScaleAnimation(0, 1, 0, 1, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 0));
+            set.addAnimation(getScaleAnimation(0, 1, -1, 0, Animation.RELATIVE_TO_SELF, 1, Animation.RELATIVE_TO_SELF, 1));
             set.addAnimation(getDefaultAlphaAnimation());
             return set;
             //return null;
@@ -215,8 +221,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
         @Override
         public void showPopupWindow(View v) {
-            setOffsetX(-(getWidth() - v.getWidth() / 2));
-            setOffsetY(-v.getHeight() / 2);
+            setOffsetX((getWidth() - v.getWidth()));
+            setOffsetY(-4 * v.getHeight());
             super.showPopupWindow(v);
         }
 
@@ -244,6 +250,20 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     this.dismiss();
                     break;
                 case R.id.transmit_message:
+//                    ChatMessage deleteMsg = chatMessageList.get(mPosition);
+//                    if (deleteMsg.getMsgID() == null) {
+//                        List<ChatMessage> list = DataSupport.where("uuid=?", deleteMsg.getUuid()).find(ChatMessage.class);
+//                        deleteMsg = list.get(0);
+//                        deleteMsg.setDelete(true);
+//                        deleteMsg.save();
+//                    }else {
+//                        List<ChatMessage> list = DataSupport.where("msgid=?", deleteMsg.getMsgID()).find(ChatMessage.class);
+//                        deleteMsg = list.get(0);
+//                        deleteMsg.setDelete(true);
+//                        deleteMsg.save();
+//                    }
+//                    chatMessageList.remove(mPosition);
+//                    notifyDataSetChanged();
                     this.dismiss();
                     break;
                 default:
@@ -252,7 +272,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             }
         }
     }
-
 
 
 }

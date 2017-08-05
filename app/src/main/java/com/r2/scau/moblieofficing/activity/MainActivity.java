@@ -17,13 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.fragement.ContactFragment;
 import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
-import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
@@ -270,7 +270,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
-            case Contacts.RequestCode.QRSCAN:
+            case Contants.RequestCode.QRSCAN:
                 if (resultCode == RESULT_OK){
                     /**
                      * Create by edwincheng in 2017/08/04

@@ -15,26 +15,25 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.r2.scau.moblieofficing.Constants;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.bean.Contact;
-import com.r2.scau.moblieofficing.gson.GsonFriend;
-import com.r2.scau.moblieofficing.gson.GsonFriends;
-import com.r2.scau.moblieofficing.gson.GsonUsers;
-import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
+import com.r2.scau.moblieofficing.event.LoginFinishEvent;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.CustomVideoView;
 import com.r2.scau.moblieofficing.widge.popview.PopField;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Headers;
@@ -43,7 +42,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends BaseActivity {
 
@@ -51,6 +49,7 @@ public class LoginActivity extends BaseActivity {
     private EditText passwordET;
     private Button loginBtn;
     private TextView sigUpTV;
+    private String user;
     private String password;
     private String loginSessionID;
 
@@ -62,7 +61,15 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -99,12 +106,12 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        CharSequence userPhone = (CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_USER_PHONE_KEY,"");
-        CharSequence password = (CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_PASSWORD_KEY,"");
+        CharSequence userPhone = (CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_USER_PHONE_KEY,"");
+        CharSequence password = (CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,"");
         if (userET != null){
             userET.setText(userPhone);
             if (password != null){
-                passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Constants.SP_LOGIN_PASSWORD_KEY,""));
+                passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,""));
             }
         }
     }
@@ -133,12 +140,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     public void login() {
-        final String user = userET.getText().toString();
+        user = userET.getText().toString();
         password = passwordET.getText().toString();
         String passwordMD5 = user + "#" + password;
         passwordMD5 = MathUtil.getMD5(passwordMD5);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.SERVER_BASE_URL + "u/")
+                .baseUrl(Contants.SERVER_IP + "/u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
         Call<ResponseBody> call = loginBiz.login(user, passwordMD5, true);
@@ -149,8 +156,8 @@ public class LoginActivity extends BaseActivity {
                     String str = response.body().string();
                     Log.e("login", str);
                     if (str.contains("登陆成功")) {
-                        SharedPrefUtil.getInstance().put(Constants.SP_LOGIN_USER_PHONE_KEY, user);
-                        SharedPrefUtil.getInstance().put(Constants.SP_LOGIN_PASSWORD_KEY, password);
+                        SharedPrefUtil.getInstance().put(Contants.SP_LOGIN_USER_PHONE_KEY, user);
+                        SharedPrefUtil.getInstance().put(Contants.SP_LOGIN_PASSWORD_KEY, password);
                         Headers headers = response.headers();
                         Log.d("info_headers", "header " + headers);
                         List<String> cookies = headers.values("Set-Cookie");
@@ -160,8 +167,10 @@ public class LoginActivity extends BaseActivity {
                         Log.i("info_s", "session is  :" + loginSessionID);
                         OkHttpUntil.loginSessionID = loginSessionID;
                         UserUntil.phone = userET.getText().toString();
-                        getUserInfo();
-                        getFriend();
+                        RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+                        RetrofitUntil.getUserInfo();
+                        RetrofitUntil.getFriend();
+                        RetrofitUntil.getGroupInfo();
                         loginOpenFire();
                     }else {
                         Log.e("login", str);
@@ -173,10 +182,13 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("login", "fail");
+                Log.e("login", "fail"+t.getMessage());
+
             }
         });
+
     }
+
 
     public void changePassword() {
         //step 1: 同样的需要创建一个OkHttpClick对象
@@ -209,74 +221,15 @@ public class LoginActivity extends BaseActivity {
         });*/
     }
 
-    public void getUserInfo(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.SERVER_BASE_URL + "group/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        ILoginBiz iLoginBiz = retrofit.create(ILoginBiz.class);
-        Call<GsonUsers> call = iLoginBiz.getUserInfo(UserUntil.phone);
-        call.enqueue(new Callback<GsonUsers>() {
-            @Override
-            public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
-                GsonUsers gsonUsers = response.body();
-                if(gsonUsers.getCode() == 200){
-                    Log.e("getUser", "success");
-                    UserUntil.gsonUser = gsonUsers.getUserInfo();
-                }else {
-                    Log.e("getUser", "fail");
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GsonUsers> call, Throwable t) {
-                Log.e("getUser", "fail");
-            }
-        });
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginFinishEvent(LoginFinishEvent finishEvent) {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
-    public void getFriend() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.SERVER_BASE_URL + "/user/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        IFriendBiz iFriendBiz = retrofit.create(IFriendBiz.class);
-        Call<GsonFriends> call = iFriendBiz.getFriend(UserUntil.phone);
-        call.enqueue(new Callback<GsonFriends>() {
-            @Override
-            public void onResponse(Call<GsonFriends> call, Response<GsonFriends> response) {
-                GsonFriends gsonFriends = response.body();
-                if (gsonFriends.getCode() == 200) {
-                    List<GsonFriend> friendList = gsonFriends.getListFriends();
-                    ArrayList<Contact> contacts = new ArrayList<Contact>();
-                    for (GsonFriend myFriend : friendList) {
-                        Contact contact = new Contact();
-                        String name = myFriend.getNickname();
-                        contact.setPhone(myFriend.getUserPhone());
-                        contact.setName(name);
-                        contact.setFirstLetter(FistLetterUntil.getSortKey(name));
-                        contacts.add(contact);
-                    }
-                    UserUntil.friendList = contacts;
-                } else {
-                    Log.e("getFriend", gsonFriends.getMsg());
-                }
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
 
-            @Override
-            public void onFailure(Call<GsonFriends> call, Throwable t) {
-                Log.e("getFriend", "fail");
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-    }
+
 
 
     @Override
@@ -284,6 +237,7 @@ public class LoginActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.btn_login:
                 Log.e("jason", "点击登录按钮");
+//                SmackManager.getInstance().logout();
                 login();
                 LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);

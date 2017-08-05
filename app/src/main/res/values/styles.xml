@@ -8,12 +8,15 @@
         <item name="colorAccent">@color/colorLightBlue</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
+    </style>
+
+    <style name="MyEditText" parent="Theme.AppCompat.Light">
         <!-- AppCompatEditText默认状态状态设置底线颜色 -->
         <item name="colorControlNormal">@color/colorWhite</item>
         <!-- AppCompatEditText选择的底线颜色 -->
         <item name="colorControlActivated">@color/colorWhite</item>
 
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white_24dp</item>
     </style>
 
     <style name="popwindow_anim_style">
@@ -27,6 +30,7 @@
         <item name="actionMenuTextColor">@color/messageTitle</item> <!--  敲定颜色-->
         <item name="colorControlNormal">@color/messageTitle</item>
     </style>
+
 
         <style name="line_style">
             <item name="android:layout_width">match_parent</item>
@@ -46,10 +50,10 @@
         <item name="actionMenuTextColor">@color/messageTitle</item> <!--颜色-->
         <item name="colorPrimaryDark">@color/colorBlack</item>
     </style>
+
     <!--修改Toolbar popup menu 弹出位置-->
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="overlapAnchor">false</item>
-        <!--把该属性改为false即可使menu位置位于toolbar之下-->
+        <item name="overlapAnchor">false</item>  <!--把该属性改为false即可使menu位置位于toolbar之下-->
     </style>
 
     <style name="SwitchButtonStyle">

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 
 import java.io.IOException;
@@ -80,7 +81,7 @@ public class SendNoticeActivity extends BaseActivity {
 
 
         //step 3: 创建请求
-        Request request = new Request.Builder().url("http://192.168.13.19:8080/permission/publicAnnouncement.shtml")
+        Request request = new Request.Builder().url(Contants.SERVER_IP + "/permission/publicAnnouncement.shtml")
                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .post(formBody)
                 .build();

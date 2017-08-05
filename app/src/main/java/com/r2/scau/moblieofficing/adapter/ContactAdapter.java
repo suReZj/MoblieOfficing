@@ -1,8 +1,5 @@
 package com.r2.scau.moblieofficing.adapter;
 
-import android.graphics.Color;
-import android.graphics.Typeface;
-import android.media.Image;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allen.library.SuperTextView;
-import com.amulyakhare.textdrawable.TextDrawable;
-import com.amulyakhare.textdrawable.util.ColorGenerator;
 import com.bumptech.glide.Glide;
-import com.r2.scau.moblieofficing.Constants;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.Contact;
-import com.r2.scau.moblieofficing.gson.GsonUser;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
@@ -66,7 +60,6 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
             holder.contactST.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    Log.e("adapterItem11111", getItem(position).getPhone());
                     Intent intent=new Intent(mContext, ChatActivity.class);
                     Contact contact=new Contact();
                     contact=getItem(position);
@@ -88,16 +81,12 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
                     }
                     EventBus.getDefault().post(record);
                     intent.putExtra("chatrecord", record);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }
             });
-            String imageUrl = (String) SharedPrefUtil.getInstance().get(Constants.IMAGE_ICON_URL,"");
-            if(imageUrl==null||imageUrl.isEmpty()){
-                holder.icon.setImageDrawable(ImageUtils.getIcon(getItem(position).getName(),23));
-            }
-            else{
-                Glide.with(mContext).load(imageUrl).into(holder.icon);
-            }
+
+            ImageUtils.setUserImageIcon(mContext, holder.icon, getItem(position).getName());
 
         }
 

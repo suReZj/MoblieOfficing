@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
@@ -29,7 +30,6 @@ import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
@@ -90,7 +90,7 @@ public class MessageFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
                     Intent intent = new Intent(getActivity(),CaptureActivity.class);
-                    getActivity().startActivityForResult(intent, Contacts.RequestCode.QRSCAN);
+                    getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
                 }
                 if (item.getItemId() == R.id.multiChat) {
                     Intent multiIntent = new Intent(getActivity().getApplicationContext(), EditGroupActivity.class);
@@ -155,6 +155,7 @@ public class MessageFragment extends Fragment {
 //        chatRecord.setSetTopFlag(false);
         if (chatRecord == null) {//还没有创建此朋友的聊天记录
             Log.d("chatRecord1", "chatRecord1");
+            message.getChatMessage().save();
             chatRecord = new ChatRecord(message.getChatMessage());
             chatRecord.setSetTopFlag(false);
             addChatRecord(chatRecord);
@@ -263,7 +264,7 @@ public class MessageFragment extends Fragment {
                     } else {
                         flagOfMulti = "0";
                     }
-                    DataSupport.deleteAll(ChatMessage.class, "mfriendusername=? and mismulti=?", chatRecord.getmFriendUsername(), flagOfMulti);
+//                    DataSupport.deleteAll(ChatMessage.class, "mfriendusername=? and mismulti=?", chatRecord.getmFriendUsername(), flagOfMulti);
                     chatRecord.delete();
                     refreshData();
                 }

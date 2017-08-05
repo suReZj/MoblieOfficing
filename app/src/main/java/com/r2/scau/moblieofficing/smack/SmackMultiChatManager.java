@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.MultiChatRoom;
+import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
@@ -44,7 +45,7 @@ public class SmackMultiChatManager {
 //
 //                try {
         List<HostedRoom> rooms = SmackManager.getInstance().getHostedRooms();
-        Log.e("bindJoinMultiChat","bindJoinMultiChat");
+
 //                    subscriber.onNext(rooms);
 //                    subscriber.onCompleted();
 //                } catch (Exception e) {
@@ -66,7 +67,31 @@ public class SmackMultiChatManager {
 //            public void call(List<HostedRoom> hostedRooms) {
 
 
-        List<MultiChatRoom> multiChats = DataSupport.findAll(MultiChatRoom.class);
+
+
+
+
+//        List<MultiChatRoom>  multiChats = DataSupport.findAll(MultiChatRoom.class);
+//        if(multiChats!=null){
+//            DataSupport.deleteAll(MultiChatRoom.class);
+//        }
+//        multiChats=null;
+//        List<GsonGroup> groupList=UserUntil.joinGroupList;
+//        for(int i=0;i<groupList.size();i++){
+//            MultiChatRoom newRoom=new MultiChatRoom(groupList.get(i).getGname()+"@conference."+SmackManager.SERVER_IP);
+//            newRoom.save();
+//            multiChats.add(newRoom);
+//        }
+//        List<GsonGroup> createGroupList=UserUntil.createGroupList;
+//        for(int i=0;i<createGroupList.size();i++){
+//            MultiChatRoom newRoom=new MultiChatRoom(createGroupList.get(i).getGname()+"@conference."+SmackManager.SERVER_IP);
+//            newRoom.save();
+//            multiChats.add(newRoom);
+//        }
+
+
+
+        List<MultiChatRoom>  multiChats = DataSupport.findAll(MultiChatRoom.class);
         for (HostedRoom room : rooms) {
             ServiceDiscoveryManager discoManager = SmackManager.getInstance().getServiceDiscoveryManager();
             // 获得指定XMPP实体的项目
@@ -99,11 +124,12 @@ public class SmackMultiChatManager {
                                     record.setmChatTime(DateUtil.currentDatetime());
                                     record.setmIsMulti(true);
                                     record.setmChatJid(friendUserName);
-                                    record.save();
+//                                    record.save();
                                 } else {
                                     record = chatRecords.get(0);
                                 }
-                                EventBus.getDefault().post(record);
+                                Log.e("bindJoinMultiChat","bindJoinMultiChat");
+//                                EventBus.getDefault().post(record);
                             } catch (Exception e) {
                                 Log.e(e.toString(), "join room %s failure");
                             }

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/back_tv"
+            android:text="返回"
+            android:textColor="#569be4"
+            android:textSize="15sp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/sign_office_tv"
+            android:text="签到"
+            android:textSize="18sp"
+            android:layout_marginLeft="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.75dp"
+        android:background="#cac9c9"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/clock_iv"
+            android:layout_marginLeft="20dp"
+            android:src="@drawable/icon_clock"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+        <TextView
+            android:id="@+id/clock_itv"
+            android:text="2017年8月8日"
+            android:textSize="12sp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+
+        <ImageView
+            android:id="@+id/point_iv"
+            android:src="@drawable/contact_more_arrow"
+            android:layout_marginLeft="50dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp" />
+        <TextView
+            android:id="@+id/point_tv"
+            android:text="当前企业：成都华迪"
+            android:textSize="12sp"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.75dp"
+        android:background="#cac9c9"
+        />
+
+    <TextView
+        android:id="@+id/office_point_tv"
+        android:maxLines="1"
+        android:text="户籍雅居"
+        android:paddingLeft="20dp"
+        android:layout_width="match_parent"
+        android:gravity="center_vertical"
+        android:layout_height="40dp" />
+
+    <!--<com.baidu.mapapi.map.MapView-->
+        <!--android:id="@+id/map"-->
+        <!--android:clickable="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="150dp"/>-->
+    <com.amap.api.maps.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"/>
+
+    <LinearLayout
+        android:background="#2b000000"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <FrameLayout
+            android:layout_width="150dp"
+            android:layout_height="150dp">
+            <ImageView
+                android:id="@+id/sign_iv"
+                android:src="@drawable/chat_fullscreen_finger_high"
+                android:layout_width="150dp"
+                android:layout_height="150dp" />
+            <TextView
+                android:id="@+id/clock_tv"
+                android:gravity="center"
+                android:text="签到\n20:55"
+                android:textColor="#ffffff"
+                android:textSize="30sp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/un_sign_iv"
+                android:src="@drawable/icon_warn_fill"
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
+            <TextView
+                android:id="@+id/un_sign_tv"
+                android:text="未签到"
+                android:textSize="15sp"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
