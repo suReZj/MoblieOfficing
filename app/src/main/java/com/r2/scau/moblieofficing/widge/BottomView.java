@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.untils.Contacts;
 
 /**
  * Created by EdwinCheng on 2017/7/25.
@@ -29,14 +29,16 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
     private int fileType;
     private String filename;
     private String fileSelectType;
+    private int position;
 
-    public BottomView(Activity mContext,String filename, int fileType , String fileSelectType, View.OnClickListener bottomOnClickListener) {
+    public BottomView(Activity mContext,String filename, int fileType , int position, String fileSelectType, View.OnClickListener bottomOnClickListener) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         this.bottomOnClickListener = bottomOnClickListener;
         this.mContext = mContext;
         this.fileType = fileType;
         this.filename = filename;
         this.fileSelectType = fileSelectType;
+        this.position = position;
         mMenuView = inflater.inflate(R.layout.popwindow_filelist_more, null);
         initView(fileType);
         initData();
@@ -69,7 +71,7 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
             rename.setVisibility(View.VISIBLE);
             shareto.setVisibility(View.VISIBLE);
             //如果传输过来的是文件夹的类型，隐藏"分享"的view
-            if (fileType == Contacts.FILEMANAGER.FOLDER_TYPE){
+            if (fileType == Contants.FILEMANAGER.FOLDER_TYPE){
                 shareto.setVisibility(View.GONE);
             }else {
                 shareto.setVisibility(View.VISIBLE);
@@ -86,7 +88,7 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
         if (fileSelectType.equals("personalfile")){
             rename.setOnClickListener(this);
             move.setOnClickListener(this);
-            if (fileType == Contacts.FILEMANAGER.FILE_TYPE){
+            if (fileType == Contants.FILEMANAGER.FILE_TYPE){
                 shareto.setOnClickListener(this);
             }
         }
@@ -101,6 +103,7 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
             case R.id.popwindow_cancel:
                 break;
             default:
+                view.setTag(position);
                 bottomOnClickListener.onClick(view);
                 break;
         }

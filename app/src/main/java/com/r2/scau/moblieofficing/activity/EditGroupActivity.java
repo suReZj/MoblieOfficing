@@ -56,6 +56,7 @@ public class EditGroupActivity extends BaseActivity {
                     Intent intent = new Intent(EditGroupActivity.this, SelectMemberActivity.class);
                     intent.putExtra("groupName", name);
                     startActivity(intent);
+                    finish();
                 }else {
                     Toast toast = Toast.makeText(getApplicationContext(), "群名称不能为空", Toast.LENGTH_SHORT);
                     toast.show();

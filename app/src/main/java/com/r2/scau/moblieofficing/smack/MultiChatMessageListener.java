@@ -8,6 +8,7 @@ import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.MultiChatMessage;
 import com.r2.scau.moblieofficing.event.MessageEvent;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.MessageListener;
@@ -32,8 +33,8 @@ public class MultiChatMessageListener implements MessageListener {
     private static final String PATTERN = "[a-zA-Z0-9_]+@";
 //    private String mMeNickName = LoginHelper.getUser().getNickname();
 //    private String mMeUserName = LoginHelper.getUser().getUsername();
-    private String mMeNickName = "张大爷";
-    private String mMeUserName = "sure3";
+    private String mMeNickName = UserUntil.gsonUser.getNickname();
+    private String mMeUserName = UserUntil.gsonUser.getUserPhone();
     @Override
     public void processMessage(Message message) {
 
@@ -42,7 +43,6 @@ public class MultiChatMessageListener implements MessageListener {
         String from = message.getFrom();//消息发送人，格式:老胡创建的群@conference.121.42.13.79/老胡     --> 老胡发送的
         String to = message.getTo();//消息接收人(当前登陆用户)，格式:zhangsan@121.42.13.79/Smack
         String id=message.getStanzaId();
-        Log.e("ididididi",id);
         Matcher matcherTo = Pattern.compile(PATTERN).matcher(to);
 //        Log.e(from,to);
         String[] fromUsers = from.split("/");
@@ -57,14 +57,17 @@ public class MultiChatMessageListener implements MessageListener {
             e.printStackTrace();
         }
 
-        ArrayList<MultiChatMessage> multiMsgList = new ArrayList<>(DataSupport.where("chatroom=? and msgid=?",friendUserName,id).find(MultiChatMessage.class));
-        if(multiMsgList.size()==0){
-            MultiChatMessage newMultiMsg=new MultiChatMessage(id,friendUserName);
-            newMultiMsg.save();
-        }else {
+//        ArrayList<MultiChatMessage> multiMsgList = new ArrayList<>(DataSupport.where("chatroom=? and msgid=?",friendUserName,id).find(MultiChatMessage.class));
+//        if(multiMsgList.size()==0){
+//            MultiChatMessage newMultiMsg=new MultiChatMessage(id,friendUserName);
+//            newMultiMsg.save();
+//        }else {
+//            return;
+//        }
+        ArrayList<ChatMessage> multiMsg=new ArrayList<>(DataSupport.where("msgid=?",id).find(ChatMessage.class));
+        if(multiMsg.size()!=0){
             return;
         }
-
 
         if((matcherTo.find())&&(!sendUser.equals(mMeUserName))) {//判断是不是自己发送的
 
@@ -82,18 +85,18 @@ public class MultiChatMessageListener implements MessageListener {
                 chatMessage.setContent(json.optString(ChatMessage.KEY_MESSAGE_CONTENT));
 
                 sendUser = json.optString(ChatMessage.KEY_MULTI_CHAT_SEND_USER);
-                Log.e(sendUser,sendUser);
                 chatMessage.setMeSend(mMeUserName.equals(sendUser));
                 chatMessage.setMulti(true);
+                chatMessage.setMsgID(id);
                 ArrayList<ChatRecord> chatMessageList = new ArrayList<>(DataSupport.where("mfriendusername=?", friendUserName).find(ChatRecord.class));
                 if(chatMessageList.size()!=0){
                     chatMessage.setUuid(chatMessageList.get(0).getUuid());
                 }else {
                     chatMessage.setUuid(UUID.randomUUID().toString());
                 }
-
-                chatMessage.save();
+//                chatMessage.save();
                 EventBus.getDefault().post(new MessageEvent(chatMessage));
+                Log.e("发送的消息格式不正确","发送的消息格式不正确");
             } catch (Exception e) {
                 Log.e("发送的消息格式不正确",e.toString());
             }

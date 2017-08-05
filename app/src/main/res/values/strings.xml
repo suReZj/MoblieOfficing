@@ -64,6 +64,29 @@
     <string name="unread">未读</string>
     <string name="press_back_again_to_exit">再按一次退出</string>
 
+    <!--work 使用字段 -->
+    <string name="office_management">内勤管理</string>
+    <string name="report">业务汇报</string>
+    <string name="office_communication">办公通讯</string>
+    <string name="sign_in">考勤打卡</string>
+    <string name="leave">请假</string>
+    <string name="go_out">外出</string>
+    <string name="business_trip">出差</string>
+    <string name="work_overtime">加班</string>
+    <string name="day_report">日报</string>
+    <string name="week_report">周报</string>
+    <string name="month_report">月报</string>
+    <string name="video_meeting">视频会议</string>
+    <string name="cloud_disk">云盘</string>
+    <string name="please_input">请填写文字</string>
+    <string name="work_finish">已完成的工作:</string>
+    <string name="work_unfinsh">未完成的工作:</string>
+    <string name="work_concert">需协调的工作:</string>
+    <string name="send_to">发给谁</string>
+    <string name="ps">备注</string>
+    <string name="add_people">添加人员</string>
+
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

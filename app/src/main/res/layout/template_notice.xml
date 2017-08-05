@@ -9,7 +9,9 @@
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="10dp"
     app:cardElevation="5dp"
-    android:padding="50dp"
+    android:layout_marginTop="10dp"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
     app:cardPreventCornerOverlap="true">
 
     <LinearLayout
@@ -21,18 +23,24 @@
             android:id="@+id/tv_notice_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
             android:textColor="@color/colorBlack"
             android:textSize="20sp"/>
 
         <TextView
             android:id="@+id/tv_notice_author_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"/>
 
         <TextView
             android:id="@+id/tv_notice_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingRight="5dp"
+            android:paddingLeft="5dp"
             android:lines="3"
             android:textColor="@color/colorBlack"
             android:textSize="16sp"/>

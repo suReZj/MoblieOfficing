@@ -91,6 +91,12 @@ public abstract class BaseActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+    public void destoryAllActivity(){
+        if(listActivity.size() > 0){
+            listActivity.pop();
+        }
+    }
+
     /**
      * Created by EdwinCheng on 2017/7/24.
      * <p>

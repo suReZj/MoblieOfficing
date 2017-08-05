@@ -5,7 +5,9 @@ import android.util.Log;
 
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.MultiChatRoom;
+import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smackx.disco.ServiceDiscoveryManager;
@@ -43,7 +45,7 @@ public class SmackMultiChatManager {
 //
 //                try {
         List<HostedRoom> rooms = SmackManager.getInstance().getHostedRooms();
-        Log.e("bindJoinMultiChat","bindJoinMultiChat");
+
 //                    subscriber.onNext(rooms);
 //                    subscriber.onCompleted();
 //                } catch (Exception e) {
@@ -65,7 +67,31 @@ public class SmackMultiChatManager {
 //            public void call(List<HostedRoom> hostedRooms) {
 
 
-        List<MultiChatRoom> multiChats = DataSupport.findAll(MultiChatRoom.class);
+
+
+
+
+//        List<MultiChatRoom>  multiChats = DataSupport.findAll(MultiChatRoom.class);
+//        if(multiChats!=null){
+//            DataSupport.deleteAll(MultiChatRoom.class);
+//        }
+//        multiChats=null;
+//        List<GsonGroup> groupList=UserUntil.joinGroupList;
+//        for(int i=0;i<groupList.size();i++){
+//            MultiChatRoom newRoom=new MultiChatRoom(groupList.get(i).getGname()+"@conference."+SmackManager.SERVER_IP);
+//            newRoom.save();
+//            multiChats.add(newRoom);
+//        }
+//        List<GsonGroup> createGroupList=UserUntil.createGroupList;
+//        for(int i=0;i<createGroupList.size();i++){
+//            MultiChatRoom newRoom=new MultiChatRoom(createGroupList.get(i).getGname()+"@conference."+SmackManager.SERVER_IP);
+//            newRoom.save();
+//            multiChats.add(newRoom);
+//        }
+
+
+
+        List<MultiChatRoom>  multiChats = DataSupport.findAll(MultiChatRoom.class);
         for (HostedRoom room : rooms) {
             ServiceDiscoveryManager discoManager = SmackManager.getInstance().getServiceDiscoveryManager();
             // 获得指定XMPP实体的项目
@@ -81,7 +107,7 @@ public class SmackMultiChatManager {
                         if (idx != -1) {
                             try {
                                 MultiUserChat multiUserChat = SmackManager.getInstance().getMultiChat(chatRoom.getRoomJid());
-                                multiUserChat.join("张大爷");
+                                multiUserChat.join(UserUntil.gsonUser.getNickname());
                                 SmackListenerManager.addMultiChatMessageListener(multiUserChat);
                                 ChatRecord record;
                                 List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", chatRoom.getRoomJid()).find(ChatRecord.class);
@@ -93,17 +119,17 @@ public class SmackMultiChatManager {
                                     record.setUuid(UUID.randomUUID().toString());
                                     record.setmFriendUsername(friendUserName);
                                     record.setmFriendNickname(friendNickName);
-                                    record.setmMeUsername("sure3");
-                                    record.setmMeNickname("张大爷");
+                                    record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+                                    record.setmMeNickname(UserUntil.gsonUser.getNickname());
                                     record.setmChatTime(DateUtil.currentDatetime());
                                     record.setmIsMulti(true);
-                                    record.save();
-
+                                    record.setmChatJid(friendUserName);
+//                                    record.save();
                                 } else {
                                     record = chatRecords.get(0);
                                 }
-                                EventBus.getDefault().post(record);
-
+                                Log.e("bindJoinMultiChat","bindJoinMultiChat");
+//                                EventBus.getDefault().post(record);
                             } catch (Exception e) {
                                 Log.e(e.toString(), "join room %s failure");
                             }

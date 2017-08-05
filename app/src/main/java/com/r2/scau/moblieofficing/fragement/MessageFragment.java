@@ -19,19 +19,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.AddFriendActivity;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
+import com.r2.scau.moblieofficing.activity.EditGroupActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
-import com.r2.scau.moblieofficing.untils.OkHttpUntil;
-
-import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
+import com.xys.libzxing.zxing.activity.CaptureActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,20 +40,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.litepal.crud.DataSupport;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-
-import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
-
 
 
 /**
@@ -68,12 +60,12 @@ public class MessageFragment extends Fragment {
     final private int deleteTopBtn = 2;
     private SmackManager smack;
     private LinearLayoutManager mLayoutManager;
-    private OkHttpClient okHttpClient = new OkHttpClient();
     private RecyclerView recyclerView;
     private ChatRecord chatRecord;
     private ArrayList<ChatRecord> newList;
     private String flagOfMulti;
     private ArrayList<String> roomNameList;
+    private OkHttpClient okHttpClient = new OkHttpClient();
 
     @Nullable
     @Override
@@ -93,157 +85,23 @@ public class MessageFragment extends Fragment {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(recyclerView);
 
-
-
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            smack = SmackManager.getInstance();
-                            smack.login("sure3", "sure3");
-//                    Chat mChat = smack.createChat("test3@192.168.13.30");
-                            try {
-                                SmackListenerManager.addGlobalListener();
-
-
-                                //step 1: 同样的需要创建一个OkHttpClick对象
-                                //step 2: 创建  FormBody.Builder
-                                FormBody formBody = new FormBody.Builder()
-                                        .add("userPhone", "sure3")
-                                        .build();
-                                //step 3: 创建请求
-                                final Request request = new Request.Builder().url("http://192.168.13.57:8089/group/getAllGroupByUser.shtml")
-                                        .post(formBody)
-                                        .addHeader("cookie", OkHttpUntil.loginSessionID)
-                                        .build();
-                                //step 4： 建立联系 创建Call对象
-                                okHttpClient.newCall(request).enqueue(new Callback() {
-                                    @Override
-                                    public void onFailure(Call call, IOException e) {
-                                        // TODO: 17-1-4  请求失败
-                                        Log.e("register", "fail");
-                                    }
-
-                                    @Override
-                                    public void onResponse(Call call, Response response) throws IOException {
-                                        // TODO: 17-1-4 请求成功
-                                        String str = response.body().string();
-                                        Log.e("register", str);
-                                    }
-                                });
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }).start();
+                    Intent intent = new Intent(getActivity(),CaptureActivity.class);
+                    getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
                 }
                 if (item.getItemId() == R.id.multiChat) {
-                    Log.e("发起群聊", "发起群聊");
-                    String chatRoomName = String.format("%s", "dasdsadsadsa");
-                    String reason = String.format("%s邀请你入群", "dasdsadsadsa");
-                    try {
-                        MultiUserChat multiUserChat = SmackManager.getInstance().createChatRoom(chatRoomName, "dasdsadsadsa", null);
-                        String jid1 = SmackManager.getInstance().getFullJid("sure1");
-                        multiUserChat.invite(jid1, reason);//邀请入群
-                        String jid2 = SmackManager.getInstance().getFullJid("sure2");
-                        multiUserChat.invite(jid2, reason);//邀请入群
-                        String jid3 = SmackManager.getInstance().getFullJid("sure3");
-                        multiUserChat.invite(jid3, reason);//邀请入群
-
-                        SmackListenerManager.addMultiChatMessageListener(multiUserChat);
-                        SmackMultiChatManager.saveMultiChat(multiUserChat);
-                        startMultiChat(getActivity().getApplicationContext(), multiUserChat);
-
-//                        FormBody formBody = new FormBody.Builder()
-//                                .add("userPhone", "sure1")
-//                                .add("groupName","dasdsadsadsa")
-//                                .build();
-//                        step 3: 创建请求
-//                         Request request = new Request.Builder().url("http://192.168.13.57:8089/group/createGroup.shtml")
-//                                .post(formBody)
-//                                .addHeader("cookie", OkHttpClientManager.loginSessionID)
-//                                .build();
-//
-//                        step 4： 建立联系 创建Call对象
-//                        okHttpClient.newCall(request).enqueue(new Callback() {
-//                            @Override
-//                            public void onFailure(Call call, IOException e) {
-//                                 TODO: 17-1-4  请求失败
-//                                Log.e("register", "fail");
-//                            }
-
-//                            @Override
-//                            public void onResponse(Call call, Response response) throws IOException {
-//                                 TODO: 17-1-4 请求成功
-//                                String str = response.body().string();
-//                                Log.e("register", str);
-//                            }
-//                        });
-
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    Intent multiIntent = new Intent(getActivity().getApplicationContext(), EditGroupActivity.class);
+                    startActivity(multiIntent);
                 }
-
-                if(item.getItemId()==R.id.addFriend){
-//                    FormBody formBody = new FormBody.Builder()
-//                            .add("groupCreatedUserPhone", "sure1")
-//                            .add("groupName","dasdsadsadsa")
-//                            .add("userPhone","sure3")
-//                            .build();
-                    //step 3: 创建请求
-//                    Request  request = new Request.Builder().url("http://192.168.13.57:8089/group/joinGroup.shtml")
-//                            .post(formBody)
-//                            .addHeader("cookie", OkHttpClientManager.loginSessionID)
-//                            .build();
-//
-                    //step 4： 建立联系 创建Call对象
-//                    okHttpClient.newCall(request).enqueue(new Callback() {
-//                        @Override
-//                        public void onFailure(Call call, IOException e) {
-//                             TODO: 17-1-4  请求失败
-//                            Log.e("register", "fail");
-//                        }
-//
-//                        @Override
-//                        public void onResponse(Call call, Response response) throws IOException {
-                            // TODO: 17-1-4 请求成功
-//                            String str = response.body().string();
-//                            Log.e("register", str);
-//                        }
-//                    });
+                if (item.getItemId() == R.id.addFriend) {
+                    Intent addFriendIntent = new Intent(getActivity().getApplicationContext(), AddFriendActivity.class);
+                    startActivity(addFriendIntent);
                 }
-                if (item.getItemId()==R.id.cloud){
-                    String roomName="dasdsadsadsa@conference.192.168.13.57";
-                    ChatRecord record;
-                    List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-                    if (chatRecords.size() == 0) {
-                        Log.e("aaaaaaaaaa","bbbbbbbbbbbb");
-                        record = new ChatRecord();
-                        String friendUserName = roomName;
-                        int idx = friendUserName.indexOf("@conference.");
-                        String friendNickName = friendUserName.substring(0, idx);
-                        record.setUuid(UUID.randomUUID().toString());
-                        record.setmFriendUsername(friendUserName);
-                        record.setmFriendNickname(friendNickName);
-                        record.setmMeUsername("sure3");
-                        record.setmMeNickname("sure3");
-                        record.setmChatTime(DateUtil.currentDatetime());
-                        record.setmIsMulti(true);
-                        record.save();
-                        SmackManager.getInstance().joinChatRoom("dasdsadsadsa@conference.192.168.13.57","sure3",null);
-                    } else {
-                        record = chatRecords.get(0);
-                    }
-                    EventBus.getDefault().post(record);
-            }
-
-//
+                if (item.getItemId() == R.id.cloud) {
+                }
                 return true;
             }
         });
@@ -297,11 +155,21 @@ public class MessageFragment extends Fragment {
 //        chatRecord.setSetTopFlag(false);
         if (chatRecord == null) {//还没有创建此朋友的聊天记录
             Log.d("chatRecord1", "chatRecord1");
+            message.getChatMessage().save();
             chatRecord = new ChatRecord(message.getChatMessage());
             chatRecord.setSetTopFlag(false);
             addChatRecord(chatRecord);
         } else {
             Log.d("chatRecord2", "chatRecord2");
+            if (!message.getChatMessage().isMeSend()) {
+                ArrayList<ChatMessage> multiMsg = new ArrayList<>(DataSupport.where("msgid=?", message.getChatMessage().getMsgID()).find(ChatMessage.class));
+                if (multiMsg.size() != 0) {
+                    refreshData();
+                    return;
+                } else {
+                    message.getChatMessage().save();
+                }
+            }
             chatRecord.setmChatTime(message.getChatMessage().getDatetime());
             chatRecord.setmLastMessage(message.getChatMessage().getContent());
             chatRecord.setSetTopFlag(false);
@@ -313,8 +181,8 @@ public class MessageFragment extends Fragment {
 //            message_adapter.update(chatRecord);
             if (!message.getChatMessage().isMulti()) {
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
-            }else {
-                chatRecord.updateAll("uuid=? and mfriendusername=?",chatRecord.getUuid(),chatRecord.getmFriendUsername());
+            } else {
+                chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
             }
             refreshData();
         }
@@ -330,15 +198,25 @@ public class MessageFragment extends Fragment {
     private ChatRecord getChatRecord(ChatMessage message) {
 
         ChatRecord chatRecord = null;
-        for (int i = 0; i < message_adapter.getMessageList().size(); i++) {
-            chatRecord = message_adapter.getMessageList().get(i);
-            if (chatRecord.getmMeUsername().equals(message.getMeUsername()) &&
-                    chatRecord.getmFriendUsername().equals(message.getFriendUsername())) {
+        List<ChatRecord> list = DataSupport.findAll(ChatRecord.class);
+        for (int i = 0; i < list.size(); i++) {
+            chatRecord = list.get(i);
+            if (chatRecord.getmFriendUsername().equals(message.getFriendUsername())) {
                 return chatRecord;
             } else {
                 chatRecord = null;
             }
+
         }
+//        for (int i = 0; i < message_adapter.getMessageList().size(); i++) {
+//            chatRecord = message_adapter.getMessageList().get(i);
+//            if (chatRecord.getmMeUsername().equals(message.getMeUsername()) &&
+//                    chatRecord.getmFriendUsername().equals(message.getFriendUsername())) {
+//                return chatRecord;
+//            } else {
+//                chatRecord = null;
+//            }
+//        }
 //    }
         return chatRecord;
     }
@@ -386,7 +264,7 @@ public class MessageFragment extends Fragment {
                     } else {
                         flagOfMulti = "0";
                     }
-                    DataSupport.deleteAll(ChatMessage.class, "mfriendusername=? and mismulti=?", chatRecord.getmFriendUsername(), flagOfMulti);
+//                    DataSupport.deleteAll(ChatMessage.class, "mfriendusername=? and mismulti=?", chatRecord.getmFriendUsername(), flagOfMulti);
                     chatRecord.delete();
                     refreshData();
                 }
@@ -475,10 +353,9 @@ public class MessageFragment extends Fragment {
 //                }
 //            });
 
-
         //我的用户名
-        String whereClause = "test1";
-//    String[] whereArgs = {LoginHelper.getUser().getUsername()};
+        String whereClause = UserUntil.gsonUser.getUserPhone();
+//        String whereClause = "sure1";
         msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
                 .where("settopflag=?", "1")
                 .order("mchattime desc")
@@ -509,7 +386,6 @@ public class MessageFragment extends Fragment {
             record.setmChatTime(DateUtil.currentDatetime());
             record.setmIsMulti(true);
             record.save();
-
         } else {
             record = chatRecords.get(0);
         }
@@ -520,37 +396,37 @@ public class MessageFragment extends Fragment {
     }
 
     //单人聊天离线消息接受
-    public void getUnReanMsg(){
+    public void getUnReanMsg() {
 
     }
 
 
-//检查离线期间加入的群聊
-public void checkMultiInvite(){
-    String roomName="dasdsadsadsa@conference.192.168.13.57";
-    ChatRecord record;
-    List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-    if (chatRecords.size() == 0) {
-        record = new ChatRecord();
-        String friendUserName = roomName;
-        int idx = friendUserName.indexOf("@conference.");
-        String friendNickName = friendUserName.substring(0, idx);
-        record.setUuid(UUID.randomUUID().toString());
-        record.setmFriendUsername(friendUserName);
-        record.setmFriendNickname(friendNickName);
-        record.setmMeUsername("sure3");
-        record.setmMeNickname("sure3");
-        record.setmChatTime(DateUtil.currentDatetime());
-        record.setmIsMulti(true);
-        record.save();
-        MultiUserChat multiChatRoom=SmackManager.getInstance().getMultiChat(roomName);
-        SmackListenerManager.addMultiChatMessageListener(multiChatRoom);
-        SmackManager.getInstance().joinChatRoom("dasdsadsadsa@conference.192.168.13.57","sure3",null);
-    } else {
-        record = chatRecords.get(0);
+    //检查离线期间加入的群聊
+    public void checkMultiInvite() {
+        String roomName = "dasdsadsadsa@conference.192.168.13.57";
+        ChatRecord record;
+        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
+        if (chatRecords.size() == 0) {
+            record = new ChatRecord();
+            String friendUserName = roomName;
+            int idx = friendUserName.indexOf("@conference.");
+            String friendNickName = friendUserName.substring(0, idx);
+            record.setUuid(UUID.randomUUID().toString());
+            record.setmFriendUsername(friendUserName);
+            record.setmFriendNickname(friendNickName);
+            record.setmMeUsername("sure3");
+            record.setmMeNickname("sure3");
+            record.setmChatTime(DateUtil.currentDatetime());
+            record.setmIsMulti(true);
+            record.save();
+            MultiUserChat multiChatRoom = SmackManager.getInstance().getMultiChat(roomName);
+            SmackListenerManager.addMultiChatMessageListener(multiChatRoom);
+            SmackManager.getInstance().joinChatRoom("dasdsadsadsa@conference.192.168.13.57", "sure3", null);
+        } else {
+            record = chatRecords.get(0);
+        }
+        EventBus.getDefault().post(record);
     }
-    EventBus.getDefault().post(record);
-}
 
 
 }

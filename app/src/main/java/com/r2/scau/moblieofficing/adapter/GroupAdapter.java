@@ -30,10 +30,10 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     @Override
     public GroupViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(
-                parent.getContext()).inflate(R.layout.template_group, parent,
-                false);
+            parent.getContext()).inflate(R.layout.template_group, parent,
+            false);
         return new GroupViewHolder(view);
-    }
+}
 
     @Override
     public void onBindViewHolder(GroupViewHolder holder, int position) {
@@ -60,6 +60,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 
     public void addAll(Collection<? extends GsonGroup> collection){
         if (collection != null) {
+            groupList.clear();
             groupList.addAll(collection);
             notifyDataSetChanged();
         }

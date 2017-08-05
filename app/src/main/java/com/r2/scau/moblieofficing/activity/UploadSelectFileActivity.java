@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.FMUploadSelectFileAdapter;
-import com.r2.scau.moblieofficing.untils.Contacts;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 
@@ -71,7 +71,7 @@ public class UploadSelectFileActivity extends BaseActivity{
             @Override
             public void handleMessage(Message msg) {
                 switch(msg.what){
-                    case Contacts.FILEMANAGER.FILEUPLOAD_SUCCESS:
+                    case Contants.FILEMANAGER.FILEUPLOAD_SUCCESS:
                         setResult(RESULT_OK);
                         UploadSelectFileActivity.this.finish();
 
@@ -172,7 +172,7 @@ public class UploadSelectFileActivity extends BaseActivity{
         RequestBody requestBody = builder.build();
 
         Request request = new Request.Builder()
-                .url(Contacts.computer_ip + Contacts.file_Server + Contacts.fileUpload)
+                .url(Contants.SERVER_IP + Contants.file_Server + Contants.fileUpload)
                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .post(requestBody)
                 .build();
@@ -188,11 +188,11 @@ public class UploadSelectFileActivity extends BaseActivity{
                 // TODO: 10-0-1 请求成功
                 message = handler.obtainMessage();
                 if (response.code() == 200){
-                    message.what = Contacts.FILEMANAGER.FILEUPLOAD_SUCCESS;
+                    message.what = Contants.FILEMANAGER.FILEUPLOAD_SUCCESS;
                     Log.e(TAG, "onResponse: " + response.body().string() );
                 }else {
                     Log.e(TAG, "网络请求 错误  " + response.code() + "   " + response.message());
-                    message.what = Contacts.FILEMANAGER.FILEUPLOAD_FAILURE;
+                    message.what = Contants.FILEMANAGER.FILEUPLOAD_FAILURE;
                 }
                 handler.sendMessage(message);
             }

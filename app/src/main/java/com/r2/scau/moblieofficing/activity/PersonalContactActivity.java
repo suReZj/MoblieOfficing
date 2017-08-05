@@ -41,10 +41,10 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
     protected void initView() {
         setContentView(R.layout.activity_contact);
 
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_personal_contact);
-        mSearchView = (SearchView)findViewById(R.id.sv_personal_contact);
-        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv_personal);
-        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv_personal);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_contact);
+        mSearchView = (SearchView)findViewById(R.id.sv_contact);
+        mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv);
+        mQuickSideBarTipsView = (QuickSideBarTipsView) findViewById(R.id.qsbtv);
         mTitleTV = (TextView) findViewById(R.id.toolbar_title);
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
         mToolBar.setTitle("");
@@ -80,7 +80,7 @@ public class PersonalContactActivity extends BaseActivity implements OnQuickSide
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter = new ContactAdapter();
+        adapter = new ContactAdapter(getApplicationContext());
         mQuickSideBarView.setLetters(customLetters);
         adapter.addAll(mContactList);
 
