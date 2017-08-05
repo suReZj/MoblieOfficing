@@ -83,6 +83,7 @@ public class MultiChatMessageListener implements MessageListener {
                 chatMessage.setMeUsername(mMeUserName);
                 chatMessage.setMeNickname(mMeNickName);
                 chatMessage.setContent(json.optString(ChatMessage.KEY_MESSAGE_CONTENT));
+                chatMessage.setMultiUserName(json.optString(ChatMessage.KEY_MULTI_CHAT_SEND_USER));
 
                 sendUser = json.optString(ChatMessage.KEY_MULTI_CHAT_SEND_USER);
                 chatMessage.setMeSend(mMeUserName.equals(sendUser));

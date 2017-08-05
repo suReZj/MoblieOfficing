@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
+import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.smack.SmackManager;
@@ -60,27 +61,9 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
             holder.contactST.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(mContext, ChatActivity.class);
-                    Contact contact=new Contact();
-                    contact=getItem(position);
-                    ChatRecord record;
-                    List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", contact.getPhone()).find(ChatRecord.class);
-                    if(chatRecords.size()==0){
-                        record = new ChatRecord();
-                        record.setUuid(UUID.randomUUID().toString());
-                        record.setmFriendUsername(contact.getPhone());
-                        record.setmFriendNickname(contact.getName());
-                        record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
-                        record.setmMeNickname(UserUntil.gsonUser.getNickname());
-                        record.setmChatTime(DateUtil.currentDatetime());
-                        record.setmIsMulti(false);
-                        record.setmChatJid(SmackManager.getInstance().getChatJid(contact.getPhone()));
-                        record.save();
-                    }else {
-                        record = chatRecords.get(0);
-                    }
-                    EventBus.getDefault().post(record);
-                    intent.putExtra("chatrecord", record);
+                    Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                    Contact contact=getItem(position);
+                    intent.putExtra("phone",contact.getPhone());
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mContext.startActivity(intent);
                 }
