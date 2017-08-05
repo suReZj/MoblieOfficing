@@ -1,7 +1,6 @@
 package com.r2.scau.moblieofficing.activity;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
@@ -15,14 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.fragement.ContactFragment;
 import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
-import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -262,26 +259,4 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             super.onBackPressed();
         }
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
-            case Contants.RequestCode.QRSCAN:
-                if (resultCode == RESULT_OK){
-                    /**
-                     * Create by edwincheng in 2017/08/04
-                     * resultdata代表的是 二维码内部储存的信息
-                     *
-                     * 自己解析resultdata中的字段 然后在做相应操作
-                     */
-                    String resultdata = data.getStringExtra("result");
-                    ToastUtils.show(MainActivity.this,resultdata,Toast.LENGTH_SHORT);
-                    Log.e("二维码扫描结果", resultdata);
-                }else {
-                    Log.e("二维码扫描结果", "用户选择取消" );
-                }
-                break;
-        }
-    }
-
 }

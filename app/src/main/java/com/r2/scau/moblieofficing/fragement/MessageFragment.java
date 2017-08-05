@@ -1,11 +1,16 @@
 package com.r2.scau.moblieofficing.fragement;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
@@ -31,6 +37,7 @@ import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
@@ -45,6 +52,8 @@ import java.util.List;
 import java.util.UUID;
 
 import okhttp3.OkHttpClient;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -66,6 +75,8 @@ public class MessageFragment extends Fragment {
     private String flagOfMulti;
     private ArrayList<String> roomNameList;
     private OkHttpClient okHttpClient = new OkHttpClient();
+
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
 
     @Nullable
     @Override
@@ -89,8 +100,14 @@ public class MessageFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
-                    Intent intent = new Intent(getActivity(),CaptureActivity.class);
-                    getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                            != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(getActivity() ,
+                                new String[]{Manifest.permission.READ_CONTACTS},
+                                MY_PERMISSIONS_REQUEST_CAMERA);
+                    }else {
+                        openQRCodeActivity();
+                    }
                 }
                 if (item.getItemId() == R.id.multiChat) {
                     Intent multiIntent = new Intent(getActivity().getApplicationContext(), EditGroupActivity.class);
@@ -281,6 +298,11 @@ public class MessageFragment extends Fragment {
     }
 
 
+    public void openQRCodeActivity(){
+        Intent intent = new Intent(getActivity(),CaptureActivity.class);
+        getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
@@ -426,6 +448,44 @@ public class MessageFragment extends Fragment {
             record = chatRecords.get(0);
         }
         EventBus.getDefault().post(record);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case Contants.RequestCode.QRSCAN:
+                if (resultCode == RESULT_OK){
+                    /**
+                     * Create by edwincheng in 2017/08/04
+                     * resultdata代表的是 二维码内部储存的信息
+                     *
+                     * 自己解析resultdata中的字段 然后在做相应操作
+                     */
+                    String resultdata = data.getStringExtra("result");
+                    ToastUtils.show(getActivity(),resultdata, Toast.LENGTH_SHORT);
+                    Log.e("二维码扫描结果", resultdata);
+                }else {
+                    Log.e("二维码扫描结果", "用户选择取消" );
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == MY_PERMISSIONS_REQUEST_CAMERA){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.e("permission", "accept");
+                openQRCodeActivity();
+            } else
+            {
+                // Permission Denied
+                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 
