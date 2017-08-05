@@ -34,7 +34,6 @@ public class GroupJoinFragment extends Fragment {
     private View view;
     private Context mContext;
     private GroupAdapter adapter;
-    public static final int GET_GROUP_JOIN= 3;
 
     @Nullable
     @Override

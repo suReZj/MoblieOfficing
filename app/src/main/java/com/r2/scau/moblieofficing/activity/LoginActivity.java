@@ -118,7 +118,7 @@ public class LoginActivity extends BaseActivity {
         String passwordMD5 = user + "#" + password;
         passwordMD5 = MathUtil.getMD5(passwordMD5);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "u/")
+                .baseUrl(Contants.SERVER_IP + "/u/")
                 .build();
         ILoginBiz loginBiz = retrofit.create(ILoginBiz.class);
         Call<ResponseBody> call = loginBiz.login(user, passwordMD5, true);
@@ -191,7 +191,7 @@ public class LoginActivity extends BaseActivity {
 
     public void getUserInfo(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "group/")
+                .baseUrl(Contants.SERVER_IP + "/group/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -219,7 +219,7 @@ public class LoginActivity extends BaseActivity {
 
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "/user/")
+                .baseUrl(Contants.SERVER_IP + "/user/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ContactAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
@@ -38,6 +39,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.r2.scau.moblieofficing.Contants.GET_FRIENDS;
+
 public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchListener {
 
     private Toolbar toolbar;
@@ -50,7 +53,6 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
     private HashMap<String, Integer> letters = new HashMap<>();
     private QuickSideBarView mQuickSideBarView;
     private QuickSideBarTipsView mQuickSideBarTipsView;
-    public static final int GET_FRIENDS = 1;
 
 
     @Override
@@ -142,7 +144,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
 
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/user/")
+                .baseUrl(Contants.SERVER_IP + "/user/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

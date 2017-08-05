@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bigkoo.quicksidebar.QuickSideBarTipsView;
 import com.bigkoo.quicksidebar.QuickSideBarView;
 import com.bigkoo.quicksidebar.listener.OnQuickSideBarTouchListener;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.SelectMemberAdapter;
 import com.r2.scau.moblieofficing.bean.Contact;
@@ -37,6 +38,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER;
+import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER_REPORT;
 import static com.r2.scau.moblieofficing.untils.UserUntil.friendList;
 
 public class SelectMemberActivity extends BaseActivity implements OnQuickSideBarTouchListener {
@@ -45,19 +48,21 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     private Toolbar mToolbar;
     private TextView mTitleTV;
     private String groupName;
+    private int type;
     private RecyclerView mRecyclerView;
     private SelectMemberAdapter adapter;
     private QuickSideBarView mQuickSideBarView;
     private QuickSideBarTipsView mQuickSideBarTipsView;
     private List<Contact> mContactList = new ArrayList<>();
     private HashMap<String, Integer> letters = new HashMap<>();
-    public static final int SELECT_MEMBER = 2;
 
 
     @Override
     protected void initView() {
         setContentView(R.layout.activity_contact);
 
+        Intent intent = getIntent();
+        type = intent.getIntExtra("type", -1);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_contact);
         mQuickSideBarView = (QuickSideBarView) findViewById(R.id.qsbv);
@@ -145,7 +150,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
 
     public void getFriend() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/user/")
+                .baseUrl(Contants.SERVER_IP + "/user/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -207,13 +212,18 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                 finish();
                 break;
             case R.id.menu_select_member:
-                List<Contact> selectMember = new ArrayList<>();
+                ArrayList<Contact> selectMember = new ArrayList<>();
                 for (Contact contact : mContactList){
                     if(contact.isSelect() == true){
                         selectMember.add(contact);
                     }
                 }
-
+                if (type == SELECT_MEMBER_REPORT){
+                    Intent intent = new Intent();
+                    intent.putParcelableArrayListExtra("member", selectMember);
+                    setResult(Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT, intent);
+                    finish();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

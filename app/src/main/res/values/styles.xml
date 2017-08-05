@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorLightBlue</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
         <!-- AppCompatEditText默认状态状态设置底线颜色 -->
         <item name="colorControlNormal">@color/colorWhite</item>
         <!-- AppCompatEditText选择的底线颜色 -->
@@ -29,14 +30,12 @@
     </style>
 
 
-        <style name="line_style">
-            <item name="android:layout_width">match_parent</item>
-            <item name="android:layout_height">0.5dp</item>
-            <item name="android:background">#CDCDCD</item>
-            <item name="android:layout_margin">2dp</item>
-        </style>
-
-
+    <style name="line_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0.5dp</item>
+        <item name="android:background">#CDCDCD</item>
+        <item name="android:layout_margin">2dp</item>
+    </style>
 
 
     <!-- toolbar弹出菜单样式 -->
@@ -64,8 +63,6 @@
         <item name="colorControlHighlight">@color/messageTitle</item>
         <item name="colorButtonNormal">@color/colorLightBlue</item>
     </style>
-
-
 
 
 </resources>

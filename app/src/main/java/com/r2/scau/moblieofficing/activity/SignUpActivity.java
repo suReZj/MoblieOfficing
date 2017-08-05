@@ -14,13 +14,11 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.retrofit.ISignBiz;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
@@ -124,7 +122,7 @@ public class SignUpActivity extends BaseActivity {
         verCodeKey = MathUtil.getMD5(verCodeKey);
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL+"open/")
+                .baseUrl(Contants.SERVER_IP + "open/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.getVerCode(verCodeKey);
@@ -159,7 +157,7 @@ public class SignUpActivity extends BaseActivity {
         String password = passwordET.getText().toString();
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_BASE_URL + "u/")
+                .baseUrl(Contants.SERVER_IP + "u/")
                 .build();
         ISignBiz signBiz = retrofit.create(ISignBiz.class);
         retrofit2.Call<ResponseBody> call = signBiz.signUp(name, phone, password, verCode, verCodeKey);

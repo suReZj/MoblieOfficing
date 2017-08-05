@@ -20,6 +20,7 @@ import com.r2.scau.moblieofficing.event.GroupJoinEvent;
 import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.gson.GsonGroups;
 import com.r2.scau.moblieofficing.retrofit.IGroupBiz;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
@@ -34,6 +35,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.r2.scau.moblieofficing.Contants.GET_GROUP_CREATE;
+
+
 /**
  * Created by 嘉进 on 15:35.
  */
@@ -43,7 +47,7 @@ public class GroupCreateFragment extends Fragment{
     private Context mContext;
     private Handler mHandler;
     private GroupAdapter adapter;
-    public static final int GET_GROUP_CREATE= 3;
+
 
     @Nullable
     @Override
@@ -80,7 +84,7 @@ public class GroupCreateFragment extends Fragment{
 
     public void getGroupInfo(){
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/group/")
+                .baseUrl(Contants.SERVER_IP + "/group/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

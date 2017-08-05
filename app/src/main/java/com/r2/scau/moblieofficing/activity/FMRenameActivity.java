@@ -13,7 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.untils.Contacts;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 
@@ -56,12 +56,12 @@ public class FMRenameActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
-                case Contacts.FILEMANAGER.FILERENAME_SUCCESS:
+                case Contants.FILEMANAGER.FILERENAME_SUCCESS:
                     setResult(RESULT_OK);
                     FMRenameActivity.this.finish();
                     break;
 
-                case Contacts.FILEMANAGER.CREATE_SUCCESS:
+                case Contants.FILEMANAGER.CREATE_SUCCESS:
                     setResult(RESULT_OK);
                     FMRenameActivity.this.finish();
                     break;
@@ -128,7 +128,7 @@ public class FMRenameActivity extends BaseActivity {
                                 .add("newPath",newPath)
                                 .add("userPhone", "123456789010")
                                 .build();
-                        request = new Request.Builder().url(Contacts.computer_ip + Contacts.file_Server + Contacts.fileRename)
+                        request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.fileRename)
                                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                                 .post(formBody)
                                 .build();
@@ -143,10 +143,10 @@ public class FMRenameActivity extends BaseActivity {
                                 // TODO: 10-0-1 请求成功
                                 message = handler.obtainMessage();
                                 if (response.code() == 200){
-                                    message.what = Contacts.FILEMANAGER.FILERENAME_SUCCESS;
+                                    message.what = Contants.FILEMANAGER.FILERENAME_SUCCESS;
                                 }else {
                                     Log.e(TAG, "网络请求 错误  "+ response.code() + "   " + response.message() );
-                                    message.what = Contacts.FILEMANAGER.FILERENAME_FAILURE;
+                                    message.what = Contants.FILEMANAGER.FILERENAME_FAILURE;
                                 }
                                 handler.sendMessage(message);
                             }
@@ -158,7 +158,7 @@ public class FMRenameActivity extends BaseActivity {
                                 .add("userPhone", "123456789010")
                                 .build();
                         request = new Request.Builder()
-                                .url(Contacts.computer_ip + Contacts.file_Server + Contacts.createDir)
+                                .url(Contants.SERVER_IP + Contants.file_Server + Contants.createDir)
                                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                                 .post(formBody)
                                 .build();
@@ -173,10 +173,10 @@ public class FMRenameActivity extends BaseActivity {
                                 // TODO: 10-0-1 请求成功
                                 message = handler.obtainMessage();
                                 if (response.code() == 200){
-                                    message.what = Contacts.FILEMANAGER.CREATE_SUCCESS;
+                                    message.what = Contants.FILEMANAGER.CREATE_SUCCESS;
                                 }else {
                                     Log.e(TAG, "网络请求 错误  "+ response.code() + "   " + response.message() );
-                                    message.what = Contacts.FILEMANAGER.CREATE_FAILURE;
+                                    message.what = Contants.FILEMANAGER.CREATE_FAILURE;
                                 }
                                 handler.sendMessage(message);
                             }

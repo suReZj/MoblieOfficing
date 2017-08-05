@@ -13,7 +13,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.OnItemClickLitener;
 import com.r2.scau.moblieofficing.bean.FileBean;
-import com.r2.scau.moblieofficing.untils.Contacts;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.widge.BottomView;
 
 import java.text.DecimalFormat;
@@ -64,21 +64,21 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public int getItemViewType(int position) {
         if (fileList != null && fileList.size() > 0){
             if(position == fileList.size()) {
-                return Contacts.FILEMANAGER.TAIL_VIEW;
+                return Contants.FILEMANAGER.TAIL_VIEW;
             }else if(position < fileList.size()){
-                return Contacts.FILEMANAGER.ITEM_VIEW;
+                return Contants.FILEMANAGER.ITEM_VIEW;
             }
         }
-        return Contacts.FILEMANAGER.EMPTYVIEW;
+        return Contants.FILEMANAGER.EMPTYVIEW;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        if (viewType == Contacts.FILEMANAGER.ITEM_VIEW){
+        if (viewType == Contants.FILEMANAGER.ITEM_VIEW){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_fileitem, parent, false);
             return new FileViewHolder(view);
-        }else if (viewType == Contacts.FILEMANAGER.TAIL_VIEW || viewType == Contacts.FILEMANAGER.EMPTYVIEW){
+        }else if (viewType == Contants.FILEMANAGER.TAIL_VIEW || viewType == Contants.FILEMANAGER.EMPTYVIEW){
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_filetail, parent, false);
             return new FileTailViewHolder(view);
         }
@@ -94,7 +94,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         if(holder instanceof FileViewHolder){
             final FileViewHolder fileViewHolder = (FileViewHolder) holder;
-            if (fileList.get(position).getAttribute() == Contacts.FILEMANAGER.FOLDER_TYPE){
+            if (fileList.get(position).getAttribute() == Contants.FILEMANAGER.FOLDER_TYPE){
                 fileViewHolder.file_image.setImageURI("res://com.r2.scau.moblieofficing/" + R.mipmap.ic_folder);
                 fileViewHolder.file_size.setText(R.string.folder);
             }else {
