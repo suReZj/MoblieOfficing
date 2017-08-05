@@ -236,33 +236,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         notifyDataSetChanged();
     }
 
-//    public void setTop(){
-//        //设置置顶状态
-//        if (messageList.get(position).getSetTopFlag()) {
-//            try {
-//                ((messageHolder) holder).linearLayout.setBackgroundColor(resources.getColor(R.color.notice_Catagory_gray));
-//                EmojiUtil.handlerEmojiText(((messageHolder) holder).chatContent, msg.getLastMessage(), this.mContext);
-//                ((messageHolder) holder).chatTitle.setText(msg.getFriendNickname());
-//                ((messageHolder) holder).chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getChatTime()));
-//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-////                ((messageHolder) holder).unRead.setText(messageCount);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        } else {
-//            try {
-//                ((messageHolder) holder).linearLayout.setBackgroundColor(resources.getColor(R.color.white));
-//                EmojiUtil.handlerEmojiText(((messageHolder) holder).chatContent, msg.getLastMessage(), this.mContext);
-//                ((messageHolder) holder).chatTitle.setText(msg.getFriendNickname());
-//                ((messageHolder) holder).chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getChatTime()));
-//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-////                ((messageHolder) holder).unRead.setText(messageCount);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
 
 }

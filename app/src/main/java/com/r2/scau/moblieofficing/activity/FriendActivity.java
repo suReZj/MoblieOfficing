@@ -131,7 +131,7 @@ public class FriendActivity extends BaseActivity implements OnQuickSideBarTouchL
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter = new ContactAdapter();
+        adapter = new ContactAdapter(getApplicationContext());
         adapter.addAll(mContactList);
 
         // Add the sticky headers decoration
