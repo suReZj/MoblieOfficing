@@ -14,13 +14,8 @@ import android.view.ViewGroup;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.GroupAdapter;
-import com.r2.scau.moblieofficing.event.GroupJoinEvent;
 import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.untils.UserUntil;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,20 +42,19 @@ public class GroupJoinFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-
         super.onViewCreated(view, savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        EventBus.getDefault().unregister(this);
+
     }
 
     public void initView(){
         List<GsonGroup> groupListJoin = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        groupListJoin = UserUntil.joinGroupList;
         adapter = new GroupAdapter(mContext, groupListJoin);
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv_group);
         rv.setLayoutManager(layoutManager);
@@ -68,10 +62,6 @@ public class GroupJoinFragment extends Fragment {
         rv.setItemAnimator(new DefaultItemAnimator());
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onGroupJoinEvent(GroupJoinEvent event) {
-        adapter.addAll(UserUntil.joinGroupList);
-    }
 
 
 }

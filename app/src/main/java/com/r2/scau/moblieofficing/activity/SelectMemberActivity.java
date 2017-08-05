@@ -1,8 +1,6 @@
 package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,14 +18,10 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.SelectMemberAdapter;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.Contact;
-import com.r2.scau.moblieofficing.gson.GsonFriend;
-import com.r2.scau.moblieofficing.gson.GsonFriends;
-import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
-import com.r2.scau.moblieofficing.untils.FistLetterUntil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -45,20 +39,13 @@ import java.util.UUID;
 
 import okhttp3.FormBody;
 import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER;
 import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER_REPORT;
 import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
 import static com.r2.scau.moblieofficing.untils.UserUntil.friendList;
 
 public class SelectMemberActivity extends BaseActivity implements OnQuickSideBarTouchListener {
 
-    private Handler handler;
     private Toolbar mToolbar;
     private TextView mTitleTV;
     private String groupName;
@@ -87,34 +74,6 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         mToolbar.setTitle("");
         mTitleTV.setText("选择群成员");
 
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what) {
-                    case SELECT_MEMBER:
-                        List<Contact> contacts = new ArrayList<Contact>();
-                        contacts = (List<Contact>) msg.obj;
-                        ArrayList<String> customLetters = new ArrayList<>();
-                        Collections.sort(contacts);
-                        int position = 0;
-                        for (Contact contact : contacts) {
-                            String letter = contact.getFirstLetter();
-                            if (!letters.containsKey(letter)) {
-                                letters.put(letter, position);
-                                customLetters.add(letter);
-                            }
-                            position++;
-                        }
-                        mQuickSideBarView.setLetters(customLetters);
-                        //mQuickSideBarView.invalidate();
-                        adapter.addAll(contacts);
-                        UserUntil.friendList = contacts;
-                        break;
-                }
-            }
-        };
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -125,23 +84,17 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         Intent intent = getIntent();
         groupName = intent.getStringExtra("groupName");
         ArrayList<String> customLetters = new ArrayList<>();
-        if (UserUntil.friendList != null) {
-            mContactList = friendList;
-            Collections.sort(mContactList);
-            int position = 0;
-            for (Contact contact : mContactList) {
-                String letter = contact.getFirstLetter();
-                if (!letters.containsKey(letter)) {
-                    letters.put(letter, position);
-                    customLetters.add(letter);
-                }
-                position++;
+        mContactList = friendList;
+        Collections.sort(mContactList);
+        int position = 0;
+        for (Contact contact : mContactList) {
+            String letter = contact.getFirstLetter();
+            if (!letters.containsKey(letter)) {
+                letters.put(letter, position);
+                customLetters.add(letter);
             }
-        } else {
-            getFriend();
+            position++;
         }
-
-
         initRV(customLetters);
     }
 
@@ -159,47 +112,6 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         mRecyclerView.setAdapter(adapter);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(headersDecor);
-    }
-
-
-    public void getFriend() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_IP + "/user/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        IFriendBiz iFriendBiz = retrofit.create(IFriendBiz.class);
-        Call<GsonFriends> call = iFriendBiz.getFriend(UserUntil.phone);
-        call.enqueue(new Callback<GsonFriends>() {
-            @Override
-            public void onResponse(Call<GsonFriends> call, Response<GsonFriends> response) {
-                GsonFriends gsonFriends = response.body();
-                if (gsonFriends.getCode() == 200) {
-                    List<GsonFriend> friendList = gsonFriends.getListFriends();
-                    ArrayList<Contact> contacts = new ArrayList<Contact>();
-                    for (GsonFriend myFriend : friendList) {
-                        Contact contact = new Contact();
-                        String name = myFriend.getNickname();
-                        contact.setPhone(myFriend.getUserPhone());
-                        contact.setName(name);
-                        contact.setFirstLetter(FistLetterUntil.getSortKey(name));
-                        contacts.add(contact);
-                    }
-                    Message msg = Message.obtain();
-                    msg.what = SELECT_MEMBER;
-                    msg.obj = contacts;
-                    handler.sendMessage(msg);
-                    Log.e("getFriend", "success");
-                } else {
-                    Log.e("getFriend", gsonFriends.getMsg());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<GsonFriends> call, Throwable t) {
-                Log.e("getFriend", "fail");
-            }
-        });
     }
 
 
@@ -237,7 +149,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                     intent.putParcelableArrayListExtra("member", selectMember);
                     setResult(Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT, intent);
                     finish();
-                }else {
+                } else {
 
                     List<Contact> selectMember = new ArrayList<>();
                     MultiUserChat multiUserChat;

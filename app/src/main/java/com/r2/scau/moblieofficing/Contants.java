@@ -27,10 +27,8 @@ public class Contants {
     public static final String SP_LOGIN_USER_PHONE_KEY = "sp_login_user_phone_key";
     public static final String SP_LOGIN_PASSWORD_KEY = "sp_login_password_key";
 
-    public static final int GET_FRIENDS = 11;
-    public static final int SELECT_MEMBER = 12;
-    public static final int GET_GROUP_JOIN = 13;
-    public static final int GET_GROUP_CREATE = 14;
+    public static final int LOGIN_IN_GET_DATA = 13;
+    public static final int SIGN_UP_GET_DATA = 14;
     public static final int OPEN_DAY_REPORTY = 15;
     public static final int OPEN_WEEK_REPORT = 16;
     public static final int OPEN_MONTH_REPORT = 17;
