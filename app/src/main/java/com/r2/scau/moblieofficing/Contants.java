@@ -29,8 +29,8 @@ public class Contants {
 
     public static final int GET_FRIENDS = 11;
     public static final int SELECT_MEMBER = 12;
-    public static final int GET_GROUP_JOIN= 13;
-    public static final int GET_GROUP_CREATE= 14;
+    public static final int GET_GROUP_JOIN = 13;
+    public static final int GET_GROUP_CREATE = 14;
     public static final int OPEN_DAY_REPORTY = 15;
     public static final int OPEN_WEEK_REPORT = 16;
     public static final int OPEN_MONTH_REPORT = 17;
@@ -41,10 +41,10 @@ public class Contants {
 
     /**
      * Create by edwincheng in 2017/7/28.
-     *
+     * <p>
      * 用于"文件管理"部分的字段
      */
-    public static class FILEMANAGER{
+    public static class FILEMANAGER {
         public static final int EMPTYVIEW = -1;
         public static final int ITEM_VIEW = 1;
         public static final int TAIL_VIEW = 2;
@@ -73,11 +73,15 @@ public class Contants {
     /**
      * requestCode
      */
-    public static class RequestCode{
+    public static class RequestCode {
 
-        public static final int RENAME = 501;
-        public static final int CREATE = 502;
-        public static final int UPLOAD = 503;
+        public static final int RENAME = 801;
+
+        public static final int CREATE = 802;
+
+        public static final int UPLOAD = 803;
+
+        public static final int QRSCAN = 804;
 
     }
 

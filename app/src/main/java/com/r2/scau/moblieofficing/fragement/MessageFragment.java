@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
@@ -29,7 +30,6 @@ import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.Contacts;
 import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
@@ -90,7 +90,7 @@ public class MessageFragment extends Fragment {
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
                     Intent intent = new Intent(getActivity(),CaptureActivity.class);
-                    getActivity().startActivityForResult(intent, Contacts.RequestCode.QRSCAN);
+                    getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
                 }
                 if (item.getItemId() == R.id.multiChat) {
                     Intent multiIntent = new Intent(getActivity().getApplicationContext(), EditGroupActivity.class);

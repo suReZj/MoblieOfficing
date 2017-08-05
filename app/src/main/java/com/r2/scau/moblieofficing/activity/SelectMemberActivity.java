@@ -53,7 +53,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER;
 import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER_REPORT;
-import static com.r2.scau.moblieofficing.activity.FriendActivity.GET_FRIENDS;
 import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
 import static com.r2.scau.moblieofficing.untils.UserUntil.friendList;
 
@@ -72,7 +71,6 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     private HashMap<String, Integer> letters = new HashMap<>();
 
 
-
     @Override
     protected void initView() {
         setContentView(R.layout.activity_contact);
@@ -89,7 +87,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         mToolbar.setTitle("");
         mTitleTV.setText("选择群成员");
 
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
                 super.handleMessage(msg);
@@ -127,7 +125,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         Intent intent = getIntent();
         groupName = intent.getStringExtra("groupName");
         ArrayList<String> customLetters = new ArrayList<>();
-        if(UserUntil.friendList != null){
+        if (UserUntil.friendList != null) {
             mContactList = friendList;
             Collections.sort(mContactList);
             int position = 0;
@@ -139,7 +137,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                 }
                 position++;
             }
-        }else {
+        } else {
             getFriend();
         }
 
@@ -228,115 +226,117 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                 finish();
                 break;
             case R.id.menu_select_member:
-                ArrayList<Contact> selectMember = new ArrayList<>();
-                for (Contact contact : mContactList){
-                    if(contact.isSelect() == true){
-                        selectMember.add(contact);
+                if (type == SELECT_MEMBER_REPORT) {
+                    ArrayList<Contact> selectMember = new ArrayList<>();
+                    for (Contact contact : mContactList) {
+                        if (contact.isSelect() == true) {
+                            selectMember.add(contact);
+                        }
                     }
-                }
-                if (type == SELECT_MEMBER_REPORT){
                     Intent intent = new Intent();
                     intent.putParcelableArrayListExtra("member", selectMember);
                     setResult(Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT, intent);
                     finish();
-                }
+                }else {
 
-                List<Contact> selectMember = new ArrayList<>();
-                MultiUserChat multiUserChat;
-                Intent intent = getIntent();
-                String groupName = intent.getStringExtra("groupName");
-                String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
-                try {
-                    multiUserChat = SmackManager.getInstance().createChatRoom(groupName, UserUntil.gsonUser.getNickname(), null);
-                    SmackListenerManager.addMultiChatMessageListener(multiUserChat);
-                    SmackMultiChatManager.saveMultiChat(multiUserChat);
-                    FormBody formBody = new FormBody.Builder()
-                            .add("userPhone", UserUntil.gsonUser.getUserPhone())
-                            .add("groupName",groupName)
-                            .build();
+                    List<Contact> selectMember = new ArrayList<>();
+                    MultiUserChat multiUserChat;
+                    Intent intent = getIntent();
+                    String groupName = intent.getStringExtra("groupName");
+                    String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
+                    try {
+                        multiUserChat = SmackManager.getInstance().createChatRoom(groupName, UserUntil.gsonUser.getNickname(), null);
+                        SmackListenerManager.addMultiChatMessageListener(multiUserChat);
+                        SmackMultiChatManager.saveMultiChat(multiUserChat);
+                        FormBody formBody = new FormBody.Builder()
+                                .add("userPhone", UserUntil.gsonUser.getUserPhone())
+                                .add("groupName", groupName)
+                                .build();
 //                        step 3: 创建请求
-                    Request request = new Request.Builder().url("http://192.168.13.61:8089/group/createGroup.shtml")
-                            .post(formBody)
-                            .addHeader("cookie", OkHttpUntil.loginSessionID)
-                            .build();
+                        Request request = new Request.Builder().url("http://192.168.13.61:8089/group/createGroup.shtml")
+                                .post(formBody)
+                                .addHeader("cookie", OkHttpUntil.loginSessionID)
+                                .build();
 
 //                        step 4： 建立联系 创建Call对象
-                    okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
-                        @Override
-                        public void onFailure(okhttp3.Call call, IOException e) {
+                        okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(okhttp3.Call call, IOException e) {
 //                                 TODO: 17-1-4  请求失败
-                            Log.e("register", "fail");
-                        }
+                                Log.e("register", "fail");
+                            }
 
-                        @Override
-                        public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                            @Override
+                            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
 //                                 TODO: 17-1-4 请求成功
-                            String str = response.body().string();
-                            Log.e("register", str);
-                        }
-                    });
-                    for (Contact contact : mContactList) {
-                        if (contact.isSelect() == true) {
-                            selectMember.add(contact);
-                            String jid = SmackManager.getInstance().getFullJid(contact.getPhone());
-                            multiUserChat.invite(jid, reason);//邀请入群
-                            formBody = new FormBody.Builder()
-                            .add("groupCreatedUserPhone", UserUntil.gsonUser.getUserPhone())
-                            .add("groupName",groupName)
-                            .add("userPhone",contact.getPhone())
-                            .build();
+                                String str = response.body().string();
+                                Log.e("register", str);
+                            }
+                        });
+                        for (Contact contact : mContactList) {
+                            if (contact.isSelect() == true) {
+                                selectMember.add(contact);
+                                String jid = SmackManager.getInstance().getFullJid(contact.getPhone());
+                                multiUserChat.invite(jid, reason);//邀请入群
+                                formBody = new FormBody.Builder()
+                                        .add("groupCreatedUserPhone", UserUntil.gsonUser.getUserPhone())
+                                        .add("groupName", groupName)
+                                        .add("userPhone", contact.getPhone())
+                                        .build();
 //                            step 3: 创建请求
-                            request = new Request.Builder().url("http://192.168.13.61:8089/group/joinGroup.shtml")
-                                    .post(formBody)
-                                    .addHeader("cookie", OkHttpUntil.loginSessionID)
-                                    .build();
+                                request = new Request.Builder().url("http://192.168.13.61:8089/group/joinGroup.shtml")
+                                        .post(formBody)
+                                        .addHeader("cookie", OkHttpUntil.loginSessionID)
+                                        .build();
 
 //                        step 4： 建立联系 创建Call对象
-                            okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
-                                @Override
-                                public void onFailure(okhttp3.Call call, IOException e) {
+                                okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+                                    @Override
+                                    public void onFailure(okhttp3.Call call, IOException e) {
 //                                 TODO: 17-1-4  请求失败
-                                    Log.e("register", "fail");
-                                }
+                                        Log.e("register", "fail");
+                                    }
 
-                                @Override
-                                public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                                    @Override
+                                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
 //                                 TODO: 17-1-4 请求成功
-                                    String str = response.body().string();
-                                    Log.e("register", str);
-                                }
-                            });
+                                        String str = response.body().string();
+                                        Log.e("register", str);
+                                    }
+                                });
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    String roomName = groupName + "@conference." + SmackManager.SERVER_NAME;
+                    ChatRecord record;
+                    List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
+                    if (chatRecords.size() == 0) {
+                        record = new ChatRecord();
+                        String friendUserName = roomName;
+                        int idx = friendUserName.indexOf("@conference.");
+                        String friendNickName = friendUserName.substring(0, idx);
+                        record.setUuid(UUID.randomUUID().toString());
+                        record.setmFriendUsername(friendUserName);
+                        record.setmFriendNickname(friendNickName);
+                        record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+                        record.setmMeNickname(UserUntil.gsonUser.getNickname());
+                        record.setmChatTime(DateUtil.currentDatetime());
+                        record.setmIsMulti(true);
+                        record.setmChatJid(roomName);
+                        record.save();
+                        SmackManager.getInstance().joinChatRoom(roomName, UserUntil.gsonUser.getNickname(), null);
+                    } else {
+                        record = chatRecords.get(0);
+                    }
+                    EventBus.getDefault().post(record);
+                    Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
+                    startChat.putExtra("chatrecord", record);
+                    startActivity(startChat);
+                    finish();
                 }
-                String roomName=groupName+"@conference."+SmackManager.SERVER_NAME;
-                ChatRecord record;
-                List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-                if (chatRecords.size() == 0) {
-                    record = new ChatRecord();
-                    String friendUserName = roomName;
-                    int idx = friendUserName.indexOf("@conference.");
-                    String friendNickName = friendUserName.substring(0, idx);
-                    record.setUuid(UUID.randomUUID().toString());
-                    record.setmFriendUsername(friendUserName);
-                    record.setmFriendNickname(friendNickName);
-                    record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
-                    record.setmMeNickname(UserUntil.gsonUser.getNickname());
-                    record.setmChatTime(DateUtil.currentDatetime());
-                    record.setmIsMulti(true);
-                    record.setmChatJid(roomName);
-                    record.save();
-                    SmackManager.getInstance().joinChatRoom(roomName,UserUntil.gsonUser.getNickname(),null);
-                } else {
-                    record = chatRecords.get(0);
-                }
-                EventBus.getDefault().post(record);
-                Intent startChat=new Intent(getApplicationContext(),ChatActivity.class);
-                startChat.putExtra("chatrecord",record);
-                startActivity(startChat);
-                finish();
+
                 break;
         }
         return super.onOptionsItemSelected(item);
