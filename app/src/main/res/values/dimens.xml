@@ -4,4 +4,5 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="padding_top">0dp</dimen>
 
+    <!--<dimen name="image_icon_text_size">23dp</dimen>-->
 </resources>
