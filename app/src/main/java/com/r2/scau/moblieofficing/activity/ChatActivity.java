@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.r2.scau.moblieofficing.Contants;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ChatMessageAdapter;
@@ -48,6 +46,10 @@ import java.util.List;
 import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+
+import static com.r2.scau.moblieofficing.Contants.creat_multi_chat;
+import static com.r2.scau.moblieofficing.Contants.multi_invite;
+import static com.r2.scau.moblieofficing.Contants.multi_invite_room_name;
 
 /**
  * Created by 张子健 on 2017/7/21 0021.
@@ -262,7 +264,6 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         }else {
             getMenuInflater().inflate(R.menu.toolbar_chat_title_multi_menu, menu);
         }
-
         return true;
     }
 
@@ -276,9 +277,15 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                 startActivity(intent);
                 break;
             case R.id.invite_group:
-
+                chatRecord = getIntent().getParcelableExtra("chatrecord");
+                intent=new Intent(this,SelectMemberActivity.class);
+                intent.putExtra(multi_invite,multi_invite);
+                intent.putExtra(multi_invite_room_name,chatRecord.getmFriendNickname());
+                startActivity(intent);
                 break;
             case R.id.notice_group:
+                intent=new Intent(this,SendNoticeActivity.class);
+                startActivity(intent);
                 break;
             case R.id.file_group:
                 break;
