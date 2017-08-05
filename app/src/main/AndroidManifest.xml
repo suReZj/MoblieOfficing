@@ -41,14 +41,8 @@
         <activity android:name=".activity.SignOfficeActivity">
 
         </activity>
-        <activity android:name=".activity.MainActivity">
-        </activity>
-        <activity android:name=".activity.FileListActivity"/>
-        <activity android:name=".activity.FileTypeSelectActivity"/>
-        <activity android:name=".activity.FMRenameActivity"/>
-        <activity android:name=".activity.UploadSelectFileActivity"/>
-        <activity android:name=".activity.ChatActivity"/>
-        <activity android:name=".activity.LoginActivity"
+
+
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">

@@ -174,7 +174,8 @@ public class LoginActivity extends BaseActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("login", "fail");
+                Log.e("login", "fail"+t.getMessage());
+
             }
         });
     }
