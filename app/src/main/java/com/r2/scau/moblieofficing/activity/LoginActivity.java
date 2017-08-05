@@ -209,7 +209,6 @@ public class LoginActivity extends BaseActivity {
         });*/
     }
 
-
     public void getUserInfo(){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.SERVER_BASE_URL + "group/")

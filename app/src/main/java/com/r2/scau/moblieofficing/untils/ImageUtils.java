@@ -43,7 +43,7 @@ public class ImageUtils {
         }
         ColorGenerator generator = ColorGenerator.MATERIAL;
         int color = generator.getRandomColor();
-        TextDrawable drawable =  TextDrawable.builder().beginConfig().width(30).height(30)
+        TextDrawable drawable =  TextDrawable.builder().beginConfig().width(60).height(60)
                 .textColor(Color.WHITE)
                 .useFont(Typeface.DEFAULT)
                 .fontSize(textsize)

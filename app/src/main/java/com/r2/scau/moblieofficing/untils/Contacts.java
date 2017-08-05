@@ -60,10 +60,13 @@ public class Contacts {
      * requestCode
      */
     public static class RequestCode{
-        public static final int RENAME = 501;
-        public static final int CREATE = 502;
-        public static final int UPLOAD = 503;
+        public static final int RENAME = 801;
+        public static final int CREATE = 802;
+        public static final int UPLOAD = 803;
+        public static final int QRSCAN = 804;
 
     }
+
+
 
 }

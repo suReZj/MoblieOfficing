@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.allen.library.SuperTextView;
 import com.amulyakhare.textdrawable.TextDrawable;
 import com.amulyakhare.textdrawable.util.ColorGenerator;
+import com.bumptech.glide.Glide;
+import com.r2.scau.moblieofficing.Constants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
@@ -23,6 +25,7 @@ import com.r2.scau.moblieofficing.bean.Contact;
 import com.r2.scau.moblieofficing.gson.GsonUser;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
@@ -88,7 +91,14 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
                     mContext.startActivity(intent);
                 }
             });
-            holder.icon.setImageDrawable(ImageUtils.getIcon(getItem(position).getName(),23));
+            String imageUrl = (String) SharedPrefUtil.getInstance().get(Constants.IMAGE_ICON_URL,"");
+            if(imageUrl==null||imageUrl.isEmpty()){
+                holder.icon.setImageDrawable(ImageUtils.getIcon(getItem(position).getName(),23));
+            }
+            else{
+                Glide.with(mContext).load(imageUrl).into(holder.icon);
+            }
+
         }
 
         @Override

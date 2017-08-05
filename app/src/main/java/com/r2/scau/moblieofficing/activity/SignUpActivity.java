@@ -52,6 +52,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.R.attr.data;
 import static android.R.attr.path;
 
 public class SignUpActivity extends BaseActivity {
@@ -130,7 +131,14 @@ public class SignUpActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        initialPath();
+    }
 
+    private void initialPath() {
+        File file = new File(Constants.FILEPATH+"/data/portraits");
+        if(!file.exists()){
+            file.mkdirs();
+        }
     }
 
     @Override
@@ -199,9 +207,9 @@ public class SignUpActivity extends BaseActivity {
                         Log.i("info_s", "session is  :" + sessionID);
                         OkHttpUntil.loginSessionID = sessionID;
                         UserUntil.phone = phoneET.getText().toString();
-                        doUpload(nameET.getText().toString()+".jpg",phoneET.getText().toString(),ImageUtils.changeDrawableToFile(
+                        imageIconUpload(nameET.getText().toString()+".jpg",phoneET.getText().toString(),ImageUtils.changeDrawableToFile(
                                 ImageUtils.getIcon(nameET.getText().toString(), 23),
-                                Environment.getExternalStorageDirectory().getPath(), nameET.getText().toString()));
+                                Constants.FILEPATH+"/data/portraits",nameET.getText().toString()));
                     } else {
                         getVerCode();
                         Log.e("signUp", str);
@@ -210,7 +218,6 @@ public class SignUpActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
                 Log.e("signUp", "fail");
@@ -218,7 +225,7 @@ public class SignUpActivity extends BaseActivity {
             }
         });
     }
-    public void doUpload(String filename, String userPhone, File image){
+    public void imageIconUpload(String filename, String userPhone, File image){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("fileName",filename)
@@ -240,8 +247,8 @@ public class SignUpActivity extends BaseActivity {
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
                 if (response.code() == 200){
                     ImageIconBean imageIconBean = new Gson().fromJson(response.body().string(), ImageIconBean.class);
-                    SharedPrefUtil.getInstance().put(Constants.ImageIconURL,imageIconBean.getPath());
-                    Log.d("onResponse",(String) SharedPrefUtil.getInstance().get(Constants.ImageIconURL,""));
+                    SharedPrefUtil.getInstance().put(Constants.IMAGE_ICON_URL,imageIconBean.getPath());
+                    Log.d("onResponse",(String) SharedPrefUtil.getInstance().get(Constants.IMAGE_ICON_URL,""));
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
