@@ -18,6 +18,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.FieldWorkActivity;
 import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
 import com.r2.scau.moblieofficing.activity.ReportActivity;
+import com.r2.scau.moblieofficing.activity.SignOfficeActivity;
 
 /**
  * Created by 嘉进 on 9:21.
@@ -40,6 +41,7 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
     private Button busniess_trip;
     private Button work_overtimeBtn;
     private Button clouddiskBtn;
+    private Button signOfficeBtn;
 
 
     @Nullable
@@ -62,7 +64,7 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
         busniess_trip = (Button) view.findViewById(R.id.btn_business_trip);
         work_overtimeBtn = (Button) view.findViewById(R.id.btn_work_overtime);
         clouddiskBtn = (Button) view.findViewById(R.id.btn_cloud_disk);
-
+        signOfficeBtn = (Button) view.findViewById(R.id.btn_sign_in);
 
         dateReportBtn.setOnClickListener(this);
         weekReportBtn.setOnClickListener(this);
@@ -72,6 +74,7 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
         busniess_trip.setOnClickListener(this);
         work_overtimeBtn.setOnClickListener(this);
         clouddiskBtn.setOnClickListener(this);
+        signOfficeBtn.setOnClickListener(this);
 
         mToolbar.setTitle("");
         titleTV.setText("工作");
@@ -118,6 +121,10 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(getActivity(), FileTypeSelectActivity.class);
                 startActivity(intent);
                 break;
+
+            case R.id.btn_sign_in:
+                Intent intent2 = new Intent(getActivity(), SignOfficeActivity.class);
+                startActivity(intent2);
             default:
                 break;
         }

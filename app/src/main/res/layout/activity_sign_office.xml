@@ -7,24 +7,24 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/back_tv"
-            android:text="返回"
-            android:textColor="#569be4"
-            android:textSize="15sp"
+
+
+        <ImageView
+            android:id="@+id/back_iv"
+            android:src="@drawable/actbar_back_white_normal"
+            android:layout_width="40dp"
             android:layout_marginLeft="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="40dp" />
 
         <TextView
             android:id="@+id/sign_office_tv"
             android:text="签到"
             android:textSize="18sp"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -61,7 +61,7 @@
         <ImageView
             android:id="@+id/point_iv"
             android:src="@drawable/contact_more_arrow"
-            android:layout_marginLeft="50dp"
+            android:layout_marginLeft="30dp"
             android:layout_width="15dp"
             android:layout_height="15dp" />
         <TextView
@@ -99,7 +99,7 @@
         android:layout_height="150dp"/>
 
     <LinearLayout
-        android:background="#2b000000"
+        android:background="#16000000"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
