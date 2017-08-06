@@ -66,6 +66,7 @@
 
             <TextView
                 android:id="@+id/left_chat_msg"
+                android:autoLink="email|phone|web"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
@@ -158,6 +159,7 @@
 
             <TextView
                 android:id="@+id/right_chat_msg"
+                android:autoLink="email|phone|web"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"

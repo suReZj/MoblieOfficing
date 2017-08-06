@@ -18,19 +18,25 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.bean.ImageIconBean;
 import com.r2.scau.moblieofficing.event.SignUpFinishEvent;
 import com.r2.scau.moblieofficing.retrofit.ISignBiz;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.CustomVideoView;
 import com.r2.scau.moblieofficing.widge.popview.PopField;
 
+import java.io.File;
+import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -38,7 +44,10 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import okhttp3.Headers;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Retrofit;
 
@@ -131,7 +140,14 @@ public class SignUpActivity extends BaseActivity {
 
     @Override
     protected void initData() {
+        initialPath();
+    }
 
+    private void initialPath() {
+        File file = new File(Contants.FILEPATH+"/data/portraits");
+        if(!file.exists()){
+            file.mkdirs();
+        }
     }
 
     @Override
@@ -220,6 +236,9 @@ public class SignUpActivity extends BaseActivity {
                         RetrofitUntil.type = Contants.SIGN_UP_GET_DATA;
                         RetrofitUntil.getUserInfo();
                         loginOpenFire();
+                        imageIconUpload(nameET.getText().toString()+".jpg",phoneET.getText().toString(),ImageUtils.changeDrawableToFile(
+                                ImageUtils.getIcon(nameET.getText().toString(), 23),
+                                Contants.FILEPATH+"/data/portraits",nameET.getText().toString()));
                     } else {
                         getVerCode();
                         Log.e("signUp", str);
@@ -228,13 +247,41 @@ public class SignUpActivity extends BaseActivity {
                     e.printStackTrace();
                 }
             }
-
             @Override
             public void onFailure(retrofit2.Call<ResponseBody> call, Throwable t) {
                 Log.e("signUp", "fail");
                 getVerCode();
             }
         });
+    }
+    public void imageIconUpload(String filename, String userPhone, File image){
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("fileName",filename)
+                .addFormDataPart("userPhone",userPhone)
+                .addFormDataPart("file",filename, RequestBody.create(null,image));
+
+        final RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(Contants.SERVER_IP + "fileServer/uploadPortrait.shtml")
+                .addHeader("cookie", OkHttpUntil.loginSessionID)
+                .post(requestBody)
+                .build();
+
+        new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (response.code() == 200){
+                    ImageIconBean imageIconBean = new Gson().fromJson(response.body().string(), ImageIconBean.class);
+                    SharedPrefUtil.getInstance().put(Contants.IMAGE_ICON_URL,imageIconBean.getPath());
+                    Log.d("onResponse",(String) SharedPrefUtil.getInstance().get(Contants.IMAGE_ICON_URL,""));
+                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+            }});
     }
 
 
