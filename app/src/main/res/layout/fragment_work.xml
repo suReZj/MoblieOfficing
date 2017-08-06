@@ -33,18 +33,21 @@
           android:text="@string/sign_in"/>
 
       <Button
+          android:id="@+id/btn_leave"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:text="@string/leave"/>
 
       <Button
+          android:id="@+id/btn_goout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:text="@string/go_out"/>
 
       <Button
+          android:id="@+id/btn_business_trip"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"

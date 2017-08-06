@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include android:id="@+id/fieldwork_title"
+        layout="@layout/toolbar"/>
+
+    <Button
+        android:id="@+id/fieldwork_submitBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/colorWhite"
+        android:theme="@style/MyButton"
+        android:text="@string/commit"
+        android:layout_alignParentBottom="true"
+        />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/fieldwork_title"
+        android:layout_above="@id/fieldwork_submitBtn"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_leavetype"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:sLeftTextString="@string/leavetype"
+                android:visibility="gone"
+                app:sUseRipple="true"
+                app:sRightIconRes="@mipmap/ic_righticon"
+                app:sRightTextMarginRight="48dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/fieldwork_travel_layout"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/base_edittext_border"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/fieldwork_travellocation"
+                    android:layout_width="86dp"
+                    android:layout_height="42dp"
+                    app:sLeftTextString="@string/travel_location"
+                    android:layout_gravity="center_vertical"
+                    app:sUseRipple="true"
+                    />
+
+                <EditText
+                    android:id="@+id/fieldwork_travellocation_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    />
+
+            </LinearLayout>
+
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_startdate"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="12dp"
+                app:sLeftTextString="@string/startdate"
+                app:sRightIconRes="@mipmap/ic_righticon"
+                app:sRightTextMarginRight="48dp"
+                app:sUseRipple="true"
+                />
+
+
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_starttime"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:sLeftTextString="@string/starttime"
+                app:sRightIconRes="@mipmap/ic_righticon"
+                app:sRightTextMarginRight="48dp"
+                app:sUseRipple="true"
+                />
+
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_enddate"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:sLeftTextString="@string/enddate"
+                app:sRightIconRes="@mipmap/ic_righticon"
+                app:sRightTextMarginRight="48dp"
+                app:sUseRipple="true"
+                android:layout_marginTop="6dp"
+                />
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_endtime"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:sLeftTextString="@string/endtime"
+                app:sRightIconRes="@mipmap/ic_righticon"
+                app:sRightTextMarginRight="48dp"
+                app:sUseRipple="true"
+                />
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_duration"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                app:sLeftTextString="@string/duration"
+                app:sRightTextMarginRight="48dp"
+                android:layout_marginTop="6dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/fieldwork_reason_layout"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@drawable/base_edittext_border"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp">
+
+                <com.allen.library.SuperTextView
+                    android:id="@+id/fieldwork_reason"
+                    android:layout_width="86dp"
+                    android:layout_height="40dp"
+                    app:sLeftTextString="@string/leave_reason"
+                    app:sLineShow="none"
+                    android:layout_gravity="start"
+                    />
+                
+                <EditText
+                    android:id="@+id/fieldwork_reason_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp"
+                    android:textSize="14sp"
+                    android:gravity="start"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_photo"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_gravity="start"
+                app:sLeftTextString="@string/photo"
+                app:sLineShow="top"
+                app:sRightIconRes="@mipmap/ic_photo"
+                />
+
+            <com.allen.library.SuperTextView
+                android:id="@+id/fieldwork_approver"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                app:sLeftTextString="@string/approver"
+                app:sLineShow="top"
+                android:layout_gravity="start"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/grid_recycle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="12dp"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

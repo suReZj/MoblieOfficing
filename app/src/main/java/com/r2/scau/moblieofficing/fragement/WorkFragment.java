@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.FieldWorkActivity;
+import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
 import com.r2.scau.moblieofficing.activity.ReportActivity;
 
 /**
@@ -32,6 +34,13 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
     private Button weekReportBtn;
     private Button monthReportBtn;
 
+    /** Create by edwincheng in 2017/08/05 */
+    private Button leaveBtn;
+    private Button gooutBtn;
+    private Button busniess_trip;
+    private Button work_overtimeBtn;
+    private Button clouddiskBtn;
+
 
     @Nullable
     @Override
@@ -48,10 +57,21 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
         dateReportBtn = (Button) view.findViewById(R.id.btn_day_report);
         weekReportBtn = (Button) view.findViewById(R.id.btn_week_report);
         monthReportBtn = (Button) view.findViewById(R.id.btn_month_report);
+        leaveBtn = (Button) view.findViewById(R.id.btn_leave);
+        gooutBtn = (Button) view.findViewById(R.id.btn_goout);
+        busniess_trip = (Button) view.findViewById(R.id.btn_business_trip);
+        work_overtimeBtn = (Button) view.findViewById(R.id.btn_work_overtime);
+        clouddiskBtn = (Button) view.findViewById(R.id.btn_cloud_disk);
+
 
         dateReportBtn.setOnClickListener(this);
         weekReportBtn.setOnClickListener(this);
         monthReportBtn.setOnClickListener(this);
+        leaveBtn.setOnClickListener(this);
+        gooutBtn.setOnClickListener(this);
+        busniess_trip.setOnClickListener(this);
+        work_overtimeBtn.setOnClickListener(this);
+        clouddiskBtn.setOnClickListener(this);
 
         mToolbar.setTitle("");
         titleTV.setText("工作");
@@ -60,6 +80,12 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
     public void openActivity(int type){
         Intent intent = new Intent(mContext, ReportActivity.class);
         intent.putExtra("type", type);
+        startActivity(intent);
+    }
+
+    public void openFieldWorkActivity(int type){
+        Intent intent = new Intent(mContext, FieldWorkActivity.class);
+        intent.putExtra("fieldworkType", type);
         startActivity(intent);
     }
 
@@ -75,6 +101,22 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.btn_month_report:
                 openActivity(Contants.OPEN_MONTH_REPORT);
+                break;
+            case R.id.btn_leave:
+                openFieldWorkActivity(Contants.FIELDWORK.OPEN_LEAVE);
+                break;
+            case R.id.btn_goout:
+                openFieldWorkActivity(Contants.FIELDWORK.OPEN_GO_OUT);
+                break;
+            case R.id.btn_business_trip:
+                openFieldWorkActivity(Contants.FIELDWORK.OPEN_TRAVEL);
+                break;
+            case R.id.btn_work_overtime:
+                openFieldWorkActivity(Contants.FIELDWORK.OPEN_OVERTIME);
+                break;
+            case R.id.btn_cloud_disk:
+                Intent intent = new Intent(getActivity(), FileTypeSelectActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
