@@ -5,15 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -72,7 +69,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_chat);
+        setContentView(R.layout.activity_chat_video);
         super.onCreate(savedInstanceState);
         SoftHideKeyBoardUtil.assistActivity(this);
 

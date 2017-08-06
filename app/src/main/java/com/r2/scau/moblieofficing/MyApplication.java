@@ -6,11 +6,13 @@ import android.util.Log;
 
 import org.litepal.LitePalApplication;
 
+import io.agora.openvcall.AGApplication;
+
 /**
  * Created by 陈家程 on 2017/8/3.
  */
 
-public class MyApplication extends LitePalApplication {
+public class MyApplication extends AGApplication {
 
     private static Context context;
 
