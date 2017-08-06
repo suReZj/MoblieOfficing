@@ -117,6 +117,13 @@
 
 
 
+    <!--userInfo-->
+    <string name="user_info"> 个人信息</string>
+    <string name="qr_code">二维码名片</string>
+    <string name="change_password">修改密码</string>
+    <string name="sign_out">退出登录</string>
+    <string name="setting">设置</string>
+
 
 
 

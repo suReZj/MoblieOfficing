@@ -14,22 +14,10 @@ import com.allen.library.SuperTextView;
 import com.bumptech.glide.Glide;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
-import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.Contact;
-import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.DateUtil;
-import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
-import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
-
-import org.greenrobot.eventbus.EventBus;
-import org.litepal.crud.DataSupport;
-
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by 嘉进 on 11:19.
@@ -54,6 +42,7 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
         @Override
         public void onBindViewHolder(ContactViewHolder holder, final int position) {
             Log.e("adapterItem", getItem(position).getName());
+            Contact contact = getItem(position);
             holder.contactST.setLeftTopString(getItem(position).getName());
             holder.contactST.setLeftBottomString(getItem(position).getPhone());
 
@@ -69,7 +58,14 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
                 }
             });
 
-            ImageUtils.setUserImageIcon(mContext, holder.icon, getItem(position).getName());
+            if (contact.getPhotoURL() == null || contact.getPhotoURL().equals("")){
+                holder.icon.setImageDrawable(ImageUtils.getIcon(contact.getName(), 32));
+            }else {
+                Glide.with(mContext)
+                        .load(Contants.PHOTO_SERVER_IP + contact.getPhotoURL())
+                        .into(holder.icon);
+            }
+
 
         }
 

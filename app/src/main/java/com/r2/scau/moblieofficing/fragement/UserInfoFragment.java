@@ -28,30 +28,31 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.gson.GsonPhoto;
-import com.r2.scau.moblieofficing.retrofit.IPhotoBiz;
+import com.r2.scau.moblieofficing.bean.ImageIconBean;
 import com.r2.scau.moblieofficing.untils.BitmapToRound_Util;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by 嘉进 on 9:23.
@@ -65,8 +66,9 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
     private Toolbar mToolbar;
     private Context mContext;
     private TextView titleTV;
+    private TextView userNameTV;
+    private TextView userPhonrTV;
     private ImageView photoIV;
-    // 头像图片 path
     private String mCurrentPhotoPath = null;
     private RelativeLayout mRelativeLayout;
     private BitmapToRound_Util round_Util = new BitmapToRound_Util();
@@ -91,7 +93,22 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         mRelativeLayout = (RelativeLayout) view.findViewById(R.id.layout_user_photo);
         photoIV = (ImageView) view.findViewById(R.id.iv_user_photo);
         titleTV = (TextView) view.findViewById(R.id.toolbar_title);
+        userNameTV = (TextView) view.findViewById(R.id.tv_user_name);
+        userPhonrTV = (TextView) view.findViewById(R.id.tv_user_phone);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+        Object object = UserUntil.gsonUser.getUserHeadPortrait();
+        if (object == null || object.toString(). equals("")){
+            photoIV.setImageDrawable(ImageUtils.getIcon(UserUntil.gsonUser.getNickname(), 32));
+        }else {
+            Glide.with(mContext)
+                    .load(Contants.PHOTO_SERVER_IP + object.toString())
+                    .into(photoIV);
+        }
+
+        userNameTV.setText(UserUntil.gsonUser.getNickname());
+        userPhonrTV.setText(UserUntil.phone);
+
 
         mRelativeLayout.setOnClickListener(this);
         mToolbar.setTitle("");
@@ -143,13 +160,22 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
                 if (imageUri != null) {
                     try {
                         Bitmap bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(imageUri));
-                        bitmap = round_Util.toRoundBitmap(bitmap);
+                        File file = new File(Contants.FILEPATH + "/data/portraits", UserUntil.gsonUser.getNickname());
+                        Log.e("nickName", UserUntil.gsonUser.getNickname());
+                        try {
+                            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+                            bos.flush();
+                            bos.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Log.e("file", file.getPath());
+                        imageIconUpload(UserUntil.gsonUser.getNickname() + ".jpg", UserUntil.phone, file);
                         photoIV.setImageBitmap(bitmap);
-                        upLoadPhoto(new File(imageUri.getPath()));
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     }
-
                 }
                 break;
             default:
@@ -186,8 +212,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
+
     /**
      * 创建临时图片文件
+     *
      * @return
      * @throws IOException
      */
@@ -224,7 +252,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         //是否返回数据  false会保存图片
 
         imageUri = Uri.parse("file://" + "/" + Environment.getExternalStorageDirectory().getPath() + "/"
-                + DateUtil.currentDatetime()  + UserUntil.phone + ".jpg");
+                + DateUtil.currentDatetime() + UserUntil.phone + ".jpg");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         startActivityForResult(intent, CROP_REQUEST);
@@ -233,49 +261,35 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
     }
 
 
+    public void imageIconUpload(String filename, String userPhone, File image) {
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("fileName", filename)
+                .addFormDataPart("userPhone", userPhone)
+                .addFormDataPart("file", filename, RequestBody.create(null, image));
 
-    public void upLoadPhoto(File file){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Contants.SERVER_IP + "/fileServer/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
+        final RequestBody requestBody = builder.build();
+        Request request = new Request.Builder()
+                .url(Contants.SERVER_IP + "/fileServer/uploadPortrait.shtml")
+                .addHeader("cookie", OkHttpUntil.loginSessionID)
+                .post(requestBody)
                 .build();
-        RequestBody photo = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        /*Map<String, RequestBody> photos = new HashMap<>();
-        photos.put("fileName",  RequestBody.create(null, file.getName()));
-        photos.put("userPhone",  RequestBody.create(null, UserUntil.phone));
-        photos.put("file\"; filename=\"" + file.getName(), photo);*/
-        MultipartBody.Part body =
-                MultipartBody.Part.createFormData("file", file.getName(), photo);
 
-        RequestBody fileName =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), file.getName());
-
-        RequestBody userPhone =
-                RequestBody.create(
-                        MediaType.parse("multipart/form-data"), UserUntil.phone);
-
-        IPhotoBiz iPhotoBiz = retrofit.create(IPhotoBiz.class);
-        Call<GsonPhoto> call = iPhotoBiz.upLoadPhoto(fileName, userPhone, body);
-        call.enqueue(new Callback<GsonPhoto>() {
+        new OkHttpClient().newCall(request).enqueue(new okhttp3.Callback() {
             @Override
-            public void onResponse(Call<GsonPhoto> call, Response<GsonPhoto> response) {
-                Log.e("upLoadPhoto", response.toString());
-                GsonPhoto gsonPhoto= response.body();
-                if (gsonPhoto != null && gsonPhoto.getCode() == 200){
-                    Log.e("upLoadPhoto", gsonPhoto.getPath());
-                }else {
-                    Log.e("upLoadPhoto", response.body().getMsg());
+            public void onFailure(okhttp3.Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                if (response.code() == 200) {
+                    ImageIconBean imageIconBean = new Gson().fromJson(response.body().string(), ImageIconBean.class);
+                    Log.e("path", imageIconBean.getPath());
+                    SharedPrefUtil.getInstance().put(Contants.IMAGE_ICON_URL, imageIconBean.getPath());
+                    Log.e("onResponse", (String) SharedPrefUtil.getInstance().get(Contants.IMAGE_ICON_URL, ""));
                 }
             }
-
-            @Override
-            public void onFailure(Call<GsonPhoto> call, Throwable t) {
-                Log.e("upLoadPhoto", t.toString());
-            }
         });
-
     }
 
 

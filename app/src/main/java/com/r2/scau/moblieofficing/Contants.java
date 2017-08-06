@@ -10,6 +10,7 @@ import android.os.Environment;
 
 public class Contants {
     public static final String SERVER_IP = "http://192.168.13.61:8089";
+    public static final String PHOTO_SERVER_IP = "http://192.168.13.61:8080";
 
     public static final String file_Server = "/fileServer";
     public static final String OfficeManage = "/OfficeManage";
