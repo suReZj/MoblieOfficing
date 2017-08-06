@@ -2,12 +2,10 @@ package com.r2.scau.moblieofficing.untils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -20,9 +18,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import static android.R.attr.bitmap;
 
 /**
  * Created by Edward on 2017/8/4.
@@ -37,7 +32,7 @@ public class ImageUtils {
                 icon.setImageDrawable(ImageUtils.getIcon(userName,23));
             }
             else{
-                Glide.with(mContext).load(imageUrl).into(icon);
+                Glide.with(mContext).load(Contants.PHOTO_SERVER_IP + imageUrl).into(icon);
             }
         }catch (Exception e){
             e.printStackTrace();

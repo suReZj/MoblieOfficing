@@ -27,6 +27,7 @@ import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.litepal.crud.DataSupport;
 
@@ -41,6 +42,8 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 
 import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER_REPORT;
+import static com.r2.scau.moblieofficing.Contants.multi_invite;
+import static com.r2.scau.moblieofficing.Contants.multi_invite_room_name;
 import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
 import static com.r2.scau.moblieofficing.untils.UserUntil.friendList;
 
@@ -102,7 +105,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter = new SelectMemberAdapter();
+        adapter = new SelectMemberAdapter(this);
         mQuickSideBarView.setLetters(customLetters);
         adapter.addAll(mContactList);
 
@@ -150,103 +153,16 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                     setResult(Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT, intent);
                     finish();
                 } else {
-
-                    List<Contact> selectMember = new ArrayList<>();
-                    MultiUserChat multiUserChat;
-                    Intent intent = getIntent();
-                    String groupName = intent.getStringExtra("groupName");
-                    String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
-                    try {
-                        multiUserChat = SmackManager.getInstance().createChatRoom(groupName, UserUntil.gsonUser.getNickname(), null);
-                        SmackListenerManager.addMultiChatMessageListener(multiUserChat);
-                        SmackMultiChatManager.saveMultiChat(multiUserChat);
-                        FormBody formBody = new FormBody.Builder()
-                                .add("userPhone", UserUntil.gsonUser.getUserPhone())
-                                .add("groupName", groupName)
-                                .build();
-//                        step 3: 创建请求
-                        Request request = new Request.Builder().url("http://192.168.13.61:8089/group/createGroup.shtml")
-                                .post(formBody)
-                                .addHeader("cookie", OkHttpUntil.loginSessionID)
-                                .build();
-
-//                        step 4： 建立联系 创建Call对象
-                        okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
-                            @Override
-                            public void onFailure(okhttp3.Call call, IOException e) {
-//                                 TODO: 17-1-4  请求失败
-                                Log.e("register", "fail");
-                            }
-
-                            @Override
-                            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-//                                 TODO: 17-1-4 请求成功
-                                String str = response.body().string();
-                                Log.e("register", str);
-                            }
-                        });
-                        for (Contact contact : mContactList) {
-                            if (contact.isSelect() == true) {
-                                selectMember.add(contact);
-                                String jid = SmackManager.getInstance().getFullJid(contact.getPhone());
-                                multiUserChat.invite(jid, reason);//邀请入群
-                                formBody = new FormBody.Builder()
-                                        .add("groupCreatedUserPhone", UserUntil.gsonUser.getUserPhone())
-                                        .add("groupName", groupName)
-                                        .add("userPhone", contact.getPhone())
-                                        .build();
-//                            step 3: 创建请求
-                                request = new Request.Builder().url("http://192.168.13.61:8089/group/joinGroup.shtml")
-                                        .post(formBody)
-                                        .addHeader("cookie", OkHttpUntil.loginSessionID)
-                                        .build();
-
-//                        step 4： 建立联系 创建Call对象
-                                okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
-                                    @Override
-                                    public void onFailure(okhttp3.Call call, IOException e) {
-//                                 TODO: 17-1-4  请求失败
-                                        Log.e("register", "fail");
-                                    }
-
-                                    @Override
-                                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-//                                 TODO: 17-1-4 请求成功
-                                        String str = response.body().string();
-                                        Log.e("register", str);
-                                    }
-                                });
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    String roomName = groupName + "@conference." + SmackManager.SERVER_NAME;
-                    ChatRecord record;
-                    List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-                    if (chatRecords.size() == 0) {
-                        record = new ChatRecord();
-                        String friendUserName = roomName;
-                        int idx = friendUserName.indexOf("@conference.");
-                        String friendNickName = friendUserName.substring(0, idx);
-                        record.setUuid(UUID.randomUUID().toString());
-                        record.setmFriendUsername(friendUserName);
-                        record.setmFriendNickname(friendNickName);
-                        record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
-                        record.setmMeNickname(UserUntil.gsonUser.getNickname());
-                        record.setmChatTime(DateUtil.currentDatetime());
-                        record.setmIsMulti(true);
-                        record.setmChatJid(roomName);
-                        record.save();
-                        SmackManager.getInstance().joinChatRoom(roomName, UserUntil.gsonUser.getNickname(), null);
+                    if ((getIntent().getStringExtra(multi_invite)).equals(multi_invite)) {
+                        String roomName = getIntent().getStringExtra(multi_invite_room_name);
+                        MultiUserChat multiUserChat = SmackManager.getInstance().getMultiChat(roomName);
+                        groupName=roomName;
+                        String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
+                        addPeople(multiUserChat, reason);
+                        finish();
                     } else {
-                        record = chatRecords.get(0);
+                        startMultiChat();
                     }
-                    EventBus.getDefault().post(record);
-                    Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
-                    startChat.putExtra("chatrecord", record);
-                    startActivity(startChat);
-                    finish();
                 }
 
                 break;
@@ -267,5 +183,120 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     public void onLetterTouching(boolean touching) {
         //可以自己加入动画效果渐显渐隐
         mQuickSideBarTipsView.setVisibility(touching ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void startMultiChat() {
+        final MultiUserChat multiUserChat;
+        Intent intent = getIntent();
+        String groupName = intent.getStringExtra("groupName");
+        final String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
+        try {
+            multiUserChat = SmackManager.getInstance().createChatRoom(groupName, UserUntil.gsonUser.getNickname(), null);
+            SmackListenerManager.addMultiChatMessageListener(multiUserChat);
+            SmackMultiChatManager.saveMultiChat(multiUserChat);
+
+            creatMultiRoom(multiUserChat,reason);
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String roomName = groupName + "@conference." + SmackManager.SERVER_NAME;
+        ChatRecord record;
+        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
+        if (chatRecords.size() == 0) {
+            record = new ChatRecord();
+            String friendUserName = roomName;
+            int idx = friendUserName.indexOf("@conference.");
+            String friendNickName = friendUserName.substring(0, idx);
+            record.setUuid(UUID.randomUUID().toString());
+            record.setmFriendUsername(friendUserName);
+            record.setmFriendNickname(friendNickName);
+            record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+            record.setmMeNickname(UserUntil.gsonUser.getNickname());
+            record.setmChatTime(DateUtil.currentDatetime());
+            record.setmIsMulti(true);
+            record.setmChatJid(roomName);
+            record.save();
+            SmackManager.getInstance().joinChatRoom(roomName, UserUntil.gsonUser.getNickname(), null);
+        } else {
+            record = chatRecords.get(0);
+        }
+        EventBus.getDefault().post(record);
+        Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
+        startChat.putExtra("chatrecord", record);
+        startActivity(startChat);
+        finish();
+    }
+
+
+    public void creatMultiRoom(final MultiUserChat multiUserChat, final String reason) {
+        FormBody formBody = new FormBody.Builder()
+                .add("userPhone", UserUntil.gsonUser.getUserPhone())
+                .add("groupName", groupName)
+                .build();
+//                        step 3: 创建请求
+        Request request = new Request.Builder().url("http://192.168.13.61:8089/group/createGroup.shtml")
+                .post(formBody)
+                .addHeader("cookie", OkHttpUntil.loginSessionID)
+                .build();
+//                        step 4： 建立联系 创建Call对象
+        okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+//                                 TODO: 17-1-4  请求失败
+                Log.e("register", "fail");
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+//                                 TODO: 17-1-4 请求成功
+                String str = response.body().string();
+                addPeople(multiUserChat, reason);
+                Log.e("register", str);
+            }
+        });
+
+    }
+
+    public void addPeople(MultiUserChat multiUserChat, String reason) {
+        List<Contact> selectMember = new ArrayList<>();
+        for (Contact contact : mContactList) {
+            if (contact.isSelect() == true) {
+                selectMember.add(contact);
+                String jid = SmackManager.getInstance().getFullJid(contact.getPhone());
+                try {
+                    multiUserChat.invite(jid, reason);//邀请入群
+                } catch (SmackException.NotConnectedException e) {
+                    e.printStackTrace();
+                }
+                FormBody formBody = new FormBody.Builder()
+                        .add("groupCreatedUserPhone", UserUntil.gsonUser.getUserPhone())
+                        .add("groupName", groupName)
+                        .add("userPhone", contact.getPhone())
+                        .build();
+//                            step 3: 创建请求
+                Request request = new Request.Builder().url("http://192.168.13.61:8089/group/joinGroup.shtml")
+                        .post(formBody)
+                        .addHeader("cookie", OkHttpUntil.loginSessionID)
+                        .build();
+
+//                        step 4： 建立联系 创建Call对象
+                okHttpClient.newCall(request).enqueue(new okhttp3.Callback() {
+                    @Override
+                    public void onFailure(okhttp3.Call call, IOException e) {
+//                                 TODO: 17-1-4  请求失败
+                        Log.e("register", "fail");
+                    }
+
+                    @Override
+                    public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+//                                 TODO: 17-1-4 请求成功
+                        String str = response.body().string();
+                        Log.e("register", str);
+                    }
+                });
+            }
+        }
     }
 }

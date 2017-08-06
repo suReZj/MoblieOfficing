@@ -13,20 +13,37 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.event.SignOfficeEvent;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
+import com.r2.scau.moblieofficing.untils.ToastUtils;
+import com.r2.scau.moblieofficing.widge.popview.PopField;
 
 
 import android.app.Activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import static org.jivesoftware.smackx.filetransfer.FileTransfer.Status.initial;
 
 
 public class SignOfficeActivity extends Activity implements GeocodeSearch.OnGeocodeSearchListener,
-        AMap.OnMyLocationChangeListener {
+        AMap.OnMyLocationChangeListener, View.OnClickListener {
 
     private MapView mMapView = null;
     private GeocodeSearch geocoderSearch;
@@ -34,15 +51,35 @@ public class SignOfficeActivity extends Activity implements GeocodeSearch.OnGeoc
     private AMap aMap;
     private TextView addressTextView;
 
+    private ImageView mSignOfficeBtn;
+    String formatAddress;
+    private PopField mPopField;
+    private ImageView unSignIv;
+    private TextView unSingTv;
+    private ImageView backIv;
+    private TextView clockTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_office);
+        EventBus.getDefault().register(this);
+
+        mPopField = PopField.attach2Window(this);
         initialView(savedInstanceState);
     }
 
     private void initialView(Bundle savedInstanceState) {
         addressTextView = (TextView) findViewById(R.id.office_point_tv);
+        mSignOfficeBtn = (ImageView) findViewById(R.id.sign_iv);
+        unSignIv = (ImageView) findViewById(R.id.un_sign_iv);
+        unSingTv = (TextView) findViewById(R.id.un_sign_tv);
+        backIv = (ImageView) findViewById(R.id.back_iv);
+        clockTv = (TextView) findViewById(R.id.clock_itv);
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm");//设置日期格式
+       clockTv.setText(df.format(new Date()));// new Date()为获取当前系统时间
+
+        backIv.setOnClickListener(this);
+        mSignOfficeBtn.setOnClickListener(this);
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.map);
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
@@ -62,13 +99,13 @@ public class SignOfficeActivity extends Activity implements GeocodeSearch.OnGeoc
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
         aMap.setOnMyLocationChangeListener(this);
         aMap.getUiSettings();
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(19));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
     }
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int rCode) {
         if(rCode == 1000){
-            String formatAddress = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+            formatAddress = regeocodeResult.getRegeocodeAddress().getFormatAddress();
             addressTextView.setText(formatAddress);
             Log.d("located","success:"+formatAddress);
         }else{
@@ -93,6 +130,8 @@ public class SignOfficeActivity extends Activity implements GeocodeSearch.OnGeoc
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
+
         //在activity执行onDestroy时执行mMapView.onDestroy()，销毁地图
         mMapView.onDestroy();
     }
@@ -114,4 +153,46 @@ public class SignOfficeActivity extends Activity implements GeocodeSearch.OnGeoc
         //在activity执行onSaveInstanceState时执行mMapView.onSaveInstanceState (outState)，保存地图当前的状态
         mMapView.onSaveInstanceState(outState);
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.back_iv:
+                finish();
+                break;
+            case R.id.sign_iv:
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+                String curTime = df.format(new Date());// new Date()为获取当前系统时间
+                if (formatAddress == null || formatAddress.equals("")){
+                    formatAddress = "成都郫县梦翔大夏";
+                }
+                RetrofitUntil.signOffice(curTime,  formatAddress );
+                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext()
+                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View addView = layoutInflater.inflate(R.layout.item_sign_in_btn, null);
+                final ImageView loginBtn2 = (ImageView) addView.findViewById(R.id.sign_iv);
+                loginBtn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//设置日期格式
+                        String curTime = df.format(new Date());// new Date()为获取当前系统时间
+                        RetrofitUntil.signOffice(curTime,  formatAddress );
+                    }
+                });
+                mPopField.popView(mSignOfficeBtn, addView, true);
+                break;
+            default:
+                break;
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginFinishEvent(SignOfficeEvent signOfficeEvent) {
+        ToastUtils.show(SignOfficeActivity.this, "签到成功");
+        unSignIv.setImageResource(R.drawable.checkbox_album_pressed);
+        unSingTv.setText("已签到");
+    }
+
+
 }

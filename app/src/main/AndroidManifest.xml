@@ -4,6 +4,7 @@
 
     <!-- 添加读取内部系统文件权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -59,6 +60,7 @@
         <activity android:name=".activity.FileTypeSelectActivity"/>
         <activity android:name=".activity.FMRenameActivity"/>
         <activity android:name=".activity.UploadSelectFileActivity"/>
+        <activity android:name=".activity.FieldWorkActivity"/>
         <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".activity.SignUpActivity"/>
         <activity android:name=".activity.SendNoticeActivity"/>

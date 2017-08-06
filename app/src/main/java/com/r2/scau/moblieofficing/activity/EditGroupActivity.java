@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 
+import static com.r2.scau.moblieofficing.Contants.creat_multi_chat;
+import static com.r2.scau.moblieofficing.Contants.multi_invite;
+
 /**
  * 作者：邓嘉进
  * 作用：新建群时，上传群图片和设置群名字
@@ -55,6 +58,7 @@ public class EditGroupActivity extends BaseActivity {
                 if(!name.equals("")){
                     Intent intent = new Intent(EditGroupActivity.this, SelectMemberActivity.class);
                     intent.putExtra("groupName", name);
+                    intent.putExtra(multi_invite,creat_multi_chat);
                     startActivity(intent);
                     finish();
                 }else {
