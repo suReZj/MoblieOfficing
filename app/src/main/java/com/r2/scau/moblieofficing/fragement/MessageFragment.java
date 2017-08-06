@@ -30,6 +30,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.activity.EditGroupActivity;
+import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
@@ -100,10 +101,10 @@ public class MessageFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
-                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED){
                         ActivityCompat.requestPermissions(getActivity() ,
-                                new String[]{Manifest.permission.READ_CONTACTS},
+                                new String[]{Manifest.permission.CAMERA},
                                 MY_PERMISSIONS_REQUEST_CAMERA);
                     }else {
                         openQRCodeActivity();
@@ -398,8 +399,35 @@ public class MessageFragment extends Fragment {
                      * 自己解析resultdata中的字段 然后在做相应操作
                      */
                     String resultdata = data.getStringExtra("result");
-                    ToastUtils.show(getActivity(),resultdata, Toast.LENGTH_SHORT);
                     Log.e("二维码扫描结果", resultdata);
+                    String[] resultarr = resultdata.split(":");
+
+                    if (resultarr.length == 2){
+
+                        if (resultarr[0].equals("user")){
+                            //打开个人信息页面的activity
+                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(getActivity(), FriendsInfoActivity.class);
+                            bundle.putString("phone", resultarr[1]);
+                            intent.putExtras(bundle);
+
+                            startActivity(intent);
+
+                        }else if (resultarr[0].equals("group")){
+                            //打开 查看群信息 的Actiity
+//                            Bundle bundle = new Bundle();
+//                            Intent intent = new Intent(getActivity(), );
+//                            bundle.putString("???", resultarr[1]);
+//                            intent.putExtras(bundle);
+//                            startActivity(intent);
+                        }else {
+                            ToastUtils.show(getActivity(),"未知二维码信息",Toast.LENGTH_SHORT);
+                        }
+                    }else{
+                        ToastUtils.show(getActivity(),"未知的二维码信息",Toast.LENGTH_SHORT);
+                    }
+
+
                 }else {
                     Log.e("二维码扫描结果", "用户选择取消" );
                 }
