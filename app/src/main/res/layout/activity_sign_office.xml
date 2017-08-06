@@ -88,11 +88,15 @@
         android:gravity="center_vertical"
         android:layout_height="40dp" />
 
-    <com.baidu.mapapi.map.MapView
+    <!--<com.baidu.mapapi.map.MapView-->
+        <!--android:id="@+id/map"-->
+        <!--android:clickable="true"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="150dp"/>-->
+    <com.amap.api.maps.MapView
         android:id="@+id/map"
-        android:clickable="true"
         android:layout_width="match_parent"
-        android:layout_height="150dp"></com.baidu.mapapi.map.MapView>
+        android:layout_height="150dp"/>
 
     <LinearLayout
         android:background="#2b000000"

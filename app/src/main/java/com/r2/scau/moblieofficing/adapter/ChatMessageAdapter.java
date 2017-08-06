@@ -34,11 +34,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.activity.FriendActivity;
+import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.activity.PersonalContactActivity;
 import com.r2.scau.moblieofficing.bean.MultiChatMessage;
 import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.sqk.emojirelease.EmojiUtil;
 
 import org.litepal.crud.DataSupport;
@@ -157,13 +159,39 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.lIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+                String phone=null;
+                if (chatMessageList.get(position).isMeSend()){
+                    phone= UserUntil.gsonUser.getUserPhone();
+                }else {
+                    if(chatMessageList.get(position).isMulti()){
+                        phone=chatMessageList.get(position).getMultiUserName();
+                    }else {
+                        phone=chatMessageList.get(position).getFriendUsername();
+                    }
+                }
+                Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("phone",phone);
+                mContext.startActivity(intent);
             }
         });
         holder.rIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "aaaaaaaaaaaaaa", Toast.LENGTH_SHORT).show();
+                String phone=null;
+                if (chatMessageList.get(position).isMeSend()){
+                    phone= UserUntil.gsonUser.getUserPhone();
+                }else {
+                    if(chatMessageList.get(position).isMulti()){
+                        phone=chatMessageList.get(position).getMultiUserName();
+                    }else {
+                        phone=chatMessageList.get(position).getFriendUsername();
+                    }
+                }
+                Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("phone",phone);
+                mContext.startActivity(intent);
             }
         });
     }
@@ -221,8 +249,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
         @Override
         public void showPopupWindow(View v) {
-            setOffsetX((getWidth() - v.getWidth()));
-            setOffsetY(-4 * v.getHeight());
+//            setOffsetX((getWidth() - v.getWidth()));
+//            setOffsetY(-4 * v.getHeight());
+            setOffsetX(v.getWidth()/2);
+            setOffsetY(-3*v.getHeight());
             super.showPopupWindow(v);
         }
 
@@ -250,20 +280,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     this.dismiss();
                     break;
                 case R.id.transmit_message:
-//                    ChatMessage deleteMsg = chatMessageList.get(mPosition);
-//                    if (deleteMsg.getMsgID() == null) {
-//                        List<ChatMessage> list = DataSupport.where("uuid=?", deleteMsg.getUuid()).find(ChatMessage.class);
-//                        deleteMsg = list.get(0);
-//                        deleteMsg.setDelete(true);
-//                        deleteMsg.save();
-//                    }else {
-//                        List<ChatMessage> list = DataSupport.where("msgid=?", deleteMsg.getMsgID()).find(ChatMessage.class);
-//                        deleteMsg = list.get(0);
-//                        deleteMsg.setDelete(true);
-//                        deleteMsg.save();
-//                    }
-//                    chatMessageList.remove(mPosition);
-//                    notifyDataSetChanged();
+
                     this.dismiss();
                     break;
                 default:

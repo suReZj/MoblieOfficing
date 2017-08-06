@@ -12,7 +12,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ToolbarPopupTheme"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:navigationIcon="@mipmap/ic_toolbar_return"
+        app:navigationIcon="@drawable/returnback"
         android:weightSum="1">
 
         <!--<Button-->

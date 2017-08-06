@@ -1,12 +1,14 @@
 package com.r2.scau.moblieofficing;
 
+import android.os.Environment;
+
 /**
  * Created by EdwinCheng on 2017/7/24.
  * class使用的字段全部封装到这一个类里面
  * layout使用的字段就封装在string中
  */
+
 public class Contants {
-    public static final String SERVER_IP = "http://192.168.13.61:8089";
 
     public static final String file_Server = "/fileServer";
     public static final String getDir = "/getDir.shtml";
@@ -23,9 +25,14 @@ public class Contants {
     public static final String deleteGroupFile = "/deleteGroupFile.shtml";
     public static final String DeleteDir = "/DeleteDir.shtml";
 
+    public static final String  SERVER_IP = "http://192.168.13.70:8089/";
     // 登录保存字段
     public static final String SP_LOGIN_USER_PHONE_KEY = "sp_login_user_phone_key";
     public static final String SP_LOGIN_PASSWORD_KEY = "sp_login_password_key";
+
+    public static final String multi_invite="invite";
+    public static final String creat_multi_chat="creat";
+    public static final String multi_invite_room_name="room";
 
     public static final int LOGIN_IN_GET_DATA = 13;
     public static final int SIGN_UP_GET_DATA = 14;
@@ -83,4 +90,7 @@ public class Contants {
 
     }
 
+
+    public static final String IMAGE_ICON_URL = "IMAGE_ICON_URL";
+    public static final String FILEPATH = Environment.getExternalStorageDirectory().getPath()+"/MoblieOfficing";
 }
