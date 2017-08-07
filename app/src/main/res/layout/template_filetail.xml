@@ -5,20 +5,22 @@
               android:padding="6dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:gravity="center">
         <TextView
             android:id="@+id/filelist_currentused"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="已用0B "/>
+            android:text="已用0B "
+            android:textSize="12sp"/>
 
         <TextView
             android:id="@+id/filelist_totalsize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" 共有2GB"/>
-
+            android:text=" 共有2GB"
+            android:textSize="12sp"/>
     </LinearLayout>
 </RelativeLayout>

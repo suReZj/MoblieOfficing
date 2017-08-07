@@ -13,7 +13,7 @@ public class GsonFileJsonBean {
 
     @SerializedName("totalSize")
     @Expose
-    private Integer totalSize;
+    private long  totalSize;
     @SerializedName("FILES")
     @Expose
     private List<String> files = null;
@@ -21,11 +21,11 @@ public class GsonFileJsonBean {
     @Expose
     private List<String> folders = null;
 
-    public Integer getTotalSize() {
+    public long getTotalSize() {
         return totalSize;
     }
 
-    public void setTotalSize(Integer totalSize) {
+    public void setTotalSize(long totalSize) {
         this.totalSize = totalSize;
     }
 

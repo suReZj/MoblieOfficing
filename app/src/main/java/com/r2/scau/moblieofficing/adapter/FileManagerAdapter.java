@@ -28,10 +28,11 @@ import java.util.List;
  */
 
 public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private static final String TAG = "ileManagerAdapter";
+    private static final String TAG = "fileManagerAdapter";
 
     private Context mContext;
     private List<FileBean> fileList;
+    private long totalSize = 0;
     private BottomView mButtomView;
     private String currentDirPath;
     /**
@@ -50,10 +51,11 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mOnItemClickLitener = mOnItemClickLitener;
     }
 
-    public FileManagerAdapter(Context mContext, List<FileBean> fileList, String currentDirPath, String fileSelectType, View.OnClickListener bottomclickListener) {
+    public FileManagerAdapter(Context mContext, long totalSize, List<FileBean> fileList, String currentDirPath, String fileSelectType, View.OnClickListener bottomclickListener) {
         super();
         this.mContext = mContext;
         this.fileList = fileList;
+        this.totalSize = totalSize;
         this.fileSelectType = fileSelectType;
         this.currentDirPath = currentDirPath;
         this.bottomclickListener = bottomclickListener;
@@ -139,8 +141,8 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         }else if(holder instanceof FileTailViewHolder){
             FileTailViewHolder fileTailViewHolder = (FileTailViewHolder) holder;
-            fileTailViewHolder.file_currentUsedSpace.setText("用户测试");
-            fileTailViewHolder.file_totalSpace.setText("XXX");
+            fileTailViewHolder.file_currentUsedSpace.setText("文件大小:" + generateSize(totalSize));
+            fileTailViewHolder.file_totalSpace.setText(",总容量2G");
         }
     }
 
