@@ -74,20 +74,20 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         public boolean handleMessage(Message msg) {
             switch (msg.what){
                 case 1:
-//                    new Thread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            try {
-//                                RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
-//                                RetrofitUntil.getUserInfo();
-//                                RetrofitUntil.getFriend();
-//                                RetrofitUntil.getGroupInfo();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+                                RetrofitUntil.getUserInfo();
+                                RetrofitUntil.getFriend();
+                                RetrofitUntil.getGroupInfo();
 //                                SmackMultiChatManager.bindJoinMultiChat();
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }).start();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
                     break;
             }
             return false;

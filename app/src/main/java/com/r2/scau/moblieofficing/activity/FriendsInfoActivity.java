@@ -338,7 +338,7 @@ public class FriendsInfoActivity extends BaseActivity {
                         if (userIconPath == null) {
                             ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
                         } else {
-                            Glide.with(getApplicationContext()).load(userIconPath).into(userIcon);
+                            Glide.with(getApplicationContext()).load(PHOTO_SERVER_IP+userIconPath).into(userIcon);
                         }
                     }
                     friendName.setLeftBottomString2(userName);
