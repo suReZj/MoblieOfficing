@@ -25,7 +25,7 @@
         android:id="@+id/st_add_friend"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        app:sLeftIconRes="@mipmap/ic_my_contact"
+        app:sLeftIconRes="@mipmap/icon_contact_local"
         app:sLeftTextString="@string/add_by_contact"
         app:sUseRipple="true"
         app:sLineShow="bottom"

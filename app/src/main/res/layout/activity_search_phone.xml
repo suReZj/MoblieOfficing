@@ -5,27 +5,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.r2.scau.moblieofficing.activity.SearchPhoneActivity">
 
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_search_phone"
+    <include layout="@layout/toolbar" />
+
+    <android.support.v7.widget.SearchView
+        android:id="@+id/sv_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding_top"
-        android:background="@color/colorBottomBar"
-        android:theme="@style/ToolbarTheme"
-        android:weightSum="1"
-        >
-
-        <android.support.v7.widget.SearchView
-            android:id="@+id/sv_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:imeOptions="actionSearch"
-            app:defaultQueryHint="@string/search_by_phone"/>
-    </android.support.v7.widget.Toolbar>
-
+        android:layout_gravity="center"
+        android:iconifiedByDefault="false"
+        app:defaultQueryHint="@string/search_by_phone"
+        />
 
 </LinearLayout>

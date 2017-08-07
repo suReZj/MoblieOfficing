@@ -68,9 +68,11 @@
         <activity android:name=".activity.SignUpActivity"/>
         <activity android:name=".activity.SendNoticeActivity"/>
         <activity android:name=".activity.GroupActivity"/>
-        <activity android:name=".activity.PersonalContactActivity">
+        <activity android:name=".activity.PersonalContactActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
-        <activity android:name=".activity.FriendActivity">
+        <activity android:name=".activity.FriendActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
         <activity android:name=".activity.AddFriendActivity">
         </activity>
@@ -80,7 +82,8 @@
         </activity>
         <activity android:name=".activity.SelectMemberActivity">
         </activity>
-        <activity android:name=".activity.ReportActivity">
+        <activity android:name=".activity.ReportActivity"
+                  android:windowSoftInputMode="stateHidden|stateAlwaysHidden">
         </activity>
         <activity android:name=".activity.FriendsInfoActivity"/>
         <activity android:name=".activity.SelectGroupActivity">

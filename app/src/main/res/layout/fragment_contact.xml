@@ -1,52 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/layout_friend"
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/toolbar"
+            android:id="@+id/toolbar_contact"/>
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/st_contact_friend"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftIconRes="@mipmap/ic_friend"
+            app:sLeftTextString="@string/gsonFriends"
+            app:sLineShow="both"
+            app:sLineColor="@color/colorLightGray"
+            app:sUseRipple="true">
+        </com.allen.library.SuperTextView>
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/st_contact_group"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftIconRes="@mipmap/ic_group"
+            app:sLeftTextString="@string/group"
+            app:sLineShow="bottom"
+            app:sLineColor="@color/colorLightGray"
+            app:sUseRipple="true">
+        </com.allen.library.SuperTextView>
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/st_contact_personal"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftIconRes="@mipmap/icon_contact_local"
+            app:sLeftTextString="@string/personal_contact"
+            app:sLineShow="bottom"
+            app:sLineColor="@color/colorLightGray"
+            app:sUseRipple="true">
+        </com.allen.library.SuperTextView>
+
+        <com.allen.library.SuperTextView
+            android:id="@+id/st_frequently_friend"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            app:sLeftIconRes="@mipmap/icon_contact_common"
+            app:sLeftTextString="@string/frequently_friend"
+            app:sLineShow="bottom"
+            app:sLineColor="@color/colorLightGray"
+            app:sUseRipple="true">
+        </com.allen.library.SuperTextView>
+
+    </LinearLayout>
 
 
-    <include layout="@layout/toolbar" />
-
-    <com.allen.library.SuperTextView
-        android:id="@+id/st_contact_friend"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:sLeftIconRes="@mipmap/ic_friend"
-        app:sLeftTextString="@string/gsonFriends"
-        app:sUseRipple="true"
-        app:sLineShow="both">
-    </com.allen.library.SuperTextView>
-
-    <com.allen.library.SuperTextView
-        android:id="@+id/st_contact_group"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:sLeftIconRes="@mipmap/ic_group"
-        app:sLeftTextString="@string/group"
-        app:sUseRipple="true"
-        app:sLineShow="bottom">
-    </com.allen.library.SuperTextView>
-
-    <com.allen.library.SuperTextView
-        android:id="@+id/st_contact_personal"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:sLeftIconRes="@mipmap/ic_my_contact"
-        app:sLeftTextString="@string/personal_contact"
-        app:sUseRipple="true"
-        app:sLineShow="bottom">
-    </com.allen.library.SuperTextView>
-
-    <com.allen.library.SuperTextView
-        android:id="@+id/st_contact_public"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        app:sLeftIconRes="@mipmap/ic_public_contact"
-        app:sLeftTextString="@string/public_contact"
-        app:sUseRipple="true"
-        app:sLineShow="bottom">
-    </com.allen.library.SuperTextView>
-
-</LinearLayout>
+</ScrollView>

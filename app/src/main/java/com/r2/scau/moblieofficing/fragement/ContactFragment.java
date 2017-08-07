@@ -37,6 +37,7 @@ public class ContactFragment extends Fragment {
     private SuperTextView friendST;
     private SuperTextView groupST;
     private SuperTextView personalContactST;
+
     public static final int MY_PERMISSIONS_REQUEST_READ_CONTACT = 1;
 
 
@@ -51,6 +52,8 @@ public class ContactFragment extends Fragment {
     }
 
     private void initView(){
+
+
 
         titleTV = (TextView) view .findViewById(R.id.toolbar_title);
         titleTV.setText("联系人");
@@ -86,7 +89,9 @@ public class ContactFragment extends Fragment {
 
             }
         });
+
     }
+
 
     public void openFriendActivity(){
         Intent intent = new Intent(mContext, FriendActivity.class);

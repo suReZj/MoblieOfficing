@@ -53,6 +53,7 @@
     <string name="input_group_name">输入群名称</string>
     <string name="commit">提交</string>
     <string name="confirm">确定</string>
+    <string name="frequently_friend">常用联系人</string>
 
     <!--notice 使用字段 -->
     <string name="send_notice">发公告</string>
