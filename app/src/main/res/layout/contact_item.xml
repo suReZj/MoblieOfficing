@@ -11,13 +11,12 @@
     >
 
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
         android:layout_centerVertical="true"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
         android:scaleType="centerCrop"
-        android:background="@mipmap/ic_friend"/>
+        android:layout_width="45dp"
+        android:layout_height="45dp"/>
 
     <!--app:sLeftIconRes="@mipmap/ic_friend"-->
     <com.allen.library.SuperTextView

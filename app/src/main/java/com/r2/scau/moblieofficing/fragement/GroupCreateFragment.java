@@ -45,7 +45,7 @@ public class GroupCreateFragment extends Fragment{
         List<GsonGroup> groupList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         groupList = UserUntil.createGroupList;
-        adapter = new GroupAdapter(mContext, groupList);
+        adapter = new GroupAdapter(mContext, groupList, 1);
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv_group);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(adapter);

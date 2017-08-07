@@ -24,23 +24,23 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.ImageIconBean;
 import com.r2.scau.moblieofficing.event.SignUpFinishEvent;
 import com.r2.scau.moblieofficing.retrofit.ISignBiz;
-import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.MathUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
-import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.RetrofitUntil;
+import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.CustomVideoView;
 import com.r2.scau.moblieofficing.widge.popview.PopField;
 
-import java.io.File;
-import java.io.IOException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.Headers;
@@ -254,6 +254,7 @@ public class SignUpActivity extends BaseActivity {
             }
         });
     }
+
     public void imageIconUpload(String filename, String userPhone, File image){
         MultipartBody.Builder builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)

@@ -4,46 +4,74 @@ package com.r2.scau.moblieofficing.fragement;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.activity.SendNoticeActivity;
-import com.r2.scau.moblieofficing.adapter.ViewPagerAdapter;
+import com.r2.scau.moblieofficing.activity.SelectGroupActivity;
+import com.r2.scau.moblieofficing.adapter.NoticeAdapter;
+import com.r2.scau.moblieofficing.gson.GsonGroup;
+import com.r2.scau.moblieofficing.gson.GsonNotice;
+import com.r2.scau.moblieofficing.gson.GsonNotices;
+import com.r2.scau.moblieofficing.retrofit.INoticeBiz;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by 嘉进 on 9:21.
  * 底部导航栏中公告的Fragment
  */
 
-public class NoticeFragment extends Fragment implements View.OnClickListener{
+public class NoticeFragment extends Fragment implements View.OnClickListener {
 
     private View view;
     private Context mContext;
     private Toolbar mToolbar;
-    private Button sendNoticeBtn;
     private TextView titleTV;
-    private TextView readTV;
-    private TextView unReadTV;
+    private Handler mHandler;
+    private NoticeAdapter adapter;
+    private List<GsonNotice> notices = new ArrayList<>();
+    private List<String> creators = new ArrayList<>();
+
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable final ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_notice, container, false);
         mContext = getActivity();
         initView();
+        mHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case Contants.REFLASH_NOTICE:
+                        adapter.addAll(notices, creators);
+                        break;
+                }
+            }
+        };
         return view;
     }
 
@@ -55,9 +83,9 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
         mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.menu_notice:
-                        Intent intent = new Intent(mContext, SendNoticeActivity.class);
+                        Intent intent = new Intent(mContext, SelectGroupActivity.class);
                         startActivity(intent);
                         break;
                 }
@@ -65,58 +93,63 @@ public class NoticeFragment extends Fragment implements View.OnClickListener{
             }
         });
         setHasOptionsMenu(true);
-
         mToolbar.setTitle("");
         titleTV.setText("公告");
-        initViewPage();
+
+        getNotices();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+        adapter = new NoticeAdapter(mContext, notices, creators);
+        RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv_unread_notice);
+        rv.setLayoutManager(layoutManager);
+        rv.setAdapter(adapter);
+        rv.setItemAnimator(new DefaultItemAnimator());
+
 
     }
 
-    public void initViewPage(){
-        ViewPager viewPage = (ViewPager) view.findViewById(R.id.vp_notice);
-        TabLayout tableLayout = (TabLayout) view.findViewById(R.id.tabLayout_notice);
+    public void getNotices() {
+        List<GsonGroup> groups = UserUntil.groupList;
 
-        List<Fragment> fragmentList = new ArrayList<>();
-        List<String> titleList = new ArrayList<>();
-        NoticeUnreadFragment unreadFragment = new NoticeUnreadFragment();
-        NoticeReadFragment readFragment = new NoticeReadFragment();
-        fragmentList.add(unreadFragment);
-        fragmentList.add(readFragment);
+        int size = groups.size();
+        for (int i = 0; i < size; i++) {
+            final GsonGroup group = groups.get(i);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(Contants.SERVER_IP + "/group/")
+                    .callFactory(OkHttpUntil.getInstance())
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            INoticeBiz iNoticeBiz = retrofit.create(INoticeBiz.class);
+            Call<GsonNotices> call = iNoticeBiz.getNotice(UserUntil.phone, (long) group.getGid());
+            call.enqueue(new Callback<GsonNotices>() {
+                @Override
+                public void onResponse(Call<GsonNotices> call, Response<GsonNotices> response) {
+                    if (response.body() != null && response.body().getCode() == 200) {
+                        notices.addAll(response.body().getAnnouncementList());
+                        for (int i = 0; i  < notices.size(); i++){
+                            creators.add(group.getGname());
+                        }
+                        Log.e("notice", notices.size() + "");
+                    }else {
+                        Log.e("notice", response.toString());
+                    }
+                }
 
-        titleList.add("未读");
-        titleList.add("已读");
+                @Override
+                public void onFailure(Call<GsonNotices> call, Throwable t) {
+                    Log.e("notice", t.toString());
+                }
+            });
 
-        tableLayout.setTabMode(TabLayout.MODE_FIXED);
-        tableLayout.addTab(tableLayout.newTab().setText(titleList.get(0)));
-        tableLayout.addTab(tableLayout.newTab().setText(titleList.get(1)));
-
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager(), fragmentList, titleList);
-        viewPage.setAdapter(adapter);
-        tableLayout.setupWithViewPager(viewPage);
-    }
-
-   /*@Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.clear();
-        inflater.inflate(R.menu.toobar_notice_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.menu_notice:
-                Intent intent = new Intent(mContext, SendNoticeActivity.class);
-                startActivity(intent);
-                break;
         }
 
-        return true;
-    }*/
+    }
+
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
 
         }
     }
+
 }

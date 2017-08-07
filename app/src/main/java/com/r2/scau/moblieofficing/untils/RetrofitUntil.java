@@ -89,6 +89,12 @@ public class RetrofitUntil {
                         contact.setPhone(myFriend.getUserPhone());
                         contact.setName(name);
                         contact.setFirstLetter(FistLetterUntil.getSortKey(name));
+                        Object object = myFriend.getUserHeadPortrait();
+                        String path = null;
+                        if (object != null){
+                            path = object.toString();
+                            contact.setPhotoURL(path);
+                        }
                         contacts.add(contact);
                     }
                     UserUntil.friendList = contacts;

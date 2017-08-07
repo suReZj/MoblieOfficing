@@ -9,9 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 
 import java.util.List;
 
@@ -44,15 +45,14 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.GridViewHolder
         if (position < mContactList.size()){
             Contact contact = mContactList.get(position);
             holder.addTextView.setText(contact.getName());
-            if (contact.getPhotoURL() == null){
-                holder.addImageView.setImageResource(R.mipmap.ic_friend);
+            if (contact.getPhotoURL() == null || contact.getPhotoURL().equals("")){
+                holder.addImageView.setImageDrawable(ImageUtils.getIcon(contact.getName(), 32));
             }else {
                 Glide.with(mContext)
-                        .load(contact.getPhotoURL())
-                        .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .load(Contants.PHOTO_SERVER_IP + contact.getPhotoURL())
                         .into(holder.addImageView);
             }
+
         }else {
             holder.addImageView.setImageResource(R.mipmap.ic_add);
             holder.addTextView.setText("添加人员");
