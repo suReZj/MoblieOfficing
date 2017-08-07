@@ -4,7 +4,7 @@
     <!-- 文件管理 使用的字段 -->
     <string name="my_disk">我的网盘</string>
     <string name="my_file">个人文件</string>
-    <string name="shared_file">公共文件</string>
+    <string name="shared_file">群文件</string>
     <string name="edit">编辑</string>
     <string name="newfolder">新建文件夹</string>
     <string name="allselect">全选</string>
@@ -21,7 +21,8 @@
     <string name="complete">完成</string>
     <string name="upload">上传</string>
     <string name="upload_selectfile">选择要上传文件</string>
-
+    <string name="fm_group_head">用户加入群组</string>
+    <string name="user_not_have_group">用户暂未加入群组</string>
 
     <!--Login 使用字段 -->
     <string name="login">登  录</string>
@@ -114,11 +115,6 @@
     <string name="maternity_leave">产假</string>
     <string name="official_leave">例假</string>
     <string name="funeral_leave">丧假</string>
-
-
-
-
-
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

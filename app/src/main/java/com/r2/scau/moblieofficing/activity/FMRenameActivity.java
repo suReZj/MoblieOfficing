@@ -16,6 +16,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.io.IOException;
 
@@ -126,7 +127,7 @@ public class FMRenameActivity extends BaseActivity {
                         formBody = new FormBody.Builder()
                                 .add("oldPath", oldPath)
                                 .add("newPath",newPath)
-                                .add("userPhone", "123456789010")
+                                .add("userPhone",UserUntil.gsonUser.getUserPhone())
                                 .build();
                         request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.fileRename)
                                 .addHeader("cookie", OkHttpUntil.loginSessionID)
@@ -155,7 +156,7 @@ public class FMRenameActivity extends BaseActivity {
                         Log.e(TAG, "basepath" + basePath + "newpath  : " +newPath);
                         formBody = new FormBody.Builder()
                                 .add("path", newPath)
-                                .add("userPhone", "123456789010")
+                                .add("userPhone", UserUntil.gsonUser.getUserPhone())
                                 .build();
                         request = new Request.Builder()
                                 .url(Contants.SERVER_IP + Contants.file_Server + Contants.createDir)
