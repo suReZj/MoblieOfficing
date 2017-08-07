@@ -1,14 +1,19 @@
-<FrameLayout
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.r2.scau.moblieofficing.fragement.NoticeUnreadFragment">
+    android:orientation="vertical"
+    tools:context="com.r2.scau.moblieofficing.activity.SelectGroupActivity">
+
+    <include layout="@layout/toolbar"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_unread_notice"
+        android:id="@+id/rv_group_select"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+</LinearLayout>

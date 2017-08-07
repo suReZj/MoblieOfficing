@@ -1,11 +1,16 @@
 package com.r2.scau.moblieofficing.fragement;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
@@ -31,6 +37,7 @@ import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
 
@@ -45,6 +52,8 @@ import java.util.List;
 import java.util.UUID;
 
 import okhttp3.OkHttpClient;
+
+import static android.app.Activity.RESULT_OK;
 
 
 /**
@@ -66,6 +75,8 @@ public class MessageFragment extends Fragment {
     private String flagOfMulti;
     private ArrayList<String> roomNameList;
     private OkHttpClient okHttpClient = new OkHttpClient();
+
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
 
     @Nullable
     @Override
@@ -89,8 +100,14 @@ public class MessageFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
-                    Intent intent = new Intent(getActivity(),CaptureActivity.class);
-                    getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                            != PackageManager.PERMISSION_GRANTED){
+                        ActivityCompat.requestPermissions(getActivity() ,
+                                new String[]{Manifest.permission.READ_CONTACTS},
+                                MY_PERMISSIONS_REQUEST_CAMERA);
+                    }else {
+                        openQRCodeActivity();
+                    }
                 }
                 if (item.getItemId() == R.id.multiChat) {
                     Intent multiIntent = new Intent(getActivity().getApplicationContext(), EditGroupActivity.class);
@@ -271,6 +288,11 @@ public class MessageFragment extends Fragment {
         return true;
     }
 
+
+    public void openQRCodeActivity(){
+        Intent intent = new Intent(getActivity(),CaptureActivity.class);
+        getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

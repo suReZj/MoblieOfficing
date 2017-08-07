@@ -1,5 +1,6 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.io.IOException;
 
@@ -30,12 +32,14 @@ public class SendNoticeActivity extends BaseActivity {
     private EditText contentET;
     private TextView titleTV;
     private Toolbar toolbar;
+    private int groupId;
 
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_send_notice);
-
+        Intent intent = getIntent();
+        groupId = intent.getIntExtra("groupId", -1);
         titleTV = (TextView) findViewById(R.id.toolbar_title);
         titleET = (EditText) findViewById(R.id.et_notice_title);
         authorET = (EditText) findViewById(R.id.et_notice_author);
@@ -75,8 +79,9 @@ public class SendNoticeActivity extends BaseActivity {
         FormBody formBody = new FormBody.Builder()
                 .add("aTitle", title)
                 .add("aContent", content)
-                .add("aCreatedUserPhone", "12345678900")
-                .add("aType", "notice1")
+                .add("aType", "notice")
+                .add("aCreatedUserPhone", UserUntil.phone)
+                .add("groupId", groupId+"")
                 .build();
 
 

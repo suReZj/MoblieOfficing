@@ -1,6 +1,5 @@
 package com.r2.scau.moblieofficing.retrofit;
 
-import com.r2.scau.moblieofficing.gson.GsonUser;
 import com.r2.scau.moblieofficing.gson.GsonUsers;
 
 import retrofit2.Call;

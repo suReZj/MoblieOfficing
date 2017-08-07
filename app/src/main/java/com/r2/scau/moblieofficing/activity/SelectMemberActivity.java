@@ -110,7 +110,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
         LinearLayoutManager layoutManager = new LinearLayoutManager(this,
                 LinearLayoutManager.VERTICAL, false);
 
-        adapter = new SelectMemberAdapter();
+        adapter = new SelectMemberAdapter(this);
         mQuickSideBarView.setLetters(customLetters);
         adapter.addAll(mContactList);
 

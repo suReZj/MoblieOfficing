@@ -65,9 +65,8 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             mContactTV = (TextView) findViewById(R.id.tv_bottom_contact);
             mUserInfoTV = (TextView) findViewById(R.id.tv_bottom_user);
 
-        initViewPager();
-        initialBottomView();
-
+            initViewPager();
+            initialBottomView();
     }
 
 
@@ -266,26 +265,4 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             super.onBackPressed();
         }
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode){
-            case Contants.RequestCode.QRSCAN:
-                if (resultCode == RESULT_OK){
-                    /**
-                     * Create by edwincheng in 2017/08/04
-                     * resultdata代表的是 二维码内部储存的信息
-                     *
-                     * 自己解析resultdata中的字段 然后在做相应操作
-                     */
-                    String resultdata = data.getStringExtra("result");
-                    ToastUtils.show(MainActivity.this,resultdata,Toast.LENGTH_SHORT);
-                    Log.e("二维码扫描结果", resultdata);
-                }else {
-                    Log.e("二维码扫描结果", "用户选择取消" );
-                }
-                break;
-        }
-    }
-
 }
