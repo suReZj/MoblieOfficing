@@ -76,7 +76,7 @@ public class SmackListenerManager {
     static void addAllMultiChatMessageListener() throws Exception {
 
         //因Smack+openfire群聊在用户退出登陆后，群聊无法保存已加入的用户信息，所以手动添加该群中的用户
-        SmackMultiChatManager.bindJoinMultiChat();
+//        SmackMultiChatManager.bindJoinMultiChat();
     }
 
     /**

@@ -16,7 +16,6 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/icon"
             app:civ_border_color="@color/colorWhite"
             app:civ_border_width="2dp"
             />
@@ -54,13 +53,13 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerInParent="true"
-                    android:background="@drawable/notice"
+                    android:background="@drawable/message"
                     />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="群公告"
+                    android:text="聊天"
                     android:textSize="10sp"
                     android:layout_gravity="center"
                     android:textColor="@color/colorLightBlue" />

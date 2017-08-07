@@ -153,9 +153,11 @@ public class MessageFragment extends Fragment {
     public void onChatRecordEvent(ChatRecord event) {
         //向其他人发起聊天时接收到的事件
         if (isRemoving() || message_adapter == null) {
+            Log.e("向其他人发起聊天时接收到的事件","向其他人发起聊天时接收到的事件");
             return;
         }
         if (message_adapter.getMessageList().indexOf(event) > -1) {
+            Log.e("已经存在此人的聊天窗口记录","已经存在此人的聊天窗口记录");
             return;//已经存在此人的聊天窗口记录
         }
         addChatRecord(event);
