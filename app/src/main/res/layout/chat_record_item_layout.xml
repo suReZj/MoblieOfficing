@@ -23,12 +23,11 @@
     >
         <ImageView
             android:id="@+id/chat_friend_avatar"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher">
+            android:scaleType="centerCrop">
         </ImageView>
         <TextView
             android:id="@+id/chat_message_count"

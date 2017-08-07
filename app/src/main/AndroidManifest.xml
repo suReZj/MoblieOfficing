@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION">
     </uses-permission>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION">
@@ -43,6 +42,7 @@
         android:windowSoftInputMode="adjustResize">
 
         <activity android:name=".activity.SignOfficeActivity"/>
+
         <activity
             android:name=".activity.LoginActivity"
             android:screenOrientation="portrait">
@@ -85,6 +85,7 @@
         <activity android:name=".activity.ReportActivity">
         </activity>
         <activity android:name=".activity.FriendsInfoActivity"/>
+        <activity android:name=".activity.GroupInfoActivity"/>
         <activity android:name=".activity.SelectGroupActivity">
         </activity>
 

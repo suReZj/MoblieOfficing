@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/third"
-        android:icon="@mipmap/chat_toolbar_more"
+        android:icon="@drawable/ic_more_horiz_white_24dp"
         android:title="third"
         app:showAsAction="ifRoom">
         <menu>
@@ -14,6 +14,11 @@
                     android:title="邀请进群"
                     app:showAsAction="ifRoom"
                     />
+                <item
+                    android:id="@+id/info_group"
+                    android:icon="@drawable/group"
+                    android:title="查看群信息"
+                    app:showAsAction="ifRoom"/>
                 <item
                     android:id="@+id/notice_group"
                     android:icon="@drawable/notice"

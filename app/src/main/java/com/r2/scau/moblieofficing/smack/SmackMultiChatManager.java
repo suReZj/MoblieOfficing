@@ -17,10 +17,13 @@ import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.litepal.crud.DataSupport;
 import org.reactivestreams.Subscriber;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import io.reactivex.Observable;
+
+import static com.r2.scau.moblieofficing.Contants.room_id;
 
 
 /**
@@ -44,6 +47,8 @@ public class SmackMultiChatManager {
 //            public void call(Subscriber<? super List<HostedRoom>> subscriber) {
 //
 //                try {
+
+        Log.e("bindJoinMultiChat","bindJoinMultiChat");
         List<HostedRoom> rooms = SmackManager.getInstance().getHostedRooms();
 
 //                    subscriber.onNext(rooms);
@@ -90,8 +95,18 @@ public class SmackMultiChatManager {
 //        }
 
 
-
-        List<MultiChatRoom>  multiChats = DataSupport.findAll(MultiChatRoom.class);
+        List<GsonGroup> list=UserUntil.groupList;
+        DataSupport.deleteAll(MultiChatRoom.class);
+        List<MultiChatRoom>  multiChats=new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            GsonGroup gsonGroup=list.get(i);
+            MultiChatRoom newRoom=new MultiChatRoom();
+            newRoom.setRoomId(gsonGroup.getGid());
+            newRoom.setRoomJid(gsonGroup.getGname()+room_id);
+            newRoom.save();
+            multiChats.add(newRoom);
+        }
+//        List<MultiChatRoom>  multiChats = DataSupport.findAll(MultiChatRoom.class);
         for (HostedRoom room : rooms) {
             ServiceDiscoveryManager discoManager = SmackManager.getInstance().getServiceDiscoveryManager();
             // 获得指定XMPP实体的项目

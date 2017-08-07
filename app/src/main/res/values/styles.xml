@@ -70,6 +70,13 @@
     </style>
 
 
-
+    <style name="BottomDialog.Animation" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_scale_anim_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_scale_anim_out</item>
+    </style>
+    <style name="BottomDialog" parent="@style/Base.V7.Theme.AppCompat.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
 
 </resources>
