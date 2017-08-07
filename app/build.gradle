@@ -31,11 +31,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     // TinyPinyin核心包，约80KB
-
+    compile 'com.makeramen:roundedimageview:2.3.0'
     // 可选，适用于Android的中国地区词典
-    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
     compile project(':library:smoothcheckbox')
     compile project(':library:libzxing')
+    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
     compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
@@ -67,11 +67,12 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.roughike:bottom-bar:2.3.1@aar'
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-    testCompile 'junit:junit:4.12'
-    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
     compile 'com.github.razerdp:BasePopup:v1.8.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    testCompile 'junit:junit:4.12'
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
 }
+
 
 
 

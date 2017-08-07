@@ -8,10 +8,11 @@
     android:layout_gravity="center"
     android:gravity="center">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_add"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:scaleType="centerCrop"
         android:layout_marginTop="10dp"/>
 
     <TextView

@@ -3,9 +3,11 @@ package com.r2.scau.moblieofficing.smack;
 
 import android.util.Log;
 
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.ChatUser;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,6 +54,14 @@ public class MultiChatInvitationListener implements InvitationListener {
                 record.setmChatJid(friendUserName);
                 record.setmIsMulti(true);
                 record.save();
+                try {
+                    RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+                    RetrofitUntil.getUserInfo();
+                    RetrofitUntil.getFriend();
+                    RetrofitUntil.getGroupInfo();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } else {
                 record = chatRecords.get(0);
             }

@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.r2.scau.moblieofficing.R;
-import com.r2.scau.moblieofficing.bean.Notice;
+import com.r2.scau.moblieofficing.gson.GsonNotice;
 
 import java.util.List;
 
@@ -20,11 +20,14 @@ import java.util.List;
 public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeHolder> {
 
     private Context context;
-    private List<Notice> noticeList;
+    private List<GsonNotice> noticeList;
+    private List<String> creatorList;
 
-    public NoticeAdapter(Context context, List<Notice> noticeList){
+
+    public NoticeAdapter(Context context, List<GsonNotice> noticeList, List<String> creator) {
         this.context = context;
         this.noticeList = noticeList;
+        this.creatorList = creator;
     }
 
     @Override
@@ -38,9 +41,9 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeHold
     @Override
     public void onBindViewHolder(NoticeHolder holder, int position) {
         Log.e("unreadNotice", "setData");
-        holder.title.setText(noticeList.get(position).getTitle());
-        holder.authorAndTime.setText(noticeList.get(position).getAuthor());
-        holder.content.setText(noticeList.get(position).getContent());
+        holder.title.setText("标题：" + noticeList.get(position).getAtitle());
+        holder.authorAndTime.setText("来自："+ creatorList.get(position));
+        holder.content.setText("内容：" + noticeList.get(position).getAcontent());
     }
 
     @Override
@@ -59,4 +62,16 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeHold
             content = (TextView) view.findViewById(R.id.tv_notice_content);
         }
     }
+
+    public void addAll(List<GsonNotice> notices, List<String> creators){
+        if (notices != null && creators != null){
+            noticeList.clear();
+            notices.addAll(notices);
+            creatorList.clear();
+            creatorList.addAll(creators);
+            notifyDataSetChanged();
+        }
+    }
+
+
 }

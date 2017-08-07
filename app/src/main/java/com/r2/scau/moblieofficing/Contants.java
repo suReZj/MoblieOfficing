@@ -10,7 +10,9 @@ import android.os.Environment;
 
 public class Contants {
     public static final String SERVER_IP = "http://192.168.13.61:8089";
+    public static final String PHOTO_SERVER_IP = "http://192.168.13.61:8080";
 
+    public static final String getInfo="/group";
     public static final String file_Server = "/fileServer";
     public static final String OfficeManage = "/OfficeManage";
     public static final String getDir = "/getDir.shtml";
@@ -26,6 +28,11 @@ public class Contants {
     public static final String DeleteFile = "/DeleteFile.shtml";
     public static final String deleteGroupFile = "/deleteGroupFile.shtml";
     public static final String DeleteDir = "/DeleteDir.shtml";
+    public static final String createGroup="/createGroup.shtml";
+    public static final String joinGroup="/joinGroup.shtml";
+
+    public static final String getGroupInfo="/getGroupInfo.shtml";
+    public static final String room_id="@conference.192.168.13.61";
 
 
     public static final String createOfficeThing = "/createOfficeThing.shtml";
@@ -46,6 +53,7 @@ public class Contants {
     public static final String creat_multi_chat="creat";
     public static final String multi_invite_room_name="room";
 
+    public static final int REFLASH_NOTICE = 12;
     public static final int LOGIN_IN_GET_DATA = 13;
     public static final int SIGN_UP_GET_DATA = 14;
     public static final int OPEN_DAY_REPORTY = 15;

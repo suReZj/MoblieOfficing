@@ -2,7 +2,6 @@ package com.r2.scau.moblieofficing.fragement;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -28,16 +27,14 @@ import android.widget.Toast;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
-import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.activity.EditGroupActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
+import com.r2.scau.moblieofficing.activity.GroupInfoActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
-import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
@@ -45,12 +42,10 @@ import com.xys.libzxing.zxing.activity.CaptureActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 
@@ -301,90 +296,21 @@ public class MessageFragment extends Fragment {
         inflater.inflate(R.menu.toolbar_message_menu, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.scan) {
-        }
-
-
-        return true;
-    }
-
-
     public void refreshData() {
         //我的用户名
         String whereClause = UserUntil.gsonUser.getUserPhone();
-//        String whereClause = "sure1";
-        msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
-                .where("settopflag=?", "1")
+        Log.e("whereClausewhereClause",whereClause);
+        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"1")
+//                .where("settopflag=?", "1")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
-        newList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
-                .where("settopflag=?", "0")
+        newList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"0")
+//                .where("settopflag=?", "0")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         msgList.addAll(newList);
         message_adapter = new MessageAdapter(getContext(), msgList);
         recyclerView.setAdapter(message_adapter);
-    }
-
-
-    public void startMultiChat(Context context, MultiUserChat multiUserChat) {
-        ChatRecord record;
-        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", multiUserChat.getRoom()).find(ChatRecord.class);
-        if (chatRecords.size() == 0) {
-            record = new ChatRecord();
-            String friendUserName = multiUserChat.getRoom();
-            int idx = friendUserName.indexOf("@conference.");
-            String friendNickName = friendUserName.substring(0, idx);
-            record.setUuid(UUID.randomUUID().toString());
-            record.setmFriendUsername(friendUserName);
-            record.setmFriendNickname(friendNickName);
-            record.setmMeUsername("sure3");
-            record.setmMeNickname("张大爷");
-            record.setmChatTime(DateUtil.currentDatetime());
-            record.setmIsMulti(true);
-            record.save();
-        } else {
-            record = chatRecords.get(0);
-        }
-        EventBus.getDefault().post(record);
-        Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("chatrecord", record);
-        startActivity(intent);
-    }
-
-    //单人聊天离线消息接受
-    public void getUnReanMsg() {
-
-    }
-
-
-    //检查离线期间加入的群聊
-    public void checkMultiInvite() {
-        String roomName = "dasdsadsadsa@conference.192.168.13.57";
-        ChatRecord record;
-        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-        if (chatRecords.size() == 0) {
-            record = new ChatRecord();
-            String friendUserName = roomName;
-            int idx = friendUserName.indexOf("@conference.");
-            String friendNickName = friendUserName.substring(0, idx);
-            record.setUuid(UUID.randomUUID().toString());
-            record.setmFriendUsername(friendUserName);
-            record.setmFriendNickname(friendNickName);
-            record.setmMeUsername("sure3");
-            record.setmMeNickname("sure3");
-            record.setmChatTime(DateUtil.currentDatetime());
-            record.setmIsMulti(true);
-            record.save();
-            MultiUserChat multiChatRoom = SmackManager.getInstance().getMultiChat(roomName);
-            SmackListenerManager.addMultiChatMessageListener(multiChatRoom);
-            SmackManager.getInstance().joinChatRoom("dasdsadsadsa@conference.192.168.13.57", "sure3", null);
-        } else {
-            record = chatRecords.get(0);
-        }
-        EventBus.getDefault().post(record);
     }
 
     @Override
@@ -403,23 +329,21 @@ public class MessageFragment extends Fragment {
                     String[] resultarr = resultdata.split(":");
 
                     if (resultarr.length == 2){
-
                         if (resultarr[0].equals("user")){
                             //打开个人信息页面的activity
                             Bundle bundle = new Bundle();
                             Intent intent = new Intent(getActivity(), FriendsInfoActivity.class);
                             bundle.putString("phone", resultarr[1]);
                             intent.putExtras(bundle);
-
                             startActivity(intent);
 
-                        }else if (resultarr[0].equals("group")){
-                            //打开 查看群信息 的Actiity
-//                            Bundle bundle = new Bundle();
-//                            Intent intent = new Intent(getActivity(), );
-//                            bundle.putString("???", resultarr[1]);
-//                            intent.putExtras(bundle);
-//                            startActivity(intent);
+                        }else if (resultarr[0].equals("groupId")){
+//                            打开 查看群信息 的Actiity
+                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(getActivity(), GroupInfoActivity.class);
+                            bundle.putString("Id", resultarr[1]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
                         }else {
                             ToastUtils.show(getActivity(),"未知二维码信息",Toast.LENGTH_SHORT);
                         }

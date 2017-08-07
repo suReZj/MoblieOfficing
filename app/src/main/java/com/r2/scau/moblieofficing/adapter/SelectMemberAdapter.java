@@ -1,14 +1,20 @@
 package com.r2.scau.moblieofficing.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.allen.library.SuperTextView;
+import com.bumptech.glide.Glide;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import cn.refactor.library.SmoothCheckBox;
@@ -20,6 +26,11 @@ import cn.refactor.library.SmoothCheckBox;
 public class SelectMemberAdapter extends ContactListAdapter<SelectMemberAdapter.ContactViewHolder>
         implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
+    private Context mContext;
+    public SelectMemberAdapter (Context context){
+        mContext = context;
+    }
+
     @Override
     public ContactViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -29,8 +40,9 @@ public class SelectMemberAdapter extends ContactListAdapter<SelectMemberAdapter.
 
     @Override
     public void onBindViewHolder(final ContactViewHolder holder, final int position) {
-        holder.contactST.setLeftTopString(getItem(position).getName());
-        holder.contactST.setLeftBottomString(getItem(position).getPhone());
+        Contact contact = getItem(position);
+        holder.contactST.setLeftTopString(contact.getName());
+        holder.contactST.setLeftBottomString(contact.getPhone());
         holder.contactST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
             @Override
             public void onSuperTextViewClick() {
@@ -44,6 +56,15 @@ public class SelectMemberAdapter extends ContactListAdapter<SelectMemberAdapter.
                 getItem(position).setSelect(isChecked);
             }
         });
+
+        if (contact.getPhotoURL() == null || contact.getPhotoURL().equals("")){
+            holder.icon.setImageDrawable(ImageUtils.getIcon(contact.getName(), 32));
+        }else {
+            Glide.with(mContext)
+                    .load(Contants.PHOTO_SERVER_IP + contact.getPhotoURL())
+                    .into(holder.icon);
+        }
+
     }
 
     @Override
@@ -68,11 +89,13 @@ public class SelectMemberAdapter extends ContactListAdapter<SelectMemberAdapter.
 
     class ContactViewHolder extends RecyclerView.ViewHolder {
         SmoothCheckBox smoothCheckBox;
+        ImageView icon;
         SuperTextView contactST;
 
         public ContactViewHolder(View view) {
             super(view);
             contactST = (SuperTextView) view.findViewById(R.id.st_contact);
+            icon = (ImageView) view.findViewById(R.id.circle_image);
             smoothCheckBox = (SmoothCheckBox) view.findViewById(R.id.checkbox_contact);
         }
 

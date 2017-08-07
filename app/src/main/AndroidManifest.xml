@@ -7,29 +7,28 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION">
     </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION">
     </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    <uses-permission android:name="android.permission.READ_PHONE_STATE">
     </uses-permission>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE">
     </uses-permission>
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" >
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS">
     </uses-permission>
-    <uses-permission android:name="android.permission.READ_LOGS" >
+    <uses-permission android:name="android.permission.READ_LOGS">
     </uses-permission>
-    <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
         android:name=".MyApplication"
@@ -52,9 +51,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="a66f5be3c5e49cfb82f86be5cad2b61a">
-            <!--//开发者申请的key-->
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="a66f5be3c5e49cfb82f86be5cad2b61a">
+
+            <!-- //开发者申请的key -->
         </meta-data>
+
         <activity android:name=".activity.MainActivity"/>
         <activity android:name=".activity.FileListActivity"/>
         <activity android:name=".activity.FileTypeSelectActivity"/>
@@ -80,6 +84,9 @@
         <activity android:name=".activity.ReportActivity">
         </activity>
         <activity android:name=".activity.FriendsInfoActivity"/>
+        <activity android:name=".activity.GroupInfoActivity"/>
+        <activity android:name=".activity.SelectGroupActivity">
+        </activity>
     </application>
 
 </manifest>

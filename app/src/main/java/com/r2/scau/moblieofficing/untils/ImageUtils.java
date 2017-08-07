@@ -2,12 +2,10 @@ package com.r2.scau.moblieofficing.untils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -20,9 +18,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
-import static android.R.attr.bitmap;
 
 /**
  * Created by Edward on 2017/8/4.
@@ -37,8 +32,18 @@ public class ImageUtils {
                 icon.setImageDrawable(ImageUtils.getIcon(userName,23));
             }
             else{
-                Glide.with(mContext).load(imageUrl).into(icon);
+                Glide.with(mContext).load(Contants.PHOTO_SERVER_IP + imageUrl).into(icon);
             }
+        }catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean setUserRectImageIcon(Context mContext, ImageView icon, String userName){
+        try {
+            icon.setImageDrawable(ImageUtils.getRectIcon(userName,23));
         }catch (Exception e){
             e.printStackTrace();
             return false;
@@ -52,7 +57,10 @@ public class ImageUtils {
         if(isContainChinese(content)){
             if(content.getBytes().length > 6)
             {
-                str = str.replace(getSubString(content,2),"");
+//                str = str.replace(getSubString(content,2),"");
+                int start = str.length() - 2;
+                int end = str.length() ;
+                str = str.substring(start, end);
             }
         }
         else{
@@ -73,6 +81,22 @@ public class ImageUtils {
                 .buildRound(str, color);
         return drawable;
     }
+
+    public static TextDrawable getRectIcon(String content, int textsize){
+        if(content == null) return null;
+        String str = content;
+        ColorGenerator generator = ColorGenerator.MATERIAL;
+        int color = generator.getRandomColor();
+        TextDrawable drawable =  TextDrawable.builder()
+                .beginConfig().width(60).height(60)
+                .textColor(Color.WHITE)
+                .useFont(Typeface.DEFAULT)
+                .fontSize(textsize)
+                .endConfig()
+                .buildRect(str, color);
+        return drawable;
+    }
+
 
     public static boolean isContainChinese(String str){
         return str.length() != str.getBytes().length;
