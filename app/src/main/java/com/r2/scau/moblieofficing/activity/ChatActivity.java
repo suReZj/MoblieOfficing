@@ -80,15 +80,6 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         setContentView(R.layout.activity_chat);
         super.onCreate(savedInstanceState);
         SoftHideKeyBoardUtil.assistActivity(this);
-        try {
-            RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
-            RetrofitUntil.getUserInfo();
-            RetrofitUntil.getFriend();
-            RetrofitUntil.getGroupInfo();
-            SmackMultiChatManager.bindJoinMultiChat();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
 
         new Thread(new Runnable() {
