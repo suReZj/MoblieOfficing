@@ -44,6 +44,7 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
     private Button signOfficeBtn;
 
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
