@@ -14,6 +14,8 @@
     <string name="rename">重命名</string>
     <string name="system_file">系统文件</string>
     <string name="folder">文件夹</string>
+    <string name="move_to_dir">移动至当前目录</string>
+    <string name="select_target_dir">请选择目标目录</string>
 
     <string name="shareto">发送给联系人</string>
 
