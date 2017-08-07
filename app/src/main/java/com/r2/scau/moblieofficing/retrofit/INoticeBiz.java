@@ -1,6 +1,6 @@
 package com.r2.scau.moblieofficing.retrofit;
 
-import com.r2.scau.moblieofficing.bean.User;
+import com.r2.scau.moblieofficing.gson.GsonNotices;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -12,7 +12,7 @@ import retrofit2.http.POST;
  */
 
 public interface INoticeBiz {
-    @POST("getTheGroupAllAnnouncements")
+    @POST("getTheGroupAllAnnouncements.shtml")
     @FormUrlEncoded
-    Call<User> login(@Field("userPhone") String userPhone, @Field("group") long groupId);
+    Call<GsonNotices> getNotice(@Field("userPhone") String userPhone, @Field("groupId") long groupId);
 }

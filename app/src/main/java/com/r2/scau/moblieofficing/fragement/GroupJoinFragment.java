@@ -55,7 +55,7 @@ public class GroupJoinFragment extends Fragment {
         List<GsonGroup> groupListJoin = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
         groupListJoin = UserUntil.joinGroupList;
-        adapter = new GroupAdapter(mContext, groupListJoin);
+        adapter = new GroupAdapter(mContext, groupListJoin, 1);
         RecyclerView rv = (RecyclerView) view.findViewById(R.id.rv_group);
         rv.setLayoutManager(layoutManager);
         rv.setAdapter(adapter);

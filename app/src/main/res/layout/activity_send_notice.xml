@@ -5,7 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     android:orientation="vertical"
     tools:context="com.r2.scau.moblieofficing.activity.SendNoticeActivity">
 
@@ -19,17 +18,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:textColorHint="@android:color/white">
+        android:layout_marginTop="8dp">
    <EditText
        android:id="@+id/et_notice_title"
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:maxLength="20"
        android:padding="10dp"
-       android:hint="@string/notice_title"
-       android:textColor="#b7ffffff"
-       android:textColorHint="#b7ffffff"/>
+       android:hint="@string/notice_title"/>
     </android.support.design.widget.TextInputLayout>
     <!--<View-->
         <!--android:layout_width="match_parent"-->
@@ -40,17 +36,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:textColorHint="@android:color/white">
+        android:layout_marginTop="8dp">
     <EditText
         android:id="@+id/et_notice_author"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:maxLength="15"
         android:padding="10dp"
-        android:hint="@string/author"
-        android:textColor="#b7ffffff"
-        android:textColorHint="#b7ffffff"/>
+        android:hint="@string/author"/>
     </android.support.design.widget.TextInputLayout>
     <!--<View-->
         <!--android:layout_width="match_parent"-->
@@ -61,17 +54,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:textColorHint="@android:color/white">
+        android:layout_marginTop="8dp">
     <EditText
         android:id="@+id/et_notice_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:inputType="textMultiLine"
-        android:hint="@string/notice_content"
-        android:textColor="#b7ffffff"
-        android:textColorHint="#b7ffffff"/>
+        android:hint="@string/notice_content"/>
     </android.support.design.widget.TextInputLayout>
     </LinearLayout>
 </LinearLayout>
