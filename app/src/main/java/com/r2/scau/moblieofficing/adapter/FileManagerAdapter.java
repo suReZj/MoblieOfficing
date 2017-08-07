@@ -10,10 +10,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.OnItemClickLitener;
 import com.r2.scau.moblieofficing.bean.FileBean;
-import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.widge.BottomView;
 
 import java.text.DecimalFormat;
@@ -32,7 +32,7 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     private Context mContext;
     private List<FileBean> fileList;
-    private long totalSize = 0;
+    private long totalSize;
     private BottomView mButtomView;
     private String currentDirPath;
     /**
@@ -164,12 +164,14 @@ public class FileManagerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 return df.format((double) size / 1073741824) +"GB";
             }
         }
-        return null;
+        return "0KB";
     }
 
-    public ArrayList<FileBean> setFileList(List<FileBean> fileList,String currentDirPath){
+    public ArrayList<FileBean> setFileList(List<FileBean> fileList,String currentDirPath, long totalSize){
         this.fileList = fileList;
         this.currentDirPath = currentDirPath;
+        this.totalSize = totalSize;
+
         this.notifyDataSetChanged();
         return (ArrayList) fileList;
     }
