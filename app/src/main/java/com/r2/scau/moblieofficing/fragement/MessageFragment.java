@@ -49,6 +49,7 @@ import java.util.List;
 
 import okhttp3.OkHttpClient;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
@@ -286,8 +287,8 @@ public class MessageFragment extends Fragment {
 
 
     public void openQRCodeActivity(){
-        Intent intent = new Intent(getActivity(),CaptureActivity.class);
-        getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, Contants.RequestCode.QRSCAN);
     }
 
     @Override
@@ -315,6 +316,7 @@ public class MessageFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case Contants.RequestCode.QRSCAN:
                 if (resultCode == RESULT_OK){
@@ -331,6 +333,7 @@ public class MessageFragment extends Fragment {
                     if (resultarr.length == 2){
                         if (resultarr[0].equals("user")){
                             //打开个人信息页面的activity
+
                             Bundle bundle = new Bundle();
                             Intent intent = new Intent(getActivity(), FriendsInfoActivity.class);
                             bundle.putString("phone", resultarr[1]);
@@ -352,7 +355,7 @@ public class MessageFragment extends Fragment {
                     }
 
 
-                }else {
+                }else if (resultCode == RESULT_CANCELED){
                     Log.e("二维码扫描结果", "用户选择取消" );
                 }
                 break;
