@@ -278,90 +278,21 @@ public class MessageFragment extends Fragment {
         inflater.inflate(R.menu.toolbar_message_menu, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.scan) {
-        }
-
-
-        return true;
-    }
-
-
     public void refreshData() {
         //我的用户名
         String whereClause = UserUntil.gsonUser.getUserPhone();
-//        String whereClause = "sure1";
-        msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
-                .where("settopflag=?", "1")
+        Log.e("whereClausewhereClause",whereClause);
+        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"1")
+//                .where("settopflag=?", "1")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
-        newList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
-                .where("settopflag=?", "0")
+        newList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"0")
+//                .where("settopflag=?", "0")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         msgList.addAll(newList);
         message_adapter = new MessageAdapter(getContext(), msgList);
         recyclerView.setAdapter(message_adapter);
-    }
-
-
-    public void startMultiChat(Context context, MultiUserChat multiUserChat) {
-        ChatRecord record;
-        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", multiUserChat.getRoom()).find(ChatRecord.class);
-        if (chatRecords.size() == 0) {
-            record = new ChatRecord();
-            String friendUserName = multiUserChat.getRoom();
-            int idx = friendUserName.indexOf("@conference.");
-            String friendNickName = friendUserName.substring(0, idx);
-            record.setUuid(UUID.randomUUID().toString());
-            record.setmFriendUsername(friendUserName);
-            record.setmFriendNickname(friendNickName);
-            record.setmMeUsername("sure3");
-            record.setmMeNickname("张大爷");
-            record.setmChatTime(DateUtil.currentDatetime());
-            record.setmIsMulti(true);
-            record.save();
-        } else {
-            record = chatRecords.get(0);
-        }
-        EventBus.getDefault().post(record);
-        Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("chatrecord", record);
-        startActivity(intent);
-    }
-
-    //单人聊天离线消息接受
-    public void getUnReanMsg() {
-
-    }
-
-
-    //检查离线期间加入的群聊
-    public void checkMultiInvite() {
-        String roomName = "dasdsadsadsa@conference.192.168.13.57";
-        ChatRecord record;
-        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-        if (chatRecords.size() == 0) {
-            record = new ChatRecord();
-            String friendUserName = roomName;
-            int idx = friendUserName.indexOf("@conference.");
-            String friendNickName = friendUserName.substring(0, idx);
-            record.setUuid(UUID.randomUUID().toString());
-            record.setmFriendUsername(friendUserName);
-            record.setmFriendNickname(friendNickName);
-            record.setmMeUsername("sure3");
-            record.setmMeNickname("sure3");
-            record.setmChatTime(DateUtil.currentDatetime());
-            record.setmIsMulti(true);
-            record.save();
-            MultiUserChat multiChatRoom = SmackManager.getInstance().getMultiChat(roomName);
-            SmackListenerManager.addMultiChatMessageListener(multiChatRoom);
-            SmackManager.getInstance().joinChatRoom("dasdsadsadsa@conference.192.168.13.57", "sure3", null);
-        } else {
-            record = chatRecords.get(0);
-        }
-        EventBus.getDefault().post(record);
     }
 
 

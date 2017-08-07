@@ -138,7 +138,7 @@ public class SmackManager {
             mConnection.login(username, password);
             User user = new User(username, password);
             user.setNickname(getAccountName());
-            Log.d("login succeed", "aaaaaaaaaa");
+            Log.e("login succeed", "aaaaaaaaaa");
             return new LoginResult(user, true);
         } catch (Exception e) {
 //            Logger.e(TAG, e, "login failure");
@@ -444,7 +444,7 @@ public class SmackManager {
 
         if (isConnected()) {
             try {
-                Roster.getInstanceFor(mConnection).createEntry(user, nickName, new String[]{groupName});
+                       Roster.getInstanceFor(mConnection).createEntry(user, nickName, new String[]{groupName});
                 return true;
             } catch (NotLoggedInException | NoResponseException
                     | XMPPErrorException | NotConnectedException e) {

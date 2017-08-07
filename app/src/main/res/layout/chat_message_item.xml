@@ -18,7 +18,6 @@
         android:paddingLeft="4dp"
         android:paddingRight="4dp"
         android:paddingTop="1dp"
-        android:text="12:30"
         android:textColor="@color/white"
         android:textSize="12sp" />
 
@@ -52,7 +51,7 @@
             android:layout_alignStart="@+id/left_chat_content_layout"
             android:layout_marginLeft="5dp"
             android:text="呵呵"
-            android:textSize="12sp" />
+            android:textSize="15sp" />
 
         <RelativeLayout
             android:id="@+id/left_chat_content_layout"
@@ -136,22 +135,21 @@
             android:focusable="false"
             android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/right_chat_username"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/right_chat_content_layout"
-            android:layout_alignParentTop="true"
-            android:layout_marginRight="5dp"
-            android:text="呵呵"
-            android:textSize="12sp"
-            />
+        <!--<TextView-->
+            <!--android:id="@+id/right_chat_username"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignEnd="@+id/right_chat_content_layout"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_marginRight="5dp"-->
+            <!--android:text="呵呵"-->
+            <!--android:textSize="15sp"-->
+            <!--/>-->
 
         <RelativeLayout
             android:id="@+id/right_chat_content_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/right_chat_username"
             android:layout_marginRight="5dp"
             android:layout_marginTop="5dp"
             android:layout_toStartOf="@+id/right_chat_icon"

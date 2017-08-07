@@ -10,6 +10,7 @@ import android.os.Environment;
 
 public class Contants {
 
+    public static final String getInfo="/group";
     public static final String file_Server = "/fileServer";
     public static final String getDir = "/getDir.shtml";
     public static final String getGroupDir = "/getGroupDir.shtml";
@@ -24,8 +25,14 @@ public class Contants {
     public static final String DeleteFile = "/DeleteFile.shtml";
     public static final String deleteGroupFile = "/deleteGroupFile.shtml";
     public static final String DeleteDir = "/DeleteDir.shtml";
+    public static final String createGroup="/createGroup.shtml";
+    public static final String joinGroup="/joinGroup.shtml";
 
-    public static final String  SERVER_IP = "http://192.168.13.70:8089/";
+    public static final String getGroupInfo="/getGroupInfo.shtml";
+
+    public static final String room_id="@conference.192.168.13.61";
+    public static final String PHOTO_SERVER_IP ="http://192.168.13.61:8080";
+    public static final String  SERVER_IP = "http://192.168.13.61:8089";
     // 登录保存字段
     public static final String SP_LOGIN_USER_PHONE_KEY = "sp_login_user_phone_key";
     public static final String SP_LOGIN_PASSWORD_KEY = "sp_login_password_key";

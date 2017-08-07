@@ -2,54 +2,47 @@ package com.r2.scau.moblieofficing.adapter;
 
 import android.animation.Animator;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
-import android.os.Handler;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.ActionMode;
-import android.view.ContextMenu;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.r2.scau.moblieofficing.activity.FriendActivity;
+import com.bumptech.glide.Glide;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
-import com.r2.scau.moblieofficing.activity.PersonalContactActivity;
-import com.r2.scau.moblieofficing.bean.MultiChatMessage;
+import com.r2.scau.moblieofficing.gson.GsonUser;
+import com.r2.scau.moblieofficing.gson.GsonUsers;
+import com.r2.scau.moblieofficing.retrofit.IFriendInfoByPhoneBiz;
 import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.sqk.emojirelease.EmojiUtil;
-
-import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import razerdp.basepopup.BasePopupWindow;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.getInfo;
 
 /**
  * Created by 张子健 on 2017/7/23 0023.
@@ -59,6 +52,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
     private List<ChatMessage> chatMessageList;
     private Context mContext;
     private int mPosition = 0;
+    private String userIcon;
 
     public ChatMessageAdapter(List<ChatMessage> chatMessageList, Context mContext) {
         this.chatMessageList = chatMessageList;
@@ -84,7 +78,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             rTextView = (TextView) view.findViewById(R.id.right_chat_msg);
             rIcon = (ImageView) view.findViewById(R.id.right_chat_icon);
             lUserName = (TextView) view.findViewById(R.id.left_chat_username);
-            rUserName = (TextView) view.findViewById(R.id.right_chat_username);
+//            rUserName = (TextView) view.findViewById(R.id.right_chat_username);
             timeText = (TextView) view.findViewById(R.id.chat_msg_time);
             recyclerView = (RecyclerView) view.findViewById(R.id.chat_recycler);
             rightLayout = (RelativeLayout) view.findViewById(R.id.right_chat_user_layout);
@@ -106,12 +100,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         if (chat_message_bean.isMeSend()) {
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
-            holder.rUserName.setText(chat_message_bean.getMeNickname());
+//            holder.rUserName.setText(chat_message_bean.getMeNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
 
 
             //设置头像
-            holder.rIcon.setImageResource(R.mipmap.ic_launcher_round);
+            ImageUtils.setUserImageIcon(mContext,holder.rIcon,chatMessageList.get(position).getMeNickname());
 
             try {
                 EmojiUtil.handlerEmojiText(holder.rTextView, chat_message_bean.getContent(), this.mContext);
@@ -127,7 +121,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
 
             //设置头像
-            holder.lIcon.setImageResource(R.mipmap.ic_launcher_round);
+            getFriendInfo(chatMessageList.get(position).getFriendUsername());
+            if(userIcon==null){
+                ImageUtils.setUserImageIcon(mContext,holder.lIcon,chatMessageList.get(position).getFriendNickname());
+            }else {
+                Glide.with(mContext).load(userIcon).into(holder.lIcon);
+            }
 
             try {
                 EmojiUtil.handlerEmojiText(holder.lTextView, chat_message_bean.getContent(), this.mContext);
@@ -288,6 +287,39 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
             }
         }
+    }
+
+    public void getFriendInfo(String Phone) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_IP+getInfo+"/")
+                .callFactory(OkHttpUntil.getInstance())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IFriendInfoByPhoneBiz iFriendInfoBiz=retrofit.create(IFriendInfoByPhoneBiz.class);
+        Call<GsonUsers> call = iFriendInfoBiz.getInfo(Phone);
+        call.enqueue(new Callback<GsonUsers>() {
+            @Override
+            public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
+                GsonUsers gsonUsers = response.body();
+
+                if (gsonUsers.getCode() == 200) {
+                    GsonUser user=gsonUsers.getUserInfo();
+                    if(user.getUserHeadPortrait()!=null){
+                        userIcon=user.getUserHeadPortrait().toString();
+                        Log.e("icon!=null",userIcon);
+                    }else {
+                        Log.e("icon==null","icon==null");
+                    }
+                    Log.e("getIcon", "success");
+                } else {
+                    Log.e("getIcon", gsonUsers.getMsg());
+                }
+            }
+            @Override
+            public void onFailure(Call<GsonUsers> call, Throwable t) {
+                Log.e("getIcon", "fail");
+            }
+        });
     }
 
 
