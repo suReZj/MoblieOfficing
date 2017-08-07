@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-    android:background="@color/colorBottomBar">
+    android:background="@color/transparent">
 
     <!-- 语音输入切换按钮 -->
     <CheckBox

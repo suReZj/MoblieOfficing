@@ -17,5 +17,4 @@ public interface IFriendBiz {
     Call<GsonFriends> getFriend(
             @Field("userPhone") String userPhone
     );
-
 }

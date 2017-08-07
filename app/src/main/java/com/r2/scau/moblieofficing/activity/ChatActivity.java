@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.r2.scau.moblieofficing.Contants;
 
@@ -24,9 +25,12 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.ChatMessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
+import com.r2.scau.moblieofficing.bean.MultiChatRoom;
 import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.SoftHideKeyBoardUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.sqk.emojirelease.Emoji;
@@ -60,7 +64,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     private Button sendBtn;//发送按钮
     private EditText editText;//文字输入框
     private RecyclerView recyclerView;//消息recycle
-    private SwipeRefreshLayout swipeRefreshLayout;//刷新layout
+    private RelativeLayout swipeRefreshLayout;//刷新layout
     private List<ChatMessage> chatMessageList = new ArrayList<>();//消息list
     private FaceFragment faceFragment;//表情fragment
     private SmackManager smack;
@@ -107,7 +111,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         sendBtn = (Button) findViewById(R.id.senMsg_button);
         editText = (EditText) findViewById(R.id.chat_editText);
         recyclerView = (RecyclerView) findViewById(R.id.chat_recycler);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.chat_swipelayout);
+        swipeRefreshLayout = (RelativeLayout) findViewById(R.id.chat_swipelayout);
         toolbar = (Toolbar) findViewById(R.id.chat_toolbar);
         titleText = (TextView) findViewById(R.id.chat_toolbar_title);
         msgRTextView = (TextView) findViewById(R.id.right_chat_msg);
@@ -137,7 +141,19 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     protected void initData() {
-
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+//                    RetrofitUntil.getUserInfo();
+//                    RetrofitUntil.getFriend();
+//                    RetrofitUntil.getGroupInfo();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     @Override
@@ -288,6 +304,11 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                 startActivity(intent);
                 break;
             case R.id.file_group:
+                break;
+            case R.id.info_group:
+                chatRecord = getIntent().getParcelableExtra("chatrecord");
+                String groupName=chatRecord.getmFriendUsername();
+                checkGroupId(groupName);
                 break;
         }
         return true;
@@ -468,6 +489,20 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                         }
                     }
                 });
+    }
+
+    public void checkGroupId(String groupName){
+        List<MultiChatRoom> list=DataSupport.findAll(MultiChatRoom.class);
+        for(int i=0;i<list.size();i++){
+            if(list.get(i).getRoomJid().equals(groupName)){
+                Intent intent=new Intent(this,GroupInfoActivity.class);
+                intent.putExtra("Id",list.get(i).getRoomId());
+                Log.e("check",list.get(i).getRoomId()+"");
+                startActivity(intent);
+                break;
+            }
+        }
+
     }
 
 }

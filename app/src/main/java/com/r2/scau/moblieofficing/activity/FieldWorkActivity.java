@@ -1,12 +1,18 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,26 +31,37 @@ import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.GridAdapter;
+import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.smack.SmackManager;
+import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.SoftHideKeyBoardUtil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.TimePickerDialog;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.litepal.crud.DataSupport;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.r2.scau.moblieofficing.untils.UserUntil.phone;
 
 /**
  * Created by EdwinCheng on 2017/8/5.
@@ -78,7 +95,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
 
     private LinearLayout travel_layout;
     private Button submitBtn;
-    private SuperTextView leavetype, startdate, starttime, enddate, endtime, duration , photo;
+    private SuperTextView leavetype, startdate, starttime, enddate, endtime, duration, photo;
     private EditText location_input, reason_input;
 
     private GridAdapter fieldworkAdapter;
@@ -94,10 +111,12 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
     private String startTimeString = null;
     private String endDateString = null;
     private String endTimeString = null;
-    private String omReasonString = null;
+    private String omReasonString = "";
     private String photoString = null;
 
-    private long officeManageId = -1 ;     //返回的事务id
+    private long officeManageId = -1;     //初始化 返回的事务id
+    private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 1;
+    private int addOmBossPos;
 
     @Override
     protected void initView() {
@@ -111,7 +130,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
         leavetype = (SuperTextView) findViewById(R.id.fieldwork_leavetype);
         startdate = (SuperTextView) findViewById(R.id.fieldwork_startdate);
         starttime = (SuperTextView) findViewById(R.id.fieldwork_starttime);
-        enddate = (SuperTextView) findViewById( R.id.fieldwork_enddate);
+        enddate = (SuperTextView) findViewById(R.id.fieldwork_enddate);
         endtime = (SuperTextView) findViewById(R.id.fieldwork_endtime);
         duration = (SuperTextView) findViewById(R.id.fieldwork_duration);
         photo = (SuperTextView) findViewById(R.id.fieldwork_photo);
@@ -126,13 +145,113 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case Contants.FIELDWORK.CREATEOM_SUCCESS:
-                        for (Contact contact : mContactList){
-                            setomBoss(contact.getPhone(),officeManageId);
+                        ToastUtils.show(FieldWorkActivity.this, "事务申请成功", Toast.LENGTH_SHORT);
+
+                        /** Create by edwincheng in 2017/08/07
+                         *  添加审批人 ？
+                         *  先把跟服务器同步添加的办法  与 发消息分离一下
+                         *  免得会出现网络时差的原因出现
+                         */
+                        if (mContactList != null && mContactList.size() > 0) {
+                            for (Contact contact : mContactList) {
+                                Log.e(TAG, "添加审批人：第 " + mContactList.indexOf(contact) + "个");
+                                // 添加到第几个审批人
+                                addOmBossPos = mContactList.indexOf(contact);
+                                setomBoss(contact.getPhone(), officeManageId);
+                            }
+                            //给审批人推送消息
+                            sendMessagToOmBoss();
                         }
+
+                        //如果有图片就上传图片 （officeManageId）
+                        File file = new File(photoString);
+                        if (photoString != null && file != null ){
+                            omUploadPhoto(file);
+                        }
+
+                        FieldWorkActivity.this.finish();
+
                         break;
+
+                    case Contants.FIELDWORK.CREATEOM_FAILURE:
+                        ToastUtils.show(FieldWorkActivity.this, "，申请失败,已存在的申请时间", Toast.LENGTH_SHORT);
+
+                    case Contants.FIELDWORK.OMADDBOSS_SUCCESS:
+                        Log.e(TAG, "添加审批人 成功 第几个？ ：" + addOmBossPos);
+                        break;
+
+
                 }
             }
         };
+    }
+
+    public void sendMessagToOmBoss() {
+        for (Contact c : mContactList){
+            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+
+            List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", phone).find(ChatRecord.class);
+            ChatRecord record;
+            if (chatRecords.size() == 0) {
+                record = new ChatRecord();
+                record.setUuid(UUID.randomUUID().toString());
+                record.setmFriendUsername(c.getPhone());
+                record.setmFriendNickname(c.getName());
+                record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+                record.setmMeNickname(UserUntil.gsonUser.getNickname());
+                record.setmChatTime(DateUtil.currentDatetime());
+                record.setmIsMulti(false);
+                record.setmChatJid(SmackManager.getInstance().getChatJid(c.getPhone()));
+                record.save();
+            } else {
+                record = chatRecords.get(0);
+            }
+            EventBus.getDefault().post(record);
+            intent.putExtra("chatrecord", record);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            startActivity(intent);
+
+        }
+    }
+
+    public void omUploadPhoto(File file){
+
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("fileName", file.getName())
+                    .addFormDataPart("userPhone", UserUntil.gsonUser.getUserPhone())
+                    .addFormDataPart("officeManageId", String.valueOf(officeManageId))
+                    .addFormDataPart("file",file.getName(), RequestBody.create(null,file));
+
+        RequestBody requestBody = builder.build();
+
+        Request request = new Request.Builder()
+                    .url(Contants.SERVER_IP + Contants.file_Server + Contants.OMUploadImage)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
+                    .post(requestBody)
+                    .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // TODO: 10-0-1  请求失败
+                Log.e(TAG, "请求创建事务  fail");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // TODO: 10-0-1 请求成功
+                message = handler.obtainMessage();
+                if (response.code() == 200) {
+                    message.what = Contants.FIELDWORK.OMUPLOADIMAGE_SUCCESS;
+
+                } else {
+                    Log.e(TAG, "事务添加图片 网络请求 错误  " + response.code() + "   " + response.message());
+                    message.what = Contants.FIELDWORK.OMUPLOADIMAGE_FAILURE;
+                }
+                handler.sendMessage(message);
+            }
+        });
+
     }
 
     @Override
@@ -141,14 +260,14 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             mContactList = new ArrayList<>();
         }
 
-            intent = new Intent();
-            bundle = getIntent().getExtras();
-            timePickerDialog = new TimePickerDialog(FieldWorkActivity.this);
+        intent = new Intent();
+        bundle = getIntent().getExtras();
+        timePickerDialog = new TimePickerDialog(FieldWorkActivity.this);
 
-            mToolBar.setTitle("");
-            initRV();
-            setSupportActionBar(mToolBar);
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        mToolBar.setTitle("");
+        initRV();
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         fieldworkType = bundle.getInt("fieldworkType");
@@ -156,7 +275,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             case Contants.FIELDWORK.OPEN_LEAVE:
                 omType = getResources().getString(R.string.leave);
 
-                titleTV.setText(getResources().getString(R.string.leave));
+                titleTV.setText(omType);
                 leavetype.setVisibility(View.VISIBLE);
                 travel_layout.setVisibility(View.GONE);
                 break;
@@ -164,24 +283,22 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             case Contants.FIELDWORK.OPEN_GO_OUT:
                 omType = getResources().getString(R.string.go_out);
 
-                titleTV.setText(getResources().getString(R.string.go_out));
+                titleTV.setText(omType);
                 break;
 
             case Contants.FIELDWORK.OPEN_TRAVEL:
                 omType = getResources().getString(R.string.business_trip);
 
-                titleTV.setText(getResources().getString(R.string.business_trip));
+                titleTV.setText(omType);
                 travel_layout.setVisibility(View.VISIBLE);
                 leavetype.setVisibility(View.GONE);
                 break;
 
             case Contants.FIELDWORK.OPEN_OVERTIME:
                 omType = getResources().getString(R.string.work_overtime);
-
-                titleTV.setText(getResources().getString(R.string.work_overtime));
+                titleTV.setText(omType);
                 break;
         }
-
     }
 
     @Override
@@ -231,7 +348,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             });
         }
 
-        startdate.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+        startdate.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onSuperTextViewClick() {
                 timePickerDialog.setTimetype(START_DATE);
@@ -247,7 +364,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             }
         });
 
-        enddate.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+        enddate.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onSuperTextViewClick() {
                 timePickerDialog.setTimetype(END_DATE);
@@ -263,14 +380,27 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             }
         });
 
-        photo.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+        photo.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener() {
             @Override
             public void onSuperTextViewClick() {
-                //访问图库
-                intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, Contants.RequestCode.OPEN_SYSTEM_ALBUM);
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        ContextCompat.checkSelfPermission(FieldWorkActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(FieldWorkActivity.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE);
+                } else {
+                    openSystemAlbumActivity();
+                }
             }
         });
+    }
+
+    public void openSystemAlbumActivity() {
+        //访问图库
+        intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, Contants.RequestCode.OPEN_SYSTEM_ALBUM);
     }
 
     @Override
@@ -278,33 +408,38 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
         switch (v.getId()) {
             //提交按钮
             case R.id.fieldwork_submitBtn:
-                if (okHttpClient == null){
+                if (okHttpClient == null) {
                     okHttpClient = new OkHttpClient();
                 }
-                if (fieldworkType == Contants.FIELDWORK.OPEN_LEAVE){
+                if (fieldworkType == Contants.FIELDWORK.OPEN_LEAVE) {
 
-                }else if (fieldworkType == Contants.FIELDWORK.OPEN_GO_OUT){
+                } else if (fieldworkType == Contants.FIELDWORK.OPEN_GO_OUT) {
 
-                }else if (fieldworkType == Contants.FIELDWORK.OPEN_TRAVEL){
+                } else if (fieldworkType == Contants.FIELDWORK.OPEN_TRAVEL) {
                     //当选择为出差时候，小类型写入出差地点
                     omSubType = location_input.getText().toString();
-                }else if (fieldworkType == Contants.FIELDWORK.OPEN_OVERTIME){
+                } else if (fieldworkType == Contants.FIELDWORK.OPEN_OVERTIME) {
 
                 }
 
                 omReasonString = reason_input.getText().toString();
-                if (omType ==null || startDateString == null || startTimeString == null || endDateString == null
-                        ||endTimeString == null){
-                    ToastUtils.show(FieldWorkActivity.this,"至少一项为空",Toast.LENGTH_SHORT);
-                }else{
+                if (omSubType == null) {
+                    omSubType = "";
+                }
+                if (omType == null || startDateString == null || startTimeString == null || endDateString == null
+                        || endTimeString == null) {
+                    ToastUtils.show(FieldWorkActivity.this, "至少一项为空", Toast.LENGTH_SHORT);
+                } else {
+                    Log.e(TAG, "提交按钮  请求网络");
                     FormBody formBody = new FormBody.Builder()
                             .add("userPhone", UserUntil.gsonUser.getUserPhone())
-                            .add("omType",omType)
-                            .add("omSubType",omSubType)
-                            .add("omStartTime",startDateString + " " + startTimeString + ":00")
-                            .add("omEndTime",endDateString + " " + endTimeString +":00")
-                            .add("omReason",omReasonString)
+                            .add("omType", omType)
+                            .add("omSubType", omSubType)
+                            .add("omStartTime", startDateString + " " + startTimeString + ":00")
+                            .add("omEndTime", endDateString + " " + endTimeString + ":00")
+                            .add("omReason", omReasonString)
                             .build();
+
                     Request request = new Request.Builder().url(Contants.SERVER_IP + Contants.OfficeManage + Contants.createOfficeThing)
                             .addHeader("cookie", OkHttpUntil.loginSessionID)
                             .post(formBody)
@@ -321,25 +456,23 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                         public void onResponse(Call call, Response response) throws IOException {
                             // TODO: 10-0-1 请求成功
                             message = handler.obtainMessage();
-                            if (response.code() == 200){
+                            if (response.code() == 200) {
                                 JSONObject jsonObj = null;
                                 try {
                                     jsonObj = new JSONObject(response.body().string());
                                     officeManageId = jsonObj.getLong("officeManageId");
-
+                                    Log.e(TAG, "申请成功 officeManageId    " + officeManageId);
                                     message.what = Contants.FIELDWORK.CREATEOM_SUCCESS;
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                            }else{
-                                Log.e(TAG, "网络请求 错误  "+ response.code() + "   " + response.message() );
+                            } else {
+                                Log.e(TAG, "网络请求 错误  " + response.code() + "   " + response.message());
                                 message.what = Contants.FIELDWORK.CREATEOM_FAILURE;
                             }
                             handler.sendMessage(message);
                         }
                     });
-
                 }
                 break;
         }
@@ -348,32 +481,56 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (resultCode) {
-            case Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT:
-                Log.e("onActivityResult", "getMember");
-                mContactList = data.getParcelableArrayListExtra("member");
-                fieldworkAdapter.addAll(mContactList);
+        switch (requestCode) {
+            case Contants.START_ACTIVIRY_SELECT_MEMBER_FOR_RESULT:
+                if (resultCode == Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT) {
+                    Log.e("onActivityResult", "getMember");
+                    mContactList = data.getParcelableArrayListExtra("member");
+                    for (Contact c : mContactList) {
+                        Log.e(TAG, "onActivityResult: fdsfafa   " + c.getName());
+                    }
+                    fieldworkAdapter.addAll(mContactList);
+                }
                 break;
 
             case Contants.RequestCode.OPEN_SYSTEM_ALBUM:
-                Log.e(TAG, "调取系统相册"+ data.toString());
+                if (resultCode == RESULT_OK) {
 
-                Uri selectImageUri = intent.getData();
-                String[] filePathColumn = {MediaStore.Images.Media.DATA};
-                Cursor cursor = getContentResolver().query(selectImageUri, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                //获得路径
-                photoString = cursor.getString(columnIndex);
-                cursor.close();
+                    Log.e(TAG, "调取系统相册" + data.toString());
 
+                    Uri selectImageUri = intent.getData();
+                    String[] filePathColumn = {MediaStore.Images.Media.DATA};
+                    Cursor cursor = getContentResolver().query(selectImageUri, filePathColumn, null, null, null);
+                    cursor.moveToFirst();
+                    int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                    //获得路径
+                    photoString = cursor.getString(columnIndex);
+                    cursor.close();
 
-                Log.e(TAG, "选取图片的路径" + photoString);
+                    Log.e(TAG, "选取图片的路径" + photoString);
+                } else if (resultCode == RESULT_CANCELED) {
+                    ToastUtils.show(FieldWorkActivity.this, "用户取消选择图片", Toast.LENGTH_SHORT);
+                }
                 break;
 
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.e("permission", "accept");
+                openSystemAlbumActivity();
+            } else {
+                // Permission Denied
+                Toast.makeText(FieldWorkActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     //时间选择器 ----------点击确定
@@ -393,7 +550,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                 enddate.setRightString(endDateString);
             }
 
-        } else if (timetype == START_TIME || timetype == END_TIME){
+        } else if (timetype == START_TIME || timetype == END_TIME) {
             int mHour = timePickerDialog.getHour();
             int mMinute = timePickerDialog.getMinute();
 
@@ -411,7 +568,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
     //时间选择器 ----------点击取消
     @Override
     public void negativeListener() {
-        ToastUtils.show(FieldWorkActivity.this,"用户取消", Toast.LENGTH_SHORT);
+        Log.e(TAG, "用户取消选择日期");
     }
 
     //创建contextmenu
@@ -419,14 +576,14 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId() == R.id.fieldwork_leavetype) {
-            menu.add(Menu.NONE,THING_LEAVE,Menu.NONE,getResources().getString(R.string.thing_leave));
-            menu.add(Menu.NONE,YEAR_LEAVE,Menu.NONE,getResources().getString(R.string.year_leave));
-            menu.add(Menu.NONE,CHANGE_REST,Menu.NONE,getResources().getString(R.string.change_rest));
-            menu.add(Menu.NONE,SICK_LEAVE,Menu.NONE,getResources().getString(R.string.sick_leave));
-            menu.add(Menu.NONE,MARRIAGE_LEAVE,Menu.NONE,getResources().getString(R.string.marriage_leave));
-            menu.add(Menu.NONE,MATERNITY_LEAVE,Menu.NONE,getResources().getString(R.string.maternity_leave));
-            menu.add(Menu.NONE,OFFICIAL_LEAVE,Menu.NONE,getResources().getString(R.string.official_leave));
-            menu.add(Menu.NONE,FUNERAL_LEAVE,Menu.NONE,getResources().getString(R.string.funeral_leave));
+            menu.add(Menu.NONE, THING_LEAVE, Menu.NONE, getResources().getString(R.string.thing_leave));
+            menu.add(Menu.NONE, YEAR_LEAVE, Menu.NONE, getResources().getString(R.string.year_leave));
+            menu.add(Menu.NONE, CHANGE_REST, Menu.NONE, getResources().getString(R.string.change_rest));
+            menu.add(Menu.NONE, SICK_LEAVE, Menu.NONE, getResources().getString(R.string.sick_leave));
+            menu.add(Menu.NONE, MARRIAGE_LEAVE, Menu.NONE, getResources().getString(R.string.marriage_leave));
+            menu.add(Menu.NONE, MATERNITY_LEAVE, Menu.NONE, getResources().getString(R.string.maternity_leave));
+            menu.add(Menu.NONE, OFFICIAL_LEAVE, Menu.NONE, getResources().getString(R.string.official_leave));
+            menu.add(Menu.NONE, FUNERAL_LEAVE, Menu.NONE, getResources().getString(R.string.funeral_leave));
         }
 
     }
@@ -455,7 +612,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                 leavetype.setRightString(omSubType);
                 break;
             case MATERNITY_LEAVE:
-                omSubType= getResources().getString(R.string.maternity_leave);
+                omSubType = getResources().getString(R.string.maternity_leave);
                 leavetype.setRightString(omSubType);
                 break;
             case OFFICIAL_LEAVE:
@@ -471,14 +628,14 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
         return true;
     }
 
-    public void setomBoss(final String omBossPhone, final long officeManageId){
+    public void setomBoss(final String omBossPhone, final long officeManageId) {
         FormBody formBody = new FormBody.Builder()
                 .add("userPhone", UserUntil.gsonUser.getUserPhone())
-                .add("approvalUserPhone",omBossPhone)
-                .add("uomType","a")
+                .add("approvalUserPhone", omBossPhone)
+                .add("uomType", "a")
                 .add("officeManageId", String.valueOf(officeManageId))
                 .build();
-        Request request = new Request.Builder().url(Contants.SERVER_IP + Contants.OfficeManage + Contants.createOfficeThing)
+        Request request = new Request.Builder().url(Contants.SERVER_IP + Contants.OfficeManage + Contants.OMaddOmBoss)
                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .post(formBody)
                 .build();
@@ -494,11 +651,11 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
             public void onResponse(Call call, Response response) throws IOException {
                 // TODO: 10-0-1 请求成功
                 message = handler.obtainMessage();
-                if (response.code() == 200){
-                    Log.e(TAG, "omaddbossid:" + omBossPhone + "state:" + response.body().string() );
+                if (response.code() == 200) {
+                    Log.e(TAG, "omaddbossid:" + omBossPhone + "state:" + response.body().string());
                     message.what = Contants.FIELDWORK.OMADDBOSS_SUCCESS;
-                }else{
-                    Log.e(TAG, "网络请求 错误  "+ response.code() + "   " + response.message() );
+                } else {
+                    Log.e(TAG, "网络请求 错误  " + response.code() + "   " + response.message());
                     message.what = Contants.FIELDWORK.OMADDBOSS_FAILURE;
                 }
                 handler.sendMessage(message);

@@ -18,6 +18,7 @@ import com.r2.scau.moblieofficing.adapter.FMUploadSelectFileAdapter;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,6 +53,10 @@ public class UploadSelectFileActivity extends BaseActivity{
     private String rootpath;
     private Stack<String> currentPath;
 
+    private String intentType;
+    private long groupId;
+    private String groupName;
+
     private Toolbar mtoolbar;
     private TextView titltTV;
 
@@ -59,6 +64,7 @@ public class UploadSelectFileActivity extends BaseActivity{
     private Bundle bundle;
     private Handler handler;
     private Message message;
+
 
     @Override
     protected void initView() {
@@ -76,8 +82,6 @@ public class UploadSelectFileActivity extends BaseActivity{
                         UploadSelectFileActivity.this.finish();
 
                         break;
-
-
                 }
             }
         };
@@ -93,9 +97,16 @@ public class UploadSelectFileActivity extends BaseActivity{
             linearLayoutManager = new LinearLayoutManager(UploadSelectFileActivity.this);
         }
         bundle = getIntent().getExtras();
-        remotePath = bundle.getString("remotePath");
-        if (remotePath.equals("")){
-            remotePath = "/";
+        intentType = bundle.getString("intentType");
+
+        if (intentType.equals("personalfile")) {
+            remotePath = bundle.getString("remotePath");
+            if (remotePath.equals("")){
+                remotePath = "/";
+            }
+        } else if (intentType.equals("shared")) {
+            groupId = bundle.getLong("groupId");
+            groupName = bundle.getString("groupName");
         }
 
         /**
@@ -137,12 +148,9 @@ public class UploadSelectFileActivity extends BaseActivity{
                      * 获得目录中的内容，计入列表中
                      * 适配器通知数据集改变
                      */
-                    ToastUtils.show(UploadSelectFileActivity.this, "点击是文件夹路径:" + uploadFilelist.get(position).getAbsolutePath(), Toast.LENGTH_SHORT);
                     currentPath.push("/" + uploadFilelist.get(position).getName());
                     showChange(getPathString());
                 }else if (uploadFilelist.get(position).isFile()){
-                    ToastUtils.show(UploadSelectFileActivity.this, "点击的文件绝对路径：" + uploadFilelist.get(position).getAbsolutePath(), Toast.LENGTH_SHORT);
-
                     //网络post操作上传文件
                     doUpload(uploadFilelist.get(position));
 
@@ -153,7 +161,7 @@ public class UploadSelectFileActivity extends BaseActivity{
 
             @Override
             public void onItemLongClick(View view, int position) {
-                ToastUtils.show(UploadSelectFileActivity.this, "长点击position:" + position, Toast.LENGTH_SHORT);
+                Log.e(TAG,  "长点击position:" + position );
             }
         });
     }
@@ -162,20 +170,40 @@ public class UploadSelectFileActivity extends BaseActivity{
     public void doUpload(File uploadFile){
         Log.e(TAG, "doUpload:  文件上传"  );
 
-        MultipartBody.Builder builder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("path",remotePath)
-                .addFormDataPart("fileName",uploadFile.getName())
-                .addFormDataPart("userPhone","123456789010")
-                .addFormDataPart("file",uploadFile.getName(), RequestBody.create(null,uploadFile));
+        MultipartBody.Builder builder;
+        RequestBody requestBody;
+        Request request = null;
+        if (intentType.equals("personalfile")) {
+            builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("path",remotePath)
+                    .addFormDataPart("fileName",uploadFile.getName())
+                    .addFormDataPart("userPhone", UserUntil.gsonUser.getUserPhone())
+                    .addFormDataPart("file",uploadFile.getName(), RequestBody.create(null,uploadFile));
 
-        RequestBody requestBody = builder.build();
+            requestBody = builder.build();
 
-        Request request = new Request.Builder()
-                .url(Contants.SERVER_IP + Contants.file_Server + Contants.fileUpload)
-                .addHeader("cookie", OkHttpUntil.loginSessionID)
-                .post(requestBody)
-                .build();
+            request = new Request.Builder()
+                    .url(Contants.SERVER_IP + Contants.file_Server + Contants.fileUpload)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
+                    .post(requestBody)
+                    .build();
+
+        } else if (intentType.equals("shared")) {
+            builder = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("fileName",uploadFile.getName())
+                    .addFormDataPart("groupId",String.valueOf(groupId))
+                    .addFormDataPart("file",uploadFile.getName(), RequestBody.create(null,uploadFile));
+
+            requestBody = builder.build();
+
+            request = new Request.Builder()
+                    .url(Contants.SERVER_IP + Contants.file_Server + Contants.uploadGroupFile)
+                    .addHeader("cookie", OkHttpUntil.loginSessionID)
+                    .post(requestBody)
+                    .build();
+        }
 
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override

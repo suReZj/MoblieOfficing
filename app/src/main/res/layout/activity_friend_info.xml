@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/toolbar" />
+    <include layout="@layout/toolbar_info" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,10 +13,9 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friend_icon_circle"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/icon"
             app:civ_border_color="@color/colorWhite"
             app:civ_border_width="2dp"
             />
@@ -25,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/friend_icon_circle"
             android:layout_centerHorizontal="true"
-            android:paddingTop="40dp"
+            android:paddingTop="30dp"
             android:text=""
             android:textSize="18sp"
             android:id="@+id/user_nickname"/>
@@ -62,6 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="聊天"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
                     android:textColor="@color/colorLightBlue" />
             </LinearLayout>
         </RelativeLayout>
@@ -71,7 +72,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/phone_layout"
+            android:id="@+id/add_layout"
             android:clickable="true"
             android:focusable="true">
             <LinearLayout
@@ -84,12 +85,14 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/phone" />
+                android:background="@drawable/add" />
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="电话"
+                    android:text="添加"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
                     android:textColor="@color/colorLightBlue" />
             </LinearLayout>
         </RelativeLayout>
@@ -117,16 +120,50 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
                     android:text="视频"
+                    android:textColor="@color/colorLightBlue" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id="@+id/qr_code_layout"
+            android:clickable="true"
+            android:focusable="true"
+            >
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/qrcode"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="二维码"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
                     android:textColor="@color/colorLightBlue" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 
     <com.allen.library.SuperTextView
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginTop="10dp"
         app:sBackgroundColor="@color/color_bg_gray"
         app:sLeftBottomTextString2="账户信息">
     </com.allen.library.SuperTextView>

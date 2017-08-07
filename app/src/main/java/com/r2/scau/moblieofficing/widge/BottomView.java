@@ -62,7 +62,7 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
         rename = (Button) mMenuView.findViewById(R.id.popwindow_rename);
         shareto = (Button) mMenuView.findViewById(R.id.popwindow_shareto);
         cancel = (Button) mMenuView.findViewById(R.id.popwindow_cancel);
-        if(fileSelectType.equals("sharedfile")){
+        if(fileSelectType.equals("shared")){
             move.setVisibility(View.GONE);
             rename.setVisibility(View.GONE);
             shareto.setVisibility(View.GONE);

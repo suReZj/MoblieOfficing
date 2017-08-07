@@ -2,7 +2,6 @@ package com.r2.scau.moblieofficing.fragement;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -28,15 +27,14 @@ import android.widget.Toast;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
-import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.activity.EditGroupActivity;
+import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
+import com.r2.scau.moblieofficing.activity.GroupInfoActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
-import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
@@ -44,15 +42,14 @@ import com.xys.libzxing.zxing.activity.CaptureActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
@@ -100,10 +97,10 @@ public class MessageFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
-                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
+                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
                             != PackageManager.PERMISSION_GRANTED){
                         ActivityCompat.requestPermissions(getActivity() ,
-                                new String[]{Manifest.permission.READ_CONTACTS},
+                                new String[]{Manifest.permission.CAMERA},
                                 MY_PERMISSIONS_REQUEST_CAMERA);
                     }else {
                         openQRCodeActivity();
@@ -153,9 +150,11 @@ public class MessageFragment extends Fragment {
     public void onChatRecordEvent(ChatRecord event) {
         //向其他人发起聊天时接收到的事件
         if (isRemoving() || message_adapter == null) {
+            Log.e("向其他人发起聊天时接收到的事件","向其他人发起聊天时接收到的事件");
             return;
         }
         if (message_adapter.getMessageList().indexOf(event) > -1) {
+            Log.e("已经存在此人的聊天窗口记录","已经存在此人的聊天窗口记录");
             return;//已经存在此人的聊天窗口记录
         }
         addChatRecord(event);
@@ -290,8 +289,8 @@ public class MessageFragment extends Fragment {
 
 
     public void openQRCodeActivity(){
-        Intent intent = new Intent(getActivity(),CaptureActivity.class);
-        getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, Contants.RequestCode.QRSCAN);
     }
 
     @Override
@@ -300,26 +299,16 @@ public class MessageFragment extends Fragment {
         inflater.inflate(R.menu.toolbar_message_menu, menu);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.scan) {
-        }
-
-
-        return true;
-    }
-
-
     public void refreshData() {
         //我的用户名
         String whereClause = UserUntil.gsonUser.getUserPhone();
-//        String whereClause = "sure1";
-        msgList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
-                .where("settopflag=?", "1")
+        Log.e("whereClausewhereClause",whereClause);
+        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"1")
+//                .where("settopflag=?", "1")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
-        newList = new ArrayList<>(DataSupport.where("mmeusername=?", whereClause)
-                .where("settopflag=?", "0")
+        newList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"0")
+//                .where("settopflag=?", "0")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         msgList.addAll(newList);
@@ -327,67 +316,9 @@ public class MessageFragment extends Fragment {
         recyclerView.setAdapter(message_adapter);
     }
 
-
-    public void startMultiChat(Context context, MultiUserChat multiUserChat) {
-        ChatRecord record;
-        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", multiUserChat.getRoom()).find(ChatRecord.class);
-        if (chatRecords.size() == 0) {
-            record = new ChatRecord();
-            String friendUserName = multiUserChat.getRoom();
-            int idx = friendUserName.indexOf("@conference.");
-            String friendNickName = friendUserName.substring(0, idx);
-            record.setUuid(UUID.randomUUID().toString());
-            record.setmFriendUsername(friendUserName);
-            record.setmFriendNickname(friendNickName);
-            record.setmMeUsername("sure3");
-            record.setmMeNickname("张大爷");
-            record.setmChatTime(DateUtil.currentDatetime());
-            record.setmIsMulti(true);
-            record.save();
-        } else {
-            record = chatRecords.get(0);
-        }
-        EventBus.getDefault().post(record);
-        Intent intent = new Intent(context, ChatActivity.class);
-        intent.putExtra("chatrecord", record);
-        startActivity(intent);
-    }
-
-    //单人聊天离线消息接受
-    public void getUnReanMsg() {
-
-    }
-
-
-    //检查离线期间加入的群聊
-    public void checkMultiInvite() {
-        String roomName = "dasdsadsadsa@conference.192.168.13.57";
-        ChatRecord record;
-        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
-        if (chatRecords.size() == 0) {
-            record = new ChatRecord();
-            String friendUserName = roomName;
-            int idx = friendUserName.indexOf("@conference.");
-            String friendNickName = friendUserName.substring(0, idx);
-            record.setUuid(UUID.randomUUID().toString());
-            record.setmFriendUsername(friendUserName);
-            record.setmFriendNickname(friendNickName);
-            record.setmMeUsername("sure3");
-            record.setmMeNickname("sure3");
-            record.setmChatTime(DateUtil.currentDatetime());
-            record.setmIsMulti(true);
-            record.save();
-            MultiUserChat multiChatRoom = SmackManager.getInstance().getMultiChat(roomName);
-            SmackListenerManager.addMultiChatMessageListener(multiChatRoom);
-            SmackManager.getInstance().joinChatRoom("dasdsadsadsa@conference.192.168.13.57", "sure3", null);
-        } else {
-            record = chatRecords.get(0);
-        }
-        EventBus.getDefault().post(record);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case Contants.RequestCode.QRSCAN:
                 if (resultCode == RESULT_OK){
@@ -398,9 +329,35 @@ public class MessageFragment extends Fragment {
                      * 自己解析resultdata中的字段 然后在做相应操作
                      */
                     String resultdata = data.getStringExtra("result");
-                    ToastUtils.show(getActivity(),resultdata, Toast.LENGTH_SHORT);
                     Log.e("二维码扫描结果", resultdata);
-                }else {
+                    String[] resultarr = resultdata.split(":");
+
+                    if (resultarr.length == 2){
+                        if (resultarr[0].equals("user")){
+                            //打开个人信息页面的activity
+
+                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(getActivity(), FriendsInfoActivity.class);
+                            bundle.putString("phone", resultarr[1]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+
+                        }else if (resultarr[0].equals("groupId")){
+//                            打开 查看群信息 的Actiity
+                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(getActivity(), GroupInfoActivity.class);
+                            bundle.putString("Id", resultarr[1]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else {
+                            ToastUtils.show(getActivity(),"未知二维码信息",Toast.LENGTH_SHORT);
+                        }
+                    }else{
+                        ToastUtils.show(getActivity(),"未知的二维码信息",Toast.LENGTH_SHORT);
+                    }
+
+
+                }else if (resultCode == RESULT_CANCELED){
                     Log.e("二维码扫描结果", "用户选择取消" );
                 }
                 break;
