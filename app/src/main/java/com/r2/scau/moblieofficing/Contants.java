@@ -110,6 +110,8 @@ public class Contants {
 
         public static final int OPEN_SYSTEM_ALBUM = 805;
 
+        public static final int MOVE = 806;
+
     }
 
     public static class FIELDWORK{

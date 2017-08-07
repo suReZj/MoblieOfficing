@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <include android:id="@+id/filemove_fileselect_toolbar"
+             layout="@layout/toolbar"/>
+
+    <LinearLayout
+        android:id="@+id/filemove_fileselect_bottomlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/filemove_fileselect_newfolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/newfolder"
+            android:layout_weight="1"
+            android:background="@drawable/basebutton_pressed"/>
+
+        <Button
+            android:id="@+id/filemove_fileselect_comfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/move_to_dir"
+            android:background="@drawable/basebutton_pressed"/>
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/filemove_fileselect_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/filemove_fileselect_toolbar"
+        android:layout_above="@id/filemove_fileselect_bottomlayout"
+        >
+        
+    </android.support.v7.widget.RecyclerView>
+</RelativeLayout>
