@@ -66,7 +66,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         TextView lTextView;
         ImageView lIcon;
         TextView lUserName;
-        TextView rUserName;
         TextView timeText;
         RecyclerView recyclerView;
         RelativeLayout rightLayout;
@@ -101,12 +100,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         if (chat_message_bean.isMeSend()) {
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
-//            holder.rUserName.setText(chat_message_bean.getMeNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
 
-
             //设置头像
-            ImageUtils.setUserImageIcon(mContext,holder.rIcon,chatMessageList.get(position).getMeNickname());
+            ImageUtils.setUserImageIcon(mContext, holder.rIcon, chatMessageList.get(position).getMeNickname());
 
             try {
                 EmojiUtil.handlerEmojiText(holder.rTextView, chat_message_bean.getContent(), this.mContext);
@@ -117,17 +114,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
             holder.lUserName.setText(chat_message_bean.getFriendNickname());
-//            Log.e("nickname",chat_message_bean.getFriendNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
-
-
             //设置头像
-            getFriendInfo(chatMessageList.get(position).getFriendUsername());
-            if(userIcon==null){
-                ImageUtils.setUserImageIcon(mContext,holder.lIcon,chatMessageList.get(position).getFriendNickname());
-            }else {
-                Glide.with(mContext).load(PHOTO_SERVER_IP+userIcon).into(holder.lIcon);
+
+            if (chatMessageList.get(position).getIconPath()==null) {
+                ImageUtils.setUserImageIcon(mContext, holder.lIcon, chatMessageList.get(position).getFriendNickname());
+            } else {
+                Glide.with(mContext).load(PHOTO_SERVER_IP + chatMessageList.get(position).getIconPath()).into(holder.lIcon);
             }
+
 
             try {
                 EmojiUtil.handlerEmojiText(holder.lTextView, chat_message_bean.getContent(), this.mContext);
@@ -159,38 +154,38 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.lIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone=null;
-                if (chatMessageList.get(position).isMeSend()){
-                    phone= UserUntil.gsonUser.getUserPhone();
-                }else {
-                    if(chatMessageList.get(position).isMulti()){
-                        phone=chatMessageList.get(position).getMultiUserName();
-                    }else {
-                        phone=chatMessageList.get(position).getFriendUsername();
+                String phone = null;
+                if (chatMessageList.get(position).isMeSend()) {
+                    phone = UserUntil.gsonUser.getUserPhone();
+                } else {
+                    if (chatMessageList.get(position).isMulti()) {
+                        phone = chatMessageList.get(position).getMultiUserName();
+                    } else {
+                        phone = chatMessageList.get(position).getFriendUsername();
                     }
                 }
-                Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                Intent intent = new Intent(mContext, FriendsInfoActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("phone",phone);
+                intent.putExtra("phone", phone);
                 mContext.startActivity(intent);
             }
         });
         holder.rIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone=null;
-                if (chatMessageList.get(position).isMeSend()){
-                    phone= UserUntil.gsonUser.getUserPhone();
-                }else {
-                    if(chatMessageList.get(position).isMulti()){
-                        phone=chatMessageList.get(position).getMultiUserName();
-                    }else {
-                        phone=chatMessageList.get(position).getFriendUsername();
+                String phone = null;
+                if (chatMessageList.get(position).isMeSend()) {
+                    phone = UserUntil.gsonUser.getUserPhone();
+                } else {
+                    if (chatMessageList.get(position).isMulti()) {
+                        phone = chatMessageList.get(position).getMultiUserName();
+                    } else {
+                        phone = chatMessageList.get(position).getFriendUsername();
                     }
                 }
-                Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                Intent intent = new Intent(mContext, FriendsInfoActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("phone",phone);
+                intent.putExtra("phone", phone);
                 mContext.startActivity(intent);
             }
         });
@@ -198,9 +193,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     @Override
     public int getItemCount() {
-
         return chatMessageList == null ? 0 : chatMessageList.size();
-
     }
 
     public void add(ChatMessage item) {
@@ -245,8 +238,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         public void showPopupWindow(View v) {
 //            setOffsetX((getWidth() - v.getWidth()));
 //            setOffsetY(-4 * v.getHeight());
-            setOffsetX(v.getWidth()/2);
-            setOffsetY(-2*v.getHeight());
+            setOffsetX(v.getWidth() / 2);
+            setOffsetY(-2 * v.getHeight());
             super.showPopupWindow(v);
         }
 
@@ -283,39 +276,4 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             }
         }
     }
-
-    public void getFriendInfo(String Phone) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_IP+getInfo+"/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        IFriendInfoByPhoneBiz iFriendInfoBiz=retrofit.create(IFriendInfoByPhoneBiz.class);
-        Call<GsonUsers> call = iFriendInfoBiz.getInfo(Phone);
-        call.enqueue(new Callback<GsonUsers>() {
-            @Override
-            public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
-                GsonUsers gsonUsers = response.body();
-
-                if (gsonUsers.getCode() == 200) {
-                    GsonUser user=gsonUsers.getUserInfo();
-                    if(user.getUserHeadPortrait()!=null){
-                        userIcon=user.getUserHeadPortrait().toString();
-                        Log.e("icon!=null",userIcon);
-                    }else {
-                        Log.e("icon==null","icon==null");
-                    }
-                    Log.e("getIcon", "success");
-                } else {
-                    Log.e("getIcon", gsonUsers.getMsg());
-                }
-            }
-            @Override
-            public void onFailure(Call<GsonUsers> call, Throwable t) {
-                Log.e("getIcon", "fail");
-            }
-        });
-    }
-
-
 }

@@ -125,7 +125,7 @@ public class MessageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshData();
+//        refreshData();
     }
 
     @Override
@@ -173,6 +173,7 @@ public class MessageFragment extends Fragment {
             message.getChatMessage().save();
             chatRecord = new ChatRecord(message.getChatMessage());
             chatRecord.setSetTopFlag(false);
+            chatRecord.setmFriendAvatar(message.getChatMessage().getIconPath());
             addChatRecord(chatRecord);
         } else {
             Log.d("chatRecord2", "chatRecord2");
@@ -195,6 +196,7 @@ public class MessageFragment extends Fragment {
             }
 //            message_adapter.update(chatRecord);
             if (!message.getChatMessage().isMulti()) {
+                chatRecord.setmFriendAvatar(message.getChatMessage().getIconPath());
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
             } else {
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
