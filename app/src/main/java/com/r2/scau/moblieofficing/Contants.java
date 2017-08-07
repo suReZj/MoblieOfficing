@@ -47,6 +47,7 @@ public class Contants {
     public static final String creat_multi_chat="creat";
     public static final String multi_invite_room_name="room";
 
+    public static final int REFLASH_NOTICE = 12;
     public static final int LOGIN_IN_GET_DATA = 13;
     public static final int SIGN_UP_GET_DATA = 14;
     public static final int OPEN_DAY_REPORTY = 15;

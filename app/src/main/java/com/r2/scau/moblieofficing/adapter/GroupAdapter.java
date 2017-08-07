@@ -1,6 +1,7 @@
 package com.r2.scau.moblieofficing.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 
 import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.SendNoticeActivity;
 import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 
@@ -21,12 +23,14 @@ import java.util.List;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHolder> {
 
+    private int type;
     private Context context;
     private List<GsonGroup> groupList;
 
-    public GroupAdapter(Context context, List<GsonGroup> groupList) {
+    public GroupAdapter(Context context, List<GsonGroup> groupList, int type) {
         this.context = context;
         this.groupList = groupList;
+        this.type = type;
     }
 
     @Override
@@ -38,9 +42,18 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
 }
 
     @Override
-    public void onBindViewHolder(GroupViewHolder holder, int position) {
-        holder.groupST.setLeftString(groupList.get(position).getGname());
-        holder.icon.setImageDrawable(ImageUtils.getIcon(groupList.get(position).getGname(), 32));
+    public void onBindViewHolder(GroupViewHolder holder, final int position) {
+        final GsonGroup group = groupList.get(position);
+        holder.groupST.setLeftString(group.getGname());
+        holder.icon.setImageDrawable(ImageUtils.getIcon(group.getGname(), 32));
+        if (type == 0){
+            holder.groupST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
+                @Override
+                public void onSuperTextViewClick() {
+                    openSendNoticeActivity(groupList.get(position).getGid());
+                }
+            });
+        }
     }
 
     @Override
@@ -56,6 +69,12 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
             groupST = (SuperTextView) view.findViewById(R.id.st_group);
             icon = (ImageView) view.findViewById(R.id.circle_image);
         }
+    }
+
+    public void openSendNoticeActivity(int id){
+        Intent intent = new Intent(context, SendNoticeActivity.class);
+        intent.putExtra("groupId", id);
+        context.startActivity(intent);
     }
 
     public void add(GsonGroup object){

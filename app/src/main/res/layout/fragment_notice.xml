@@ -9,61 +9,10 @@
 
     <include layout="@layout/toolbar" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tabLayout_notice"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_unread_notice"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:tabIndicatorColor="@color/white"
-        app:tabSelectedTextColor="@color/white"/>
-
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vp_notice"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
-
-<!--
-<LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal">
-
-      <TextView
-          android:id="@+id/tv_notice_unread"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:padding="10dp"
-          android:gravity="center_horizontal|center_vertical"
-          android:textColor="@drawable/notice_read_status"
-          android:textSize="18sp"
-          android:text="@string/unread"
-      />
-
-      <View
-          android:layout_width="1px"
-          android:layout_height="match_parent"
-          android:background="@color/colorGray"
-          />
-
-      <TextView
-          android:id="@+id/tv_notice_read"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:padding="10dp"
-          android:gravity="center_horizontal|center_vertical"
-          android:textColor="@drawable/notice_read_status"
-          android:textSize="18sp"
-          android:text="@string/read"
-          />
-
-  </LinearLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorGray"
-        />
--->
