@@ -15,6 +15,11 @@
                     app:showAsAction="ifRoom"
                     />
                 <item
+                    android:id="@+id/info_group"
+                    android:icon="@drawable/group"
+                    android:title="查看群信息"
+                    app:showAsAction="ifRoom"/>
+                <item
                     android:id="@+id/notice_group"
                     android:icon="@drawable/notice"
                     android:title="发布群公告"

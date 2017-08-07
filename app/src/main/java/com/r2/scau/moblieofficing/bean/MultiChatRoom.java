@@ -12,6 +12,15 @@ public class MultiChatRoom extends DataSupport{
 
 
     private String mRoomJid;
+    private Integer roomId;
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
+    }
 
     public MultiChatRoom() {
 

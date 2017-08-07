@@ -13,7 +13,7 @@
         <include layout="@layout/toolbar_chat_title"/>
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <RelativeLayout
         android:id="@+id/chat_swipelayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:longClickable="true"/>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
 
     <!--<android.support.v7.widget.CardView-->
     <!--android:layout_width="wrap_content"-->

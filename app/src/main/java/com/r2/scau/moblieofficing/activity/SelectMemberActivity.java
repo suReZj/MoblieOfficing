@@ -1,6 +1,8 @@
 package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +25,7 @@ import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -42,6 +45,10 @@ import okhttp3.FormBody;
 import okhttp3.Request;
 
 import static com.r2.scau.moblieofficing.Contants.SELECT_MEMBER_REPORT;
+import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.createGroup;
+import static com.r2.scau.moblieofficing.Contants.getInfo;
+import static com.r2.scau.moblieofficing.Contants.joinGroup;
 import static com.r2.scau.moblieofficing.Contants.multi_invite;
 import static com.r2.scau.moblieofficing.Contants.multi_invite_room_name;
 import static com.r2.scau.moblieofficing.untils.OkHttpUntil.okHttpClient;
@@ -59,7 +66,33 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     private QuickSideBarTipsView mQuickSideBarTipsView;
     private List<Contact> mContactList = new ArrayList<>();
     private HashMap<String, Integer> letters = new HashMap<>();
+    private ChatRecord record;
+    private  MultiUserChat multiUserChat;
 
+    Handler handler=new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+//                                RetrofitUntil.getUserInfo();
+//                                RetrofitUntil.getFriend();
+//                                RetrofitUntil.getGroupInfo();
+//                                SmackMultiChatManager.bindJoinMultiChat();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }).start();
+                    break;
+            }
+            return false;
+        }
+    });
 
     @Override
     protected void initView() {
@@ -186,7 +219,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     }
 
     public void startMultiChat() {
-        final MultiUserChat multiUserChat;
+//        final MultiUserChat multiUserChat;
         Intent intent = getIntent();
         String groupName = intent.getStringExtra("groupName");
         final String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
@@ -194,15 +227,10 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
             multiUserChat = SmackManager.getInstance().createChatRoom(groupName, UserUntil.gsonUser.getNickname(), null);
             SmackListenerManager.addMultiChatMessageListener(multiUserChat);
             SmackMultiChatManager.saveMultiChat(multiUserChat);
-
-            creatMultiRoom(multiUserChat,reason);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         String roomName = groupName + "@conference." + SmackManager.SERVER_NAME;
-        ChatRecord record;
         List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
         if (chatRecords.size() == 0) {
             record = new ChatRecord();
@@ -223,10 +251,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
             record = chatRecords.get(0);
         }
         EventBus.getDefault().post(record);
-        Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
-        startChat.putExtra("chatrecord", record);
-        startActivity(startChat);
-        finish();
+        creatMultiRoom(multiUserChat,reason);
     }
 
 
@@ -236,7 +261,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                 .add("groupName", groupName)
                 .build();
 //                        step 3: 创建请求
-        Request request = new Request.Builder().url("http://192.168.13.61:8089/group/createGroup.shtml")
+        Request request = new Request.Builder().url(SERVER_IP+getInfo+createGroup)
                 .post(formBody)
                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .build();
@@ -276,7 +301,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                         .add("userPhone", contact.getPhone())
                         .build();
 //                            step 3: 创建请求
-                Request request = new Request.Builder().url("http://192.168.13.61:8089/group/joinGroup.shtml")
+                Request request = new Request.Builder().url(SERVER_IP+getInfo+joinGroup)
                         .post(formBody)
                         .addHeader("cookie", OkHttpUntil.loginSessionID)
                         .build();
@@ -298,5 +323,12 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                 });
             }
         }
+        Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
+        startChat.putExtra("chatrecord", record);
+        Message message=Message.obtain();
+        message.what=1;
+        handler.sendMessage(message);
+        startActivity(startChat);
+        finish();
     }
 }

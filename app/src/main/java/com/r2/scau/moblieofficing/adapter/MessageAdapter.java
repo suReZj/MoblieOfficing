@@ -3,7 +3,6 @@ package com.r2.scau.moblieofficing.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,17 +14,31 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
 import com.daimajia.swipe.SwipeLayout;
+import com.r2.scau.moblieofficing.gson.GsonUser;
+import com.r2.scau.moblieofficing.gson.GsonUsers;
+import com.r2.scau.moblieofficing.retrofit.IFriendInfoByPhoneBiz;
 import com.r2.scau.moblieofficing.untils.ChatTimeUtil;
-import com.r2.scau.moblieofficing.listener.OnRecyclerViewOnClickListener;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
+import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.sqk.emojirelease.EmojiUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.getInfo;
 
 
 /**
@@ -37,7 +50,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
     private Context mContext;
     public int mPosition = 0;
     private final LayoutInflater inflater;
-    private OnRecyclerViewOnClickListener mListener;
+    private String userIcon;
+
 
     public List<ChatRecord> getMessageList() {
         return messageList;
@@ -59,6 +73,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         TextView chatTime;
         TextView unRead;
         CardView cardView;
+        String iconPath="";
+        String phone="";
 
 
         public messageHolder(final View view) {
@@ -106,13 +122,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
 
     @Override
     public void onBindViewHolder(messageHolder holder, final int position) {
+        Resources resources=mContext.getResources();
+
+        if(messageList.get(position).ismIsMulti()){
+            ImageUtils.setUserImageIcon(mContext,holder.icon,messageList.get(position).getmFriendNickname());
+        }else {
+            getFriendInfo(messageList.get(position).getmFriendUsername());
+            if(userIcon==null){
+                ImageUtils.setUserImageIcon(mContext,holder.icon,messageList.get(position).getmFriendNickname());
+            }else {
+                Glide.with(mContext).load(userIcon).into(holder.icon);
+            }
+        }
+
 
 
         ChatRecord msg = messageList.get(position);
-        final Resources resources = mContext.getResources();
-        Drawable drawable = resources.getDrawable(R.drawable.ic_launcher_round);
-
-
 
 
         holder.linearLayout.setOnLongClickListener(new View.OnLongClickListener() {
@@ -234,6 +259,39 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         }
         messageList.add(position, item);
         notifyDataSetChanged();
+    }
+
+    public void getFriendInfo(String Phone) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_IP+getInfo+"/")
+                .callFactory(OkHttpUntil.getInstance())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IFriendInfoByPhoneBiz iFriendInfoBiz=retrofit.create(IFriendInfoByPhoneBiz.class);
+        Call<GsonUsers> call = iFriendInfoBiz.getInfo(Phone);
+        call.enqueue(new Callback<GsonUsers>() {
+            @Override
+            public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
+                GsonUsers gsonUsers = response.body();
+
+                if (gsonUsers.getCode() == 200) {
+                    GsonUser user=gsonUsers.getUserInfo();
+                    if(user.getUserHeadPortrait()!=null){
+                        userIcon=user.getUserHeadPortrait().toString();
+                        Log.e("icon!=null",userIcon);
+                    }else {
+                        Log.e("icon==null","icon==null");
+                    }
+                    Log.e("getIcon", "success");
+                } else {
+                    Log.e("getIcon", gsonUsers.getMsg());
+                }
+            }
+            @Override
+            public void onFailure(Call<GsonUsers> call, Throwable t) {
+                Log.e("getIcon", "fail");
+            }
+        });
     }
 
 

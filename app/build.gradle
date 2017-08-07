@@ -31,7 +31,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     // TinyPinyin核心包，约80KB
-
+    compile 'com.makeramen:roundedimageview:2.3.0'
     // 可选，适用于Android的中国地区词典
     compile project(':library:smoothcheckbox')
     compile project(':library:libzxing')

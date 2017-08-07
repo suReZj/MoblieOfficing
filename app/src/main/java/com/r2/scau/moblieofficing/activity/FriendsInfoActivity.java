@@ -1,42 +1,48 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.app.Dialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
-import android.provider.ContactsContract;
-import android.speech.tts.TextToSpeech;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.allen.library.SuperTextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.Contact;
-import com.r2.scau.moblieofficing.gson.GsonFriend;
-import com.r2.scau.moblieofficing.gson.GsonFriends;
+import com.r2.scau.moblieofficing.gson.GsonQRCode;
 import com.r2.scau.moblieofficing.gson.GsonUser;
 import com.r2.scau.moblieofficing.gson.GsonUsers;
-import com.r2.scau.moblieofficing.retrofit.IFriendInfoBiz;
+import com.r2.scau.moblieofficing.retrofit.IFriendInfoByPhoneBiz;
+import com.r2.scau.moblieofficing.retrofit.IQRCodeBiz;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.DateUtil;
-import com.r2.scau.moblieofficing.untils.FistLetterUntil;
+import com.r2.scau.moblieofficing.untils.DensityUtil;
+import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +53,10 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.r2.scau.moblieofficing.R.string.contact;
+import static com.r2.scau.moblieofficing.Contants.PHOTO_SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.file_Server;
+import static com.r2.scau.moblieofficing.Contants.getInfo;
 
 /**
  * Created by dell88 on 2017/8/4 0004.
@@ -55,8 +64,9 @@ import static com.r2.scau.moblieofficing.R.string.contact;
 
 public class FriendsInfoActivity extends BaseActivity {
     private RelativeLayout chatToFriend;
-    private RelativeLayout phoneToFriend;
+    private RelativeLayout addFriend;
     private RelativeLayout videoToFriend;
+    private RelativeLayout qrOfFriend;
     private SuperTextView friendName;
     private SuperTextView friendPhone;
     private SuperTextView friendEmail;
@@ -72,9 +82,12 @@ public class FriendsInfoActivity extends BaseActivity {
     private int sendFriendEmail = 6;
     private String phone;
     private GsonUser user;
-    private String userPhone="";
-    private String userName="";
-    private String userEmail="";
+    private String userPhone = "";
+    private String userName = "";
+    private String userEmail = "";
+    private String QRPath = "";
+    private String userIconPath = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +98,18 @@ public class FriendsInfoActivity extends BaseActivity {
     @Override
     protected void initView() {
         chatToFriend = (RelativeLayout) findViewById(R.id.chat_layout);
-        phoneToFriend = (RelativeLayout) findViewById(R.id.phone_layout);
+        addFriend = (RelativeLayout) findViewById(R.id.add_layout);
         videoToFriend = (RelativeLayout) findViewById(R.id.video_layout);
+        qrOfFriend = (RelativeLayout) findViewById(R.id.qr_code_layout);
         friendName = (SuperTextView) findViewById(R.id.friend_name);
         friendPhone = (SuperTextView) findViewById(R.id.friend_phone);
         friendEmail = (SuperTextView) findViewById(R.id.friend_email);
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        toolBarText = (TextView) findViewById(R.id.toolbar_title);
-        userIcon=(CircleImageView)findViewById(R.id.friend_icon_circle);
-        userNickName=(TextView)findViewById(R.id.user_nickname);
+        mToolBar = (Toolbar) findViewById(R.id.toolbar_info);
+        toolBarText = (TextView) findViewById(R.id.toolbar_info_title);
+        userIcon = (CircleImageView) findViewById(R.id.friend_icon_circle);
+        userNickName = (TextView) findViewById(R.id.user_nickname);
         mToolBar.setTitle("");
-        toolBarText.setText("详细资料");
+        toolBarText.setText("用户资料");
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -114,12 +128,9 @@ public class FriendsInfoActivity extends BaseActivity {
     protected void initData() {
         Intent intent = getIntent();
         phone = intent.getStringExtra("phone");
-//        Log.e("phone", phone);
         getFriendInfo(phone);
-//        friendName.setLeftBottomString2(user.getNickname());
-//        friendPhone.setLeftBottomString2(user.getUserPhone());
-//        friendEmail.setLeftBottomString2(user.getEmail().toString());
-
+        getQRCode(phone);
+//        getFriendIcon(phone);
     }
 
     @Override
@@ -141,6 +152,7 @@ public class FriendsInfoActivity extends BaseActivity {
                 unregisterForContextMenu(friendPhone);
             }
         });
+
         friendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,11 +161,12 @@ public class FriendsInfoActivity extends BaseActivity {
                 unregisterForContextMenu(friendEmail);
             }
         });
+
         chatToFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(userName.equals(UserUntil.gsonUser.getUserPhone())){
-                    Toast.makeText(getApplicationContext(),"不能和自己聊天",Toast.LENGTH_SHORT).show();
+                if (userName.equals(UserUntil.gsonUser.getUserPhone())) {
+                    Toast.makeText(getApplicationContext(), "不能和自己聊天", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
@@ -177,6 +190,31 @@ public class FriendsInfoActivity extends BaseActivity {
                 intent.putExtra("chatrecord", record);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
+            }
+        });
+
+        qrOfFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImageDialog();
+            }
+        });
+
+        addFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (phone.equals(UserUntil.gsonUser.getUserPhone())) {
+                    Toast.makeText(getApplicationContext(), "别逗，这是你自己", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                List<Contact> list = UserUntil.friendList;
+                for (Contact contact : list) {
+                    if (contact.getPhone().equals(phone)) {
+                        Toast.makeText(getApplicationContext(), "他已经是你的好基友", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+                SmackManager.getInstance().addFriend(phone, userName, null);
             }
         });
     }
@@ -232,33 +270,76 @@ public class FriendsInfoActivity extends BaseActivity {
                 break;
             case 6:
                 Intent data = new Intent(Intent.ACTION_SENDTO);
-                data.setData(Uri.parse("mailto:"+userEmail));
+                data.setData(Uri.parse("mailto:" + userEmail));
                 startActivity(data);
                 break;
         }
         return super.onContextItemSelected(item);
     }
 
-    public void getFriendInfo(String Phone) {
+    public void getQRCode(String Phone) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.13.61:8089/group/")
+                .baseUrl(SERVER_IP + file_Server + "/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        IFriendInfoBiz iFriendInfoBiz=retrofit.create(IFriendInfoBiz.class);
+        IQRCodeBiz iqrCodeBiz = retrofit.create(IQRCodeBiz.class);
+        Call<GsonQRCode> call = iqrCodeBiz.getQR(Phone);
+        call.enqueue(new Callback<GsonQRCode>() {
+            @Override
+            public void onResponse(Call<GsonQRCode> call, Response<GsonQRCode> response) {
+                GsonQRCode gsonQRCode = response.body();
+                if (gsonQRCode.getCode() == 200) {
+                    QRPath = gsonQRCode.getPath();
+                    Log.e("getQR", "success");
+
+                } else {
+                    Log.e("getQR", gsonQRCode.getMsg());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GsonQRCode> call, Throwable t) {
+                Log.e("getInfo", "fail");
+            }
+        });
+    }
+
+    public void getFriendInfo(String Phone) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_IP + getInfo + "/")
+                .callFactory(OkHttpUntil.getInstance())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IFriendInfoByPhoneBiz iFriendInfoBiz = retrofit.create(IFriendInfoByPhoneBiz.class);
         Call<GsonUsers> call = iFriendInfoBiz.getInfo(Phone);
         call.enqueue(new Callback<GsonUsers>() {
             @Override
             public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
                 GsonUsers gsonUsers = response.body();
                 if (gsonUsers.getCode() == 200) {
-                    user=gsonUsers.getUserInfo();
-                    userPhone=user.getUserPhone();
-                    userName=user.getNickname();
-                    if (user.getEmail() != null){
+                    user = gsonUsers.getUserInfo();
+                    userPhone = user.getUserPhone();
+                    userName = user.getNickname();
+                    if (user.getEmail() != null) {
                         userEmail = user.getEmail().toString();
-                    }else {
+                    } else {
                         userEmail = "无";
+                    }
+                    if (user.getUserHeadPortrait() != null) {
+                        userIconPath = user.getUserHeadPortrait().toString();
+                        Log.e("icon!=null", userIconPath);
+                    } else {
+                        Log.e("icon==null", "icon==null");
+                    }
+                    if (phone.equals(UserUntil.gsonUser.getUserPhone())) {
+                        ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
+                    } else {
+                        if (userIconPath == null) {
+                            ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
+                        } else {
+                            Glide.with(getApplicationContext()).load(userIconPath).into(userIcon);
+                        }
                     }
                     friendName.setLeftBottomString2(userName);
                     friendPhone.setLeftBottomString2(userPhone);
@@ -268,6 +349,7 @@ public class FriendsInfoActivity extends BaseActivity {
                     Log.e("getInfo", gsonUsers.getMsg());
                 }
             }
+
             @Override
             public void onFailure(Call<GsonUsers> call, Throwable t) {
                 Log.e("getInfo", "fail");
@@ -280,5 +362,34 @@ public class FriendsInfoActivity extends BaseActivity {
         finish();
         super.onBackPressed();
     }
+
+
+    private void showImageDialog() {
+
+
+//        imageView.setBackground(getDrawable(R.mipmap.test));
+        View contentView = LayoutInflater.from(this).inflate(R.layout.dialog_content_circle, null);
+        Dialog bottomDialog = new Dialog(this, R.style.BottomDialog);
+        final ImageView imageView = (ImageView) contentView.findViewById(R.id.QR_image);
+        Log.e("path", QRPath);
+        Glide.with(getApplicationContext()).load(PHOTO_SERVER_IP + QRPath).into(new SimpleTarget<GlideDrawable>() {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                imageView.setBackground(resource);
+                Log.e("path", QRPath);
+            }
+        });
+//        Glide.with(this).load(QRPath).into(imageView);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
+        params.width = getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(this, 16f);
+        params.bottomMargin = DensityUtil.dp2px(this, 8f);
+        contentView.setLayoutParams(params);
+        bottomDialog.setCanceledOnTouchOutside(true);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        bottomDialog.show();
+    }
+
 
 }
