@@ -103,6 +103,7 @@ public class GroupInfoActivity extends BaseActivity {
     private TextView toolBarText;
     private TextView group_nickname;
     private ChatRecord record;
+    private Boolean flag=false;
 
     Handler handler=new Handler(new Handler.Callback() {
         @Override
@@ -170,6 +171,10 @@ public class GroupInfoActivity extends BaseActivity {
         noticeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(flag){
+                    startMultiChat();
+                    return;
+                }
                 multiChatRooms=DataSupport.findAll(MultiChatRoom.class);
                 for(int i=0;i<multiChatRooms.size();i++){
                     if(multiChatRooms.get(i).getRoomId()==roomId){
@@ -200,6 +205,7 @@ public class GroupInfoActivity extends BaseActivity {
                 }
                 SmackManager.getInstance().joinChatRoom(groupName, UserUntil.gsonUser.getNickname(),null);
                 addGroup();
+                Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
             }
         });
 //        二维码点击事件
@@ -459,10 +465,8 @@ public class GroupInfoActivity extends BaseActivity {
 //                                 TODO: 17-1-4 请求成功
                 String str = response.body().string();
                 try {
-                    RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
-                    RetrofitUntil.getUserInfo();
-                    RetrofitUntil.getFriend();
                     RetrofitUntil.getGroupInfo();
+                    flag=true;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

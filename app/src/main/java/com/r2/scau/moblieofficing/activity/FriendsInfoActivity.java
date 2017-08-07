@@ -38,6 +38,7 @@ import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.DensityUtil;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -223,6 +224,8 @@ public class FriendsInfoActivity extends BaseActivity {
                     }
                 }
                 SmackManager.getInstance().addFriend(phone, userName, null);
+                RetrofitUntil.getFriend();
+                Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
             }
         });
     }
