@@ -144,7 +144,7 @@ public class GroupInfoActivity extends BaseActivity {
         toolBarText = (TextView) findViewById(R.id.toolbar_info_title);
         group_nickname=(TextView)findViewById(R.id.group_nickname);
         mToolBar.setTitle("");
-        toolBarText.setText("详细资料");
+        toolBarText.setText("群资料");
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -450,7 +450,6 @@ public class GroupInfoActivity extends BaseActivity {
                     RetrofitUntil.getUserInfo();
                     RetrofitUntil.getFriend();
                     RetrofitUntil.getGroupInfo();
-                    SmackMultiChatManager.bindJoinMultiChat();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

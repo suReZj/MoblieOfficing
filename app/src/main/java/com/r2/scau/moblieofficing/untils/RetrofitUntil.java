@@ -17,6 +17,7 @@ import com.r2.scau.moblieofficing.retrofit.IFriendBiz;
 import com.r2.scau.moblieofficing.retrofit.IGroupBiz;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.retrofit.ISignOffice;
+import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -141,7 +142,11 @@ public class RetrofitUntil {
                     if (type == Contants.LOGIN_IN_GET_DATA){
                         EventBus.getDefault().post(new LoginFinishEvent());
                     }
-
+                    try {
+                        SmackMultiChatManager.bindJoinMultiChat();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }else {
                     Log.e("getGroup", "fail");
                 }

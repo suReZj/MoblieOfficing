@@ -1,6 +1,8 @@
 package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -64,7 +66,33 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     private QuickSideBarTipsView mQuickSideBarTipsView;
     private List<Contact> mContactList = new ArrayList<>();
     private HashMap<String, Integer> letters = new HashMap<>();
+    private ChatRecord record;
+    private  MultiUserChat multiUserChat;
 
+    Handler handler=new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            switch (msg.what){
+                case 1:
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            try {
+//                                RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+//                                RetrofitUntil.getUserInfo();
+//                                RetrofitUntil.getFriend();
+//                                RetrofitUntil.getGroupInfo();
+//                                SmackMultiChatManager.bindJoinMultiChat();
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            }
+//                        }
+//                    }).start();
+                    break;
+            }
+            return false;
+        }
+    });
 
     @Override
     protected void initView() {
@@ -191,7 +219,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
     }
 
     public void startMultiChat() {
-        final MultiUserChat multiUserChat;
+//        final MultiUserChat multiUserChat;
         Intent intent = getIntent();
         String groupName = intent.getStringExtra("groupName");
         final String reason = String.format("%s邀请你入群", UserUntil.gsonUser.getNickname());
@@ -199,14 +227,10 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
             multiUserChat = SmackManager.getInstance().createChatRoom(groupName, UserUntil.gsonUser.getNickname(), null);
             SmackListenerManager.addMultiChatMessageListener(multiUserChat);
             SmackMultiChatManager.saveMultiChat(multiUserChat);
-            creatMultiRoom(multiUserChat,reason);
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
         String roomName = groupName + "@conference." + SmackManager.SERVER_NAME;
-        ChatRecord record;
         List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
         if (chatRecords.size() == 0) {
             record = new ChatRecord();
@@ -227,19 +251,7 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
             record = chatRecords.get(0);
         }
         EventBus.getDefault().post(record);
-        Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
-        startChat.putExtra("chatrecord", record);
-        try {
-            RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
-            RetrofitUntil.getUserInfo();
-            RetrofitUntil.getFriend();
-            RetrofitUntil.getGroupInfo();
-            SmackMultiChatManager.bindJoinMultiChat();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        startActivity(startChat);
-        finish();
+        creatMultiRoom(multiUserChat,reason);
     }
 
 
@@ -311,5 +323,12 @@ public class SelectMemberActivity extends BaseActivity implements OnQuickSideBar
                 });
             }
         }
+        Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
+        startChat.putExtra("chatrecord", record);
+        Message message=Message.obtain();
+        message.what=1;
+        handler.sendMessage(message);
+        startActivity(startChat);
+        finish();
     }
 }

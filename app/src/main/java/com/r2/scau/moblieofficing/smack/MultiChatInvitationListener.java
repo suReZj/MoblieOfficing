@@ -59,7 +59,6 @@ public class MultiChatInvitationListener implements InvitationListener {
                     RetrofitUntil.getUserInfo();
                     RetrofitUntil.getFriend();
                     RetrofitUntil.getGroupInfo();
-                    SmackMultiChatManager.bindJoinMultiChat();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -109,7 +109,7 @@ public class FriendsInfoActivity extends BaseActivity {
         userIcon = (CircleImageView) findViewById(R.id.friend_icon_circle);
         userNickName = (TextView) findViewById(R.id.user_nickname);
         mToolBar.setTitle("");
-        toolBarText.setText("详细资料");
+        toolBarText.setText("用户资料");
         setSupportActionBar(mToolBar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }

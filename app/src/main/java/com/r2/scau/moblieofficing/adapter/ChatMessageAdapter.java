@@ -214,16 +214,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
 
     public class MenuPopup extends BasePopupWindow implements View.OnClickListener {
-
-        private TextView tx1;
-        private TextView tx2;
-        private TextView tx3;
-
-
         public MenuPopup(Activity context) {
             super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             findViewById(R.id.copy_message).setOnClickListener(this);
-            findViewById(R.id.transmit_message).setOnClickListener(this);
+//            findViewById(R.id.transmit_message).setOnClickListener(this);
         }
 
         @Override
@@ -251,7 +245,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 //            setOffsetX((getWidth() - v.getWidth()));
 //            setOffsetY(-4 * v.getHeight());
             setOffsetX(v.getWidth()/2);
-            setOffsetY(-3*v.getHeight());
+            setOffsetY(-2*v.getHeight());
             super.showPopupWindow(v);
         }
 
@@ -278,10 +272,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     clipboardManager.setText(chatMessageList.get(mPosition).getContent());
                     this.dismiss();
                     break;
-                case R.id.transmit_message:
-
-                    this.dismiss();
-                    break;
+//                case R.id.transmit_message:
+//
+//                    this.dismiss();
+//                    break;
                 default:
                     break;
 
