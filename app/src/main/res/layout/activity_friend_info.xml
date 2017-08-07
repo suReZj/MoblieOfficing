@@ -36,89 +36,98 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="20dp">
+
         <RelativeLayout
+            android:id="@+id/chat_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/chat_layout"
             android:clickable="true"
             android:focusable="true"
             >
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/sendMsg_icon_circle"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/message"
-                />
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/sendMsg_icon_circle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/message"
+                    />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="聊天"
-                    android:textColor="@color/colorLightBlue" />
+                    android:textColor="@color/colorLightBlue"/>
             </LinearLayout>
         </RelativeLayout>
 
 
         <RelativeLayout
+            android:id="@+id/phone_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/phone_layout"
             android:clickable="true"
             android:focusable="true">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/call_icon_circle"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/phone" />
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/call_icon_circle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/phone"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="电话"
-                    android:textColor="@color/colorLightBlue" />
+                    android:textColor="@color/colorLightBlue"/>
             </LinearLayout>
         </RelativeLayout>
 
 
         <RelativeLayout
+            android:id="@+id/video_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:id="@+id/video_layout"
             android:clickable="true"
             android:focusable="true">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerInParent="true">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/secret_chat_circle"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/video" />
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/secret_chat_circle"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/video"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:text="视频"
-                    android:textColor="@color/colorLightBlue" />
+                    android:textColor="@color/colorLightBlue"/>
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

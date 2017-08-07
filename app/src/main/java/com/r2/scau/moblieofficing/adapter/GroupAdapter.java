@@ -45,7 +45,7 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.GroupViewHol
     public void onBindViewHolder(GroupViewHolder holder, final int position) {
         final GsonGroup group = groupList.get(position);
         holder.groupST.setLeftString(group.getGname());
-        holder.icon.setImageDrawable(ImageUtils.getIcon(group.getGname(), 32));
+        holder.icon.setImageDrawable(ImageUtils.getIcon(group.getGname(), 23));
         if (type == 0){
             holder.groupST.setOnSuperTextViewClickListener(new SuperTextView.OnSuperTextViewClickListener(){
                 @Override

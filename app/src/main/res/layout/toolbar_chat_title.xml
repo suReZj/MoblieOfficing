@@ -8,11 +8,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/padding_top"
-        android:background="@color/colorBottomBar"
+        android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ToolbarPopupTheme"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:navigationIcon="@drawable/returnback"
+        app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
         android:weightSum="1">
 
         <!--<Button-->
@@ -27,7 +27,7 @@
             android:id="@+id/chat_toolbar_title"
             android:text="标题栏"
             android:textSize="18sp"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/white"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             />

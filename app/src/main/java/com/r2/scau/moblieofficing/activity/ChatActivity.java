@@ -74,7 +74,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_chat_video);
+        setContentView(R.layout.activity_chat);
         super.onCreate(savedInstanceState);
         SoftHideKeyBoardUtil.assistActivity(this);
 

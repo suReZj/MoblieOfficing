@@ -51,7 +51,7 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
 
     @Override
     protected void initView() {
-            setContentView(R.layout.activity_main_video);
+            setContentView(R.layout.activity_main);
 
             /**初始化facebook 图片加载器*/
             Fresco.initialize(MainActivity.this);

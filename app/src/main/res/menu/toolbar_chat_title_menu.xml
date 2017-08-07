@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/personInfo"
-        android:icon="@drawable/person"
+        android:icon="@drawable/iconmonstr_chatuser_32"
         android:title=""
         app:showAsAction="ifRoom">
     </item>

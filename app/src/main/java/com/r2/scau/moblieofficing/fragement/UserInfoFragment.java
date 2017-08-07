@@ -99,7 +99,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
 
         Object object = UserUntil.gsonUser.getUserHeadPortrait();
         if (object == null || object.toString(). equals("")){
-            photoIV.setImageDrawable(ImageUtils.getIcon(UserUntil.gsonUser.getNickname(), 32));
+            photoIV.setImageDrawable(ImageUtils.getIcon(UserUntil.gsonUser.getNickname(), 23));
         }else {
             Glide.with(mContext)
                     .load(Contants.PHOTO_SERVER_IP + object.toString())

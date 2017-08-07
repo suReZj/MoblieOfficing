@@ -38,5 +38,6 @@
     <color name="transparent">#00000000</color>
     <!-- 透明颜色 -->
 
+    <color name="userInfoBackground">#0F000000</color>
 </resources>
 

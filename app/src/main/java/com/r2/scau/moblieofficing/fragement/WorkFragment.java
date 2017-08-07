@@ -55,7 +55,6 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
 
 
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -93,7 +92,7 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
         work_overtimeBtn.setOnClickListener(this);
         clouddiskBtn.setOnClickListener(this);
         signOfficeBtn.setOnClickListener(this);
-
+        videoMeetingBtn.setOnClickListener(this);
 
 
         mToolbar.setTitle("");
@@ -144,7 +143,11 @@ public class WorkFragment extends Fragment implements View.OnClickListener {
 
             case R.id.btn_sign_in:
                 requestLocationPermission();
-
+                break;
+            case R.id.btn_video_meeting:
+                Intent intent2video = new Intent(getActivity(), io.agora.openvcall.ui.MainActivity.class);
+                startActivity(intent2video);
+                break;
             default:
                 break;
         }
