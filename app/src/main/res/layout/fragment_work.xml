@@ -23,6 +23,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
+                android:textSize="17sp"
                 android:text="@string/office_management" />
 
             <LinearLayout
@@ -31,20 +32,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
+                android:paddingRight="10dp"
+                >
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="@dimen/work_height_ll"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground">
 
-                    <com.makeramen.roundedimageview.RoundedImageView
+
+                <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/btn_sign_in"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_sign_office"
                         app:riv_corner_radius="10dip" />
 
@@ -62,13 +66,16 @@
                     android:layout_height="@dimen/work_height_ll"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground">
 
-                    <com.makeramen.roundedimageview.RoundedImageView
+
+                <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/btn_leave"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_qingjia"
                         app:riv_corner_radius="10dip" />
 
@@ -86,13 +93,15 @@
                     android:layout_height="@dimen/work_height_ll"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="?android:attr/selectableItemBackground">
 
                     <com.makeramen.roundedimageview.RoundedImageView
                         android:id="@+id/btn_goout"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_waichu"
                         app:riv_corner_radius="10dip" />
 
@@ -118,6 +127,7 @@
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
                         android:src="@drawable/icon_chuchai"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         app:riv_corner_radius="10dip" />
 
                     <TextView
@@ -149,6 +159,7 @@
                         android:id="@+id/btn_work_overtime"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:layout_weight="1"
                         android:src="@drawable/icon_jiaban"
                         app:riv_corner_radius="10dip" />
@@ -192,6 +203,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/report"
+                android:textSize="17sp"
 
                 />
 
@@ -214,6 +226,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_qingjia"
                         app:riv_corner_radius="10dip" />
 
@@ -238,6 +251,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_qingjia"
                         app:riv_corner_radius="10dip" />
 
@@ -261,6 +275,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_qingjia"
                         app:riv_corner_radius="10dip" />
 
@@ -285,6 +300,8 @@
                 android:id="@+id/tv_office_communication"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="17sp"
+
                 android:padding="10dp"
                 android:text="@string/office_communication" />
 
@@ -309,6 +326,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
                         android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:src="@drawable/icon_shipin_meeting"
                         app:riv_corner_radius="10dip" />
 
@@ -332,6 +350,7 @@
                         android:id="@+id/btn_cloud_disk"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/work_height_iv"
+                        android:background="?android:attr/selectableItemBackgroundBorderless"
                         android:layout_weight="1"
                         android:src="@drawable/icon_cloud"
                         app:riv_corner_radius="10dip" />
