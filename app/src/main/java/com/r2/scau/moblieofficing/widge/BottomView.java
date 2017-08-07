@@ -73,8 +73,10 @@ public class BottomView implements View.OnClickListener,View.OnTouchListener {
             //如果传输过来的是文件夹的类型，隐藏"分享"的view
             if (fileType == Contants.FILEMANAGER.FOLDER_TYPE){
                 shareto.setVisibility(View.GONE);
+                move.setVisibility(View.GONE);
             }else {
                 shareto.setVisibility(View.VISIBLE);
+                move.setVisibility(View.VISIBLE);
             }
         }
     }
