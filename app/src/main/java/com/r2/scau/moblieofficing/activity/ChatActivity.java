@@ -448,12 +448,9 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
         String whereClause = chatRecord.getmFriendUsername();
         String whereArgs = UserUntil.gsonUser.getUserPhone();
-//    String[] whereArgs = {LoginHelper.getUser().getUsername()};
-//        if (!chatRecord.ismIsMulti()) {
+
         chatMessageList = new ArrayList<>(DataSupport.where("mfriendusername=? and mmeusername=? ", whereClause, whereArgs).find(ChatMessage.class));
-//        } else {
-//            chatMessageList = new ArrayList<>(DataSupport.where("uuid=?", chatRecord.getUuid()).find(ChatMessage.class));
-//        }
+
         adapter = new ChatMessageAdapter(chatMessageList, this);
         layoutManager.scrollToPosition(adapter.getItemCount() - 1);
     }
