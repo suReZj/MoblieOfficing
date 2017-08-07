@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="com.r2.scau.moblieofficing">
 
     <!-- 添加读取内部系统文件权限 -->
@@ -31,12 +32,12 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
+        tools:replace="Android:icon, android:theme,android:label"
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@mipmap/icon_main"
+        android:label="@string/appname_manifest"
         android:largeHeap="true"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:windowSoftInputMode="adjustResize">
