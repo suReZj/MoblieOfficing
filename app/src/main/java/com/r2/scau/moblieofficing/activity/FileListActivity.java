@@ -112,7 +112,7 @@ public class FileListActivity extends BaseActivity {
                             initState = false;
                         } else if (initState == false) {
                             //非初始化状态
-                            fileList = fileManagerAdapter.setFileList(fileList, getPathString());
+                            fileList = fileManagerAdapter.setFileList(fileList, getPathString(),fileJson.getTotalSize());
                         }
                         break;
 
