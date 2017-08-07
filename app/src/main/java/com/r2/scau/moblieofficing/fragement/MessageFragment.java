@@ -126,7 +126,7 @@ public class MessageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-//        refreshData();
+        refreshData();
     }
 
     @Override
@@ -200,6 +200,7 @@ public class MessageFragment extends Fragment {
                 chatRecord.setmFriendAvatar(message.getChatMessage().getIconPath());
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
             } else {
+                chatRecord.setmFriendAvatar(null);
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
             }
             refreshData();
@@ -348,7 +349,7 @@ public class MessageFragment extends Fragment {
 //                            打开 查看群信息 的Actiity
                             Bundle bundle = new Bundle();
                             Intent intent = new Intent(getActivity(), GroupInfoActivity.class);
-                            bundle.putString("Id", resultarr[1]);
+                            bundle.putInt("Id", Integer.parseInt(resultarr[1]));
                             intent.putExtras(bundle);
                             startActivity(intent);
                         }else {

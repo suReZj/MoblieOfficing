@@ -130,24 +130,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
 
     @Override
     public void onBindViewHolder(final messageHolder holder, final int position) {
-//        if (messageList.get(position).ismIsMulti()) {
-//            ImageUtils.setUserImageIcon(mContext, holder.icon, messageList.get(position).getmFriendNickname());
-//        }else {
-//            getFriendInfo(messageList.get(position).getmFriendUsername(), holder, position);
-//        }
-//        holder.handler = new Handler(new Handler.Callback() {
-//            @Override
-//            public boolean handleMessage(Message msg) {
-//                if (userIcon == null) {
-//                    ImageUtils.setUserImageIcon(mContext, holder.icon, messageList.get(msg.what).getmFriendNickname());
-//                } else {
-//                    Glide.with(mContext).load(PHOTO_SERVER_IP + userIcon).into(holder.icon);
-//                }
-//
-//                return false;
-//            }
-//        });
-
         if(messageList.get(position).getmFriendAvatar()==null){
             ImageUtils.setUserImageIcon(mContext, holder.icon, messageList.get(position).getmFriendNickname());
         }else {
@@ -184,8 +166,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
                     holder.chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getmChatTime()));
                 }
 
-//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-//                ((messageHolder) holder).unRead.setText(messageCount);
                 if ((msg.getmUnReadMessageCount() > 0) && (msg.getmUnReadMessageCount() <= 99)) {
                     holder.unRead.setVisibility(View.VISIBLE);
                     holder.unRead.setText(String.valueOf(msg.getmUnReadMessageCount()));
@@ -215,8 +195,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
                 } else {
                     holder.chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getmChatTime()));
                 }
-//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-//                ((messageHolder) holder).unRead.setText(messageCount);
                 if ((msg.getmUnReadMessageCount() > 0) && (msg.getmUnReadMessageCount() <= 99)) {
                     holder.unRead.setVisibility(View.VISIBLE);
                     holder.unRead.setText(String.valueOf(msg.getmUnReadMessageCount()));
