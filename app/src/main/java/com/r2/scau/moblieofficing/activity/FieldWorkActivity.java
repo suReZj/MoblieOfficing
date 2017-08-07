@@ -31,10 +31,10 @@ import com.allen.library.SuperTextView;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.GridAdapter;
-import com.r2.scau.moblieofficing.bean.ChatRecord;
+import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.Contact;
+import com.r2.scau.moblieofficing.event.MessageEvent;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.SoftHideKeyBoardUtil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
@@ -42,16 +42,18 @@ import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.r2.scau.moblieofficing.widge.TimePickerDialog;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jivesoftware.smack.chat.Chat;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.litepal.crud.DataSupport;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -60,8 +62,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import static com.r2.scau.moblieofficing.untils.UserUntil.phone;
 
 /**
  * Created by EdwinCheng on 2017/8/5.
@@ -177,7 +177,6 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                         ToastUtils.show(FieldWorkActivity.this, "，申请失败,已存在的申请时间", Toast.LENGTH_SHORT);
 
                     case Contants.FIELDWORK.OMADDBOSS_SUCCESS:
-                        Log.e(TAG, "添加审批人 成功 第几个？ ：" + addOmBossPos);
                         break;
 
 
@@ -187,32 +186,43 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
     }
 
     public void sendMessagToOmBoss() {
-        for (Contact c : mContactList){
-            Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+        SmackManager  smack = SmackManager.getInstance();
 
-            List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", phone).find(ChatRecord.class);
-            ChatRecord record;
-            if (chatRecords.size() == 0) {
-                record = new ChatRecord();
-                record.setUuid(UUID.randomUUID().toString());
-                record.setmFriendUsername(c.getPhone());
-                record.setmFriendNickname(c.getName());
-                record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
-                record.setmMeNickname(UserUntil.gsonUser.getNickname());
-                record.setmChatTime(DateUtil.currentDatetime());
-                record.setmIsMulti(false);
-                record.setmChatJid(SmackManager.getInstance().getChatJid(c.getPhone()));
-                record.save();
-            } else {
-                record = chatRecords.get(0);
-            }
-            EventBus.getDefault().post(record);
-            intent.putExtra("chatrecord", record);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
 
+        for (final Contact c : mContactList){
+            final Chat mChat = smack.createChat(c.getPhone() + "@192.168.13.61");
+            //msg 为一个可查询事务的url
+            String msg = Contants.SERVER_IP + Contants.OfficeManage + Contants.queryOfficeThing + "?userPhone=" + UserUntil.gsonUser.getUserPhone();
+            Observable.just(msg)
+                    .observeOn(Schedulers.io())
+                    .subscribe(new Consumer<String>() {
+                        @Override
+                        public void accept(String message) {
+                            try {
+                                JSONObject json = new JSONObject();
+                                json.put("fromNickName", UserUntil.gsonUser.getNickname());
+                                json.put("messageContent", message);
+                                mChat.sendMessage(json.toString());
+
+                                ChatMessage msg = new ChatMessage(1, true);
+
+                                msg.setFriendNickname(c.getName());
+                                msg.setFriendUsername(c.getPhone());
+                                msg.setMeUsername(UserUntil.gsonUser.getUserPhone());
+                                msg.setMeNickname(UserUntil.gsonUser.getNickname());
+                                msg.setContent(message);
+                                msg.setMeSend(true);
+                                msg.save();
+
+                                EventBus.getDefault().post(new MessageEvent(msg));
+                            } catch (Exception e) {
+                                Log.d("send message failure", e.toString());
+                            }
+                        }
+                    });
         }
     }
+
 
     public void omUploadPhoto(File file){
 
@@ -658,7 +668,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                     Log.e(TAG, "网络请求 错误  " + response.code() + "   " + response.message());
                     message.what = Contants.FIELDWORK.OMADDBOSS_FAILURE;
                 }
-                handler.sendMessage(message);
+//                handler.sendMessage(message);
             }
         });
     }
