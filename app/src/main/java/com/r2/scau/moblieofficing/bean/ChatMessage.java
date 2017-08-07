@@ -54,6 +54,15 @@ public class ChatMessage extends DataSupport implements Parcelable {
     private boolean mIsMeSend;
 
     private String multiUserName=null;
+    private String iconPath=null;
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
 
     public String getMultiUserName() {
         return multiUserName;
