@@ -1,196 +1,366 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-   <include
-       layout="@layout/toolbar"/>
+    <include layout="@layout/toolbar" />
 
-   <TextView
-       android:id="@+id/tv_office_management"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:padding="10dp"
-       android:text="@string/office_management"
-       />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-   <LinearLayout
-       android:id="@+id/layout_office_management"
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:paddingLeft="10dp"
-       android:paddingRight="10dp"
-       android:orientation="horizontal"
-       >
-
-      <Button
-          android:id="@+id/btn_sign_in"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/sign_in"/>
-
-      <Button
-          android:id="@+id/btn_leave"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/leave"/>
-
-      <Button
-          android:id="@+id/btn_goout"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/go_out"/>
-
-      <Button
-          android:id="@+id/btn_business_trip"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/business_trip"/>
-
-   </LinearLayout>
-
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:paddingLeft="10dp"
-       android:padding="10dp"
-       >
-
-      <Button
-          android:id="@+id/btn_work_overtime"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/work_overtime"/>
-
-      <Button
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:visibility="invisible"
-        />
-
-      <Button
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:visibility="invisible"
-          />
-
-      <Button
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:visibility="invisible"
-          />
-
-   </LinearLayout>
-
-   <TextView
-       android:id="@+id/tv_report"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/report"
-       android:paddingLeft="10dp"
-       android:paddingRight="10dp"
-       android:paddingBottom="10dp"
-
-       />
-
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:padding="10dp"
-       >
-
-      <Button
-          android:id="@+id/btn_day_report"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/day_report"/>
-
-      <Button
-          android:id="@+id/btn_week_report"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/week_report"
-          />
-
-      <Button
-          android:id="@+id/btn_month_report"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/month_report"
-          />
-
-      <Button
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:visibility="invisible"
-          />
-
-   </LinearLayout>
-
-   <TextView
-       android:id="@+id/tv_office_communication"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:text="@string/office_communication"
-       android:padding="10dp"
-       />
-
-   <LinearLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:orientation="horizontal"
-       android:paddingLeft="10dp"
-       android:paddingRight="10dp"
-       android:paddingBottom="10dp"
-       >
-
-      <Button
-          android:id="@+id/btn_video_meeting"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/video_meeting"/>
-
-      <Button
-          android:id="@+id/btn_cloud_disk"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:text="@string/cloud_disk"
-          />
-
-      <Button
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:visibility="invisible"
-          />
-
-      <Button
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:visibility="invisible"
-          />
-
-   </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
 
 
+            <TextView
+                android:id="@+id/tv_office_management"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/office_management" />
+
+            <LinearLayout
+                android:id="@+id/layout_office_management"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_sign_in"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_sign_office"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/sign_in" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_leave"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_qingjia"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/leave" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_goout"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_waichu"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/go_out" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_business_trip"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_chuchai"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/business_trip" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:paddingLeft="10dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_work_overtime"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_jiaban"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/work_overtime" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="@string/report"
+
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_day_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_qingjia"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/day_report" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_week_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_qingjia"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/week_report" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_month_report"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_qingjia"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/month_report" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_office_communication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="@string/office_communication" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_video_meeting"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_shipin_meeting"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/video_meeting" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/work_height_ll"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.makeramen.roundedimageview.RoundedImageView
+                        android:id="@+id/btn_cloud_disk"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/work_height_iv"
+                        android:layout_weight="1"
+                        android:src="@drawable/icon_cloud"
+                        app:riv_corner_radius="10dip" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center"
+                        android:text="@string/cloud_disk" />
+                </LinearLayout>
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+                <Button
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>
