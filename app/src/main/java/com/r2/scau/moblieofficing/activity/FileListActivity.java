@@ -507,6 +507,12 @@ public class FileListActivity extends BaseActivity {
 
     private void doMove(int bottompos){
         Toast.makeText(FileListActivity.this, "该动能暂未开放" , Toast.LENGTH_SHORT).show();
+        bundle.clear();
+        intent.setClass(FileListActivity.this, FileMoveSelectFileActivity.class);
+        bundle.putString("oldPath",(getPathString() + "/" + fileList.get(bottompos).getName()));
+        bundle.putString("fileName",fileList.get(bottompos).getName());
+        intent.putExtras(bundle);
+        this.startActivityForResult(intent, Contants.RequestCode.MOVE,bundle);
     }
 
     private void  getFileListFromServer(String path,String fileSelectType) {
@@ -589,6 +595,15 @@ public class FileListActivity extends BaseActivity {
 
                 }
                 break;
+            case Contants.RequestCode.MOVE:
+                if (resultCode == RESULT_OK){
+                    ToastUtils.show(FileListActivity.this,"移动文件成功", Toast.LENGTH_SHORT);
+                    showChange(getPathString());
+                }else{
+
+                }
+                break;
+
         }
     }
 

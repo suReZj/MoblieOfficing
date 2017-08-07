@@ -65,6 +65,7 @@
         <activity android:name=".activity.FMRenameActivity"/>
         <activity android:name=".activity.UploadSelectFileActivity"/>
         <activity android:name=".activity.FieldWorkActivity"/>
+        <activity android:name=".activity.FileMoveSelectFileActivity"/>
         <activity android:name=".activity.ChatActivity"/>
         <activity android:name=".activity.SignUpActivity"/>
         <activity android:name=".activity.SendNoticeActivity"/>
