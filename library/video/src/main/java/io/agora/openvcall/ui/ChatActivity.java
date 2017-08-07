@@ -66,6 +66,7 @@ public class ChatActivity extends BaseActivity implements AGEventHandler {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat_video);
     }
 
@@ -239,9 +240,9 @@ public class ChatActivity extends BaseActivity implements AGEventHandler {
     }
 
     private void showMessageEditContainer() {
-        findViewById(R.id.bottom_action_container).setVisibility(View.GONE);
-        findViewById(R.id.bottom_action_end_call).setVisibility(View.GONE);
-        findViewById(R.id.msg_input_container).setVisibility(View.VISIBLE);
+        //findViewById(R.id.bottom_action_container).setVisibility(View.GONE);
+        //findViewById(R.id.bottom_action_end_call).setVisibility(View.GONE);
+        findViewById(R.id.msg_input_container).setVisibility(findViewById(R.id.msg_input_container).getVisibility()==View.GONE?View.VISIBLE:View.GONE);
 
         EditText edit = (EditText) findViewById(R.id.msg_content);
 

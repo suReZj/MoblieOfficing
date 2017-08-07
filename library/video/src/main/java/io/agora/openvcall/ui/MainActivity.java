@@ -14,6 +14,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
+
 import io.agora.openvcall.R;
 import io.agora.openvcall.model.ConstantApp;
 
@@ -125,6 +127,11 @@ public class MainActivity extends BaseActivity {
         EditText v_encryption_key = (EditText) findViewById(R.id.encryption_key);
         String encryption = v_encryption_key.getText().toString();
         vSettings().mEncryptionKey = encryption;
+
+        if(channel==null||encryption==null||channel.isEmpty()||encryption.isEmpty()){
+            Toast.makeText(this,"密码或用户名不能为空！",Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         Intent i = new Intent(MainActivity.this, ChatActivity.class);
         i.putExtra(ConstantApp.ACTION_KEY_CHANNEL_NAME, channel);
