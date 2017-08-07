@@ -1,10 +1,16 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -13,18 +19,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.FileManagerAdapter;
 import com.r2.scau.moblieofficing.bean.FileBean;
 import com.r2.scau.moblieofficing.gson.GsonFileJsonBean;
-import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.untils.DateUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
+import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -52,6 +60,7 @@ public class FileListActivity extends BaseActivity {
     private RecyclerView fileListRecycler;
     private LinearLayoutManager linearLayoutManager;
     private FileManagerAdapter fileManagerAdapter;
+    private LinearLayout secondActionBar;
     private Button filelist_editBtn, filelist_newfolderBtn;
     private Toolbar mtoolbar;
     private TextView titleTV;
@@ -76,8 +85,11 @@ public class FileListActivity extends BaseActivity {
     private FormBody formBody;
     private Request request;
     private Message message;
-
     private View.OnClickListener bottomclickListener;
+    private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 1;
+
+    private long groupId ;
+    private String groupName = null;
 
     @Override
     protected void initView() {
@@ -85,6 +97,7 @@ public class FileListActivity extends BaseActivity {
         fileListRecycler = (RecyclerView) findViewById(R.id.filelist_recycler);
         filelist_editBtn = (Button) findViewById(R.id.filelist_editBtn);
         filelist_newfolderBtn = (Button) findViewById(R.id.filelist_newfolderBtn);
+        secondActionBar = (LinearLayout) findViewById(R.id.filelist_secondbar);
         mtoolbar = (Toolbar) findViewById(R.id.toolbar);
         titleTV = (TextView) findViewById(R.id.toolbar_title);
 
@@ -99,7 +112,7 @@ public class FileListActivity extends BaseActivity {
                             initState = false;
                         } else if (initState == false) {
                             //非初始化状态
-                            fileList = fileManagerAdapter.setFileList(fileList, getPathString());
+                            fileList = fileManagerAdapter.setFileList(fileList, getPathString(),fileJson.getTotalSize());
                         }
                         break;
 
@@ -141,14 +154,17 @@ public class FileListActivity extends BaseActivity {
         }
 
         //判断是"个人文件" 还是公共文件
+        bundle = getIntent().getExtras();
         fileSelectType = bundle.getString("intenttype");
 
         if (fileSelectType.equals("personalfile")) {
             titleTV.setText(R.string.my_file);
-        } else if (fileSelectType.equals("sharedfile")) {
-            titleTV.setText(R.string.shared_file);
+        } else if (fileSelectType.equals("shared")) {
+            secondActionBar.setVisibility(View.GONE);
+            groupId = bundle.getInt("groupId");
+            groupName = bundle.getString("groupName");
+            titleTV.setText(groupName);
         }
-
         //默认的路径
         rootPath = "/";
         /**
@@ -174,16 +190,40 @@ public class FileListActivity extends BaseActivity {
                 break;
 
             case R.id.menu_upload:
-                bundle.clear();
-                bundle.putString("remotePath", getPathString());
-                FileListActivity.this.openActivityForResult(UploadSelectFileActivity.class, bundle, Contants.RequestCode.UPLOAD);
+
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                        ContextCompat.checkSelfPermission(FileListActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                        != PackageManager.PERMISSION_GRANTED){
+                    ActivityCompat.requestPermissions(FileListActivity.this ,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE);
+                }else {
+                    openFileSelectActivity();
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    public void openFileSelectActivity() {
+        bundle.clear();
+        bundle.putString("intentType",fileSelectType);
+        bundle.putString("remotePath", getPathString());
+
+        if (fileSelectType.equals("personalfile")) {
+
+        } else if (fileSelectType.equals("shared")) {
+            bundle.putLong("groupId",groupId);
+            bundle.putString("groupName",groupName);
+        }
+
+        FileListActivity.this.openActivityForResult(UploadSelectFileActivity.class, bundle, Contants.RequestCode.UPLOAD);
+    }
+
     private void initRecycler() {
-        fileManagerAdapter = new FileManagerAdapter(FileListActivity.this, fileList, getPathString(), fileSelectType, bottomclickListener);
+        Log.e(TAG, "initRecycler: 文件大小" + fileJson.getTotalSize() );
+        fileManagerAdapter = new FileManagerAdapter(FileListActivity.this, fileJson.getTotalSize(), fileList, getPathString(), fileSelectType, bottomclickListener);
         fileListRecycler.setLayoutManager(linearLayoutManager);
         fileListRecycler.setAdapter(fileManagerAdapter);
 
@@ -193,8 +233,7 @@ public class FileListActivity extends BaseActivity {
                 FileBean fileBean = fileList.get(position);
                 //对文件的处理
                 if (fileBean.getAttribute() == Contants.FILEMANAGER.FILE_TYPE) {
-                    ToastUtils.show(FileListActivity.this, "点击的是文件" + fileBean.getName(), Toast.LENGTH_SHORT);
-
+                    Log.e(TAG, "点击的是文件" + fileBean.getName());
                     doDowmload(getPathString(), fileBean.getName());
 
                 } else {
@@ -204,7 +243,8 @@ public class FileListActivity extends BaseActivity {
                      * 获得目录中的内容，计入列表中
                      * 适配器通知数据集改变
                      */
-                    ToastUtils.show(FileListActivity.this, "点击的是文件夹" + fileBean.getName(), Toast.LENGTH_SHORT);
+                    Log.e(TAG, "点击的是文件夹" + fileBean.getName());
+
                     currentPathStack.push("/" + fileBean.getName());
                     showChange(getPathString());
                 }
@@ -212,7 +252,7 @@ public class FileListActivity extends BaseActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-                ToastUtils.show(FileListActivity.this, "长点击position:" + position, Toast.LENGTH_SHORT);
+                Log.e(TAG,  "长点击position:" + position);
             }
         });
     }
@@ -222,7 +262,7 @@ public class FileListActivity extends BaseActivity {
         if (fileSelectType.equals("personalfile")) {
             formBody = new FormBody.Builder()
                     .add("path", downloadPath)
-                    .add("userPhone", "123456789010")
+                    .add("userPhone", UserUntil.gsonUser.getUserPhone())
                     .build();
             request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.filedownload)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
@@ -231,7 +271,7 @@ public class FileListActivity extends BaseActivity {
         } else {
             formBody = new FormBody.Builder()
                     .add("fileName", filename)
-                    .add("groupId", "123456789010")
+                    .add("groupId", UserUntil.gsonUser.getUserPhone())
                     .build();
             request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.downLoadGroupFile)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
@@ -389,15 +429,12 @@ public class FileListActivity extends BaseActivity {
         ArrayList<FileBean> tempFileList = new ArrayList<>();
         for (String str : tempJsonBean.getFiles()) {
             String[] fi = str.split(";");
-            Log.e(TAG, "fileJsonToObject 文件" + fi.length);
             tempFileList.add(new FileBean(fi[0], Integer.parseInt(fi[1]), DateUtils.timete(fi[2]), Contants.FILEMANAGER.FILE_TYPE));
         }
         for (String str : tempJsonBean.getFolders()) {
             String[] fo = str.split(";");
-            Log.e(TAG, "fileJsonToObject 文件夹" + fo.length);
             tempFileList.add(new FileBean(fo[0], Integer.parseInt(fo[1]), DateUtils.timete(fo[2]), Contants.FILEMANAGER.FOLDER_TYPE));
         }
-        Log.e(TAG, "tempFileLists .size " + tempFileList.size());
         return tempFileList;
     }
 
@@ -414,16 +451,16 @@ public class FileListActivity extends BaseActivity {
             Log.e(TAG, "doDelete: -----> 个人文档--删除操作 url" + posturl);
             formBody = new FormBody.Builder()
                     .add("path", getPathString() + "/"  + fileList.get(bottompos).getName())
-                    .add("userPhone", "123456789010")
+                    .add("userPhone", UserUntil.gsonUser.getUserPhone())
                     .build();
             request = new Request.Builder().url(posturl)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
                     .post(formBody)
                     .build();
-        }else if(fileSelectType.equals("sharedfile")){
+        }else if(fileSelectType.equals("shared")){
             formBody = new FormBody.Builder()
-                    .add("path",getPathString() + "/"  + fileList.get(bottompos).getName())
-                    .add("groupId","111")
+                    .add("path",getPathString() + "/" +fileList.get(bottompos).getName())
+                    .add("groupId",String.valueOf(groupId))
                     .build();
             request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.deleteGroupFile)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
@@ -469,14 +506,14 @@ public class FileListActivity extends BaseActivity {
     }
 
     private void doMove(int bottompos){
-        Toast.makeText(FileListActivity.this, "移动" , Toast.LENGTH_SHORT).show();
+        Toast.makeText(FileListActivity.this, "该动能暂未开放" , Toast.LENGTH_SHORT).show();
     }
 
     private void  getFileListFromServer(String path,String fileSelectType) {
         if (fileSelectType.equals("personalfile")){
             formBody = new FormBody.Builder()
                     .add("path", path)
-                    .add("userPhone", "123456789010")
+                    .add("userPhone", UserUntil.gsonUser.getUserPhone())
                     .build();
             request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.getDir)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
@@ -484,7 +521,7 @@ public class FileListActivity extends BaseActivity {
                     .build();
         }else {
             formBody = new FormBody.Builder()
-                    .add("groupId", "123456789010")
+                    .add("groupId", String.valueOf(groupId))
                     .build();
             request = new Request.Builder().url(Contants.SERVER_IP + Contants.file_Server + Contants.getGroupDir)
                     .addHeader("cookie", OkHttpUntil.loginSessionID)
@@ -505,6 +542,7 @@ public class FileListActivity extends BaseActivity {
                 message = handler.obtainMessage();
                 if (response.code() == 200){
                     fileJson = gson.fromJson(response.body().string(), GsonFileJsonBean.class);
+                    Log.e(TAG, "onResponse: totalsizeaaaaaa:  " + fileJson.getTotalSize() );
                     fileList = fileJsonToObject(fileJson);
                     message.what = Contants.FILEMANAGER.GETDIR_SUCCESS;
                 }else{
@@ -551,8 +589,22 @@ public class FileListActivity extends BaseActivity {
 
                 }
                 break;
-
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE){
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                Log.e("permission", "accept");
+                openFileSelectActivity();
+            } else {
+                // Permission Denied
+                Toast.makeText(FileListActivity.this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 }

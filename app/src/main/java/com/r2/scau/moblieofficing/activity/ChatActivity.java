@@ -141,19 +141,19 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     protected void initData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
-                    RetrofitUntil.getUserInfo();
-                    RetrofitUntil.getFriend();
-                    RetrofitUntil.getGroupInfo();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
+//                    RetrofitUntil.getUserInfo();
+//                    RetrofitUntil.getFriend();
+//                    RetrofitUntil.getGroupInfo();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
     }
 
     @Override
@@ -499,6 +499,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                 intent.putExtra("Id",list.get(i).getRoomId());
                 Log.e("check",list.get(i).getRoomId()+"");
                 startActivity(intent);
+                break;
             }
         }
 

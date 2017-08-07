@@ -37,6 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.r2.scau.moblieofficing.Contants.PHOTO_SERVER_IP;
 import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
 import static com.r2.scau.moblieofficing.Contants.getInfo;
 
@@ -131,7 +132,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
             if(userIcon==null){
                 ImageUtils.setUserImageIcon(mContext,holder.icon,messageList.get(position).getmFriendNickname());
             }else {
-                Glide.with(mContext).load(userIcon).into(holder.icon);
+                Glide.with(mContext).load(PHOTO_SERVER_IP+userIcon).into(holder.icon);
             }
         }
 

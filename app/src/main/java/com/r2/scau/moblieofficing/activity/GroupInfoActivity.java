@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.adapter.groupMemberAdapter;
+import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.bean.MultiChatRoom;
 import com.r2.scau.moblieofficing.bean.groupMember;
 import com.r2.scau.moblieofficing.gson.GsonGroupInfo;
@@ -42,19 +43,23 @@ import com.r2.scau.moblieofficing.retrofit.IGroupInfoBiz;
 import com.r2.scau.moblieofficing.retrofit.IGroupQRCodeBiz;
 import com.r2.scau.moblieofficing.retrofit.IMembersBiz;
 import com.r2.scau.moblieofficing.retrofit.IQRCodeBiz;
+import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.smack.SmackMultiChatManager;
+import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.DensityUtil;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
+import org.greenrobot.eventbus.EventBus;
 import org.litepal.crud.DataSupport;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.FormBody;
@@ -97,6 +102,7 @@ public class GroupInfoActivity extends BaseActivity {
     private Toolbar mToolBar;
     private TextView toolBarText;
     private TextView group_nickname;
+    private ChatRecord record;
 
     Handler handler=new Handler(new Handler.Callback() {
         @Override
@@ -164,7 +170,14 @@ public class GroupInfoActivity extends BaseActivity {
         noticeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                multiChatRooms=DataSupport.findAll(MultiChatRoom.class);
+                for(int i=0;i<multiChatRooms.size();i++){
+                    if(multiChatRooms.get(i).getRoomId()==roomId){
+                        startMultiChat();
+                        return;
+                    }
+                }
+                Toast.makeText(getApplicationContext(),"请先加群",Toast.LENGTH_SHORT).show();
             }
         });
 //        群文件点击事件
@@ -465,5 +478,33 @@ public class GroupInfoActivity extends BaseActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void startMultiChat() {
+//        final MultiUserChat multiUserChat;
+        String roomName = groupName + "@conference." + SmackManager.SERVER_NAME;
+        List<ChatRecord> chatRecords = DataSupport.where("mfriendusername=?", roomName).find(ChatRecord.class);
+        if (chatRecords.size() == 0) {
+            record = new ChatRecord();
+            String friendUserName = roomName;
+            int idx = friendUserName.indexOf("@conference.");
+            String friendNickName = friendUserName.substring(0, idx);
+            record.setUuid(UUID.randomUUID().toString());
+            record.setmFriendUsername(friendUserName);
+            record.setmFriendNickname(friendNickName);
+            record.setmMeUsername(UserUntil.gsonUser.getUserPhone());
+            record.setmMeNickname(UserUntil.gsonUser.getNickname());
+            record.setmChatTime(DateUtil.currentDatetime());
+            record.setmIsMulti(true);
+            record.setmChatJid(roomName);
+            record.save();
+            SmackManager.getInstance().joinChatRoom(roomName, UserUntil.gsonUser.getNickname(), null);
+        } else {
+            record = chatRecords.get(0);
+        }
+        EventBus.getDefault().post(record);
+        Intent startChat = new Intent(getApplicationContext(), ChatActivity.class);
+        startChat.putExtra("chatrecord", record);
+        startActivity(startChat);
     }
 }

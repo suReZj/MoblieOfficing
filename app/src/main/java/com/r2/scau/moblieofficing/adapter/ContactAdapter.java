@@ -26,9 +26,11 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactViewHolder>
         implements StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
     private Context mContext;
+    private boolean flag=false;//判断是好友还是手机通讯录
 
-    public ContactAdapter(Context mContext) {
+    public ContactAdapter(Context mContext, boolean flag) {
         this.mContext = mContext;
+        this.flag = flag;
     }
 
     @Override
@@ -50,11 +52,13 @@ public class ContactAdapter extends ContactListAdapter<ContactAdapter.ContactVie
             holder.contactST.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent=new Intent(mContext, FriendsInfoActivity.class);
-                    Contact contact=getItem(position);
-                    intent.putExtra("phone",contact.getPhone());
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    mContext.startActivity(intent);
+                    if(flag){
+                        Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                        Contact contact=getItem(position);
+                        intent.putExtra("phone",contact.getPhone());
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                    }
                 }
             });
 
