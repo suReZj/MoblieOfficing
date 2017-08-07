@@ -48,7 +48,9 @@
                 android:layout_height="48dp"
                 android:background="@drawable/base_edittext_border"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <com.allen.library.SuperTextView
                     android:id="@+id/fieldwork_travellocation"
@@ -64,6 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@null"
+                    android:focusable="true"
                     android:singleLine="true"
                     android:maxLines="1"
                     />
@@ -118,6 +121,7 @@
                 app:sLeftTextString="@string/duration"
                 app:sRightTextMarginRight="48dp"
                 android:layout_marginTop="6dp"
+                android:visibility="gone"
                 />
 
             <LinearLayout
@@ -128,7 +132,9 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="12dp"
                 android:paddingTop="2dp"
-                android:paddingBottom="2dp">
+                android:paddingBottom="2dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
 
                 <com.allen.library.SuperTextView
                     android:id="@+id/fieldwork_reason"
@@ -146,8 +152,9 @@
                     android:padding="12dp"
                     android:textSize="14sp"
                     android:gravity="start"
-                    android:background="@null"/>
-
+                    android:background="@null"
+                    android:focusable="true"
+                    />
             </LinearLayout>
 
             <com.allen.library.SuperTextView
