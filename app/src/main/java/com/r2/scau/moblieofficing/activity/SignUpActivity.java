@@ -1,12 +1,16 @@
 package com.r2.scau.moblieofficing.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +70,7 @@ public class SignUpActivity extends BaseActivity {
     private OkHttpClient okHttpClient = new OkHttpClient();
     private ImageView verCodeImageView;
     public static final int VERCODE = 1;
-
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
 
     // 注册特效
     private PopField mPopField;
@@ -140,15 +144,10 @@ public class SignUpActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        initialPath();
+
     }
 
-    private void initialPath() {
-        File file = new File(Contants.FILEPATH+"/data/portraits");
-        if(!file.exists()){
-            file.mkdirs();
-        }
-    }
+
 
     @Override
     protected void initListener() {
