@@ -9,8 +9,8 @@ import android.os.Environment;
  */
 
 public class Contants {
-    public static final String SERVER_IP = "http://192.168.13.99:8089";
-    public static final String PHOTO_SERVER_IP = "http://192.168.13.99:8080";
+    public static final String SERVER_IP = "http://192.168.13.27:8089";
+    public static final String PHOTO_SERVER_IP = "http://192.168.13.27:8080";
 
     public static final String getInfo="/group";
     public static final String file_Server = "/fileServer";
