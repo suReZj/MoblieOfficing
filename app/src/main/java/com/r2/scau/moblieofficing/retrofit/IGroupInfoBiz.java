@@ -4,6 +4,7 @@ import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.gson.GsonGroupInfo;
 import com.r2.scau.moblieofficing.gson.GsonQRCode;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -16,7 +17,7 @@ import retrofit2.http.POST;
 public interface IGroupInfoBiz {
     @POST("getGroupInfo.shtml")
     @FormUrlEncoded
-    Call<GsonGroupInfo> getGroupInfo(
+    Observable<GsonGroupInfo> getGroupInfo(
             @Field("groupId") Integer groupId
     );
 }

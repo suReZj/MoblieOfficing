@@ -24,19 +24,21 @@
         android:id="@+id/relativeLayout">
 
         <!-- 文字输入框 -->
-        <EditText
+        <com.xw.repo.XEditText
             android:id="@+id/chat_editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/chat_edittext"
             android:inputType="textMultiLine"
             android:maxHeight="60dp"
             android:minHeight="40dp"
             android:maxLines="2"
             android:textSize="18sp"
+            android:textColor="@color/white"
             android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="5dp"
+            android:theme="@style/MyEditText"
+            />
 
         <!--<Button-->
             <!--android:id="@+id/keyboard_record_voice_button"-->
@@ -79,7 +81,7 @@
             android:id="@+id/senMsg_button"
             android:layout_width="50dp"
             android:layout_height="35dp"
-            android:background="@drawable/chat_send_button"
+            android:background="@color/transparent"
             android:gravity="center"
             android:text="send"
             android:textColor="@color/white"

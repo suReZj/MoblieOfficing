@@ -16,8 +16,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.r2.scau.moblieofficing.activity.ExaminationActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.gson.GsonUser;
 import com.r2.scau.moblieofficing.gson.GsonUsers;
@@ -117,7 +119,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
             //设置头像
 
-            if (chatMessageList.get(position).getIconPath()==null) {
+            if (chatMessageList.get(position).getIconPath() == null) {
                 ImageUtils.setUserImageIcon(mContext, holder.lIcon, chatMessageList.get(position).getFriendNickname());
             } else {
                 Glide.with(mContext).load(PHOTO_SERVER_IP + chatMessageList.get(position).getIconPath()).into(holder.lIcon);
@@ -211,7 +213,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         public MenuPopup(Activity context) {
             super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             findViewById(R.id.copy_message).setOnClickListener(this);
-//            findViewById(R.id.transmit_message).setOnClickListener(this);
+            findViewById(R.id.transmit_message).setOnClickListener(this);
         }
 
         @Override
@@ -239,7 +241,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 //            setOffsetX((getWidth() - v.getWidth()));
 //            setOffsetY(-4 * v.getHeight());
             setOffsetX(v.getWidth() / 2);
-            setOffsetY(-2 * v.getHeight());
+            setOffsetY(-v.getHeight()/8);
             super.showPopupWindow(v);
         }
 
@@ -266,10 +268,30 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     clipboardManager.setText(chatMessageList.get(mPosition).getContent());
                     this.dismiss();
                     break;
-//                case R.id.transmit_message:
-//
-//                    this.dismiss();
-//                    break;
+                case R.id.transmit_message:
+                    if (chatMessageList.get(mPosition).isMeSend()) {
+                        Toast.makeText(mContext, "不能审批自己发送的事务", Toast.LENGTH_SHORT).show();
+                        this.dismiss();
+                        break;
+                    }
+                    if (chatMessageList.get(mPosition).getContent().indexOf("长按进行审批")!=-1) {
+                        chatMessageList.get(mPosition).getContent();
+                        Log.e("aaaaaaaaa", chatMessageList.get(mPosition).getContent());
+                        String content = chatMessageList.get(mPosition).getContent();
+                        String type = content.substring(content.indexOf("号") + 2, content.length());
+                        Log.e("aaaaaaaaa", type);
+                        Intent intent = new Intent(mContext, ExaminationActivity.class);
+                        Integer omid = Integer.parseInt(type);
+                        intent.putExtra("omid", omid);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                        this.dismiss();
+                        break;
+                    } else {
+                        Toast.makeText(mContext, "不是可以审批的事务", Toast.LENGTH_SHORT).show();
+                        this.dismiss();
+                        break;
+                    }
                 default:
                     break;
 

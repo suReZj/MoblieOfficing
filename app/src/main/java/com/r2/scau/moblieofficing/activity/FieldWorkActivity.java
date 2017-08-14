@@ -190,7 +190,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
 
 
         for (final Contact c : mContactList){
-            final Chat mChat = smack.createChat(c.getPhone() + "@192.168.13.61");
+            final Chat mChat = smack.createChat(c.getPhone() + "@" + SmackManager.SERVER_IP);
             //msg 为一个可查询事务的url
             String msg = Contants.SERVER_IP + Contants.OfficeManage + Contants.queryOfficeThing + "?userPhone=" + UserUntil.gsonUser.getUserPhone();
             Observable.just(msg)

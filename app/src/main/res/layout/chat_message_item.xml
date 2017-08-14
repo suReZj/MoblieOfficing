@@ -51,6 +51,7 @@
             android:layout_alignStart="@+id/left_chat_content_layout"
             android:layout_marginLeft="5dp"
             android:text="呵呵"
+            android:textColor="@color/white"
             android:textSize="15sp" />
 
         <RelativeLayout
