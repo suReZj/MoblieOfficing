@@ -28,6 +28,7 @@ import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
 import com.r2.scau.moblieofficing.activity.EditGroupActivity;
+import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.activity.GroupInfoActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
@@ -47,14 +48,6 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.ObservableSource;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 
 import static android.app.Activity.RESULT_CANCELED;
@@ -123,6 +116,8 @@ public class MessageFragment extends Fragment {
                     startActivity(addFriendIntent);
                 }
                 if (item.getItemId() == R.id.cloud) {
+                    Intent intent = new Intent(getActivity(), FileTypeSelectActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
