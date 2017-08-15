@@ -1,7 +1,6 @@
 package com.r2.scau.moblieofficing.smack;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.bean.LoginResult;
 import com.r2.scau.moblieofficing.bean.User;
@@ -45,7 +44,7 @@ public class SmackManager {
     /**
      * Xmpp服务器地址
      */
-    public static final String SERVER_IP = "192.168.13.27";
+    public static final String SERVER_IP = "192.168.13.40";
     /**
      * Xmpp 服务器端口
      */
@@ -53,7 +52,7 @@ public class SmackManager {
     /**
      * 服务器名称
      */
-    public static final String SERVER_NAME = "192.168.13.27";
+    public static final String SERVER_NAME = "192.168.13.40";
     /**
      *
      */
