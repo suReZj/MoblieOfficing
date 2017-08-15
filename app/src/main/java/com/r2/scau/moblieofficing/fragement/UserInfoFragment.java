@@ -38,6 +38,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.bean.ImageIconBean;
 import com.r2.scau.moblieofficing.gson.GsonQRCode;
@@ -93,6 +94,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
     private BitmapToRound_Util round_Util = new BitmapToRound_Util();
     private SuperTextView userInfo;
     private SuperTextView QRcode;
+    private SuperTextView cloudDisk;
     private String QRPath;
 
     public static final int ALBUM_REQUEST = 100;
@@ -120,6 +122,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         userInfo=(SuperTextView)view.findViewById(R.id.st_user_info);
         QRcode=(SuperTextView)view.findViewById(R.id.st_qr_code);
+        cloudDisk = (SuperTextView) view.findViewById(R.id.st_cloud_disk);
 
         Object object = UserUntil.gsonUser.getUserHeadPortrait();
         if (object == null || object.toString(). equals("")){
@@ -137,6 +140,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         mRelativeLayout.setOnClickListener(this);
         userInfo.setOnClickListener(this);
         QRcode.setOnClickListener(this);
+        cloudDisk.setOnClickListener(this);
         mToolbar.setTitle("");
         titleTV.setText("我的");
     }
@@ -342,6 +346,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.st_qr_code:
                 getQRCode(UserUntil.gsonUser.getUserPhone());
+                break;
+            case R.id.st_cloud_disk:
+                Intent intent1 = new Intent(getActivity(), FileTypeSelectActivity.class);
+                startActivity(intent1);
                 break;
         }
     }

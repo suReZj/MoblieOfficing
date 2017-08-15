@@ -1,7 +1,6 @@
 package com.r2.scau.moblieofficing.smack;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.bean.LoginResult;
 import com.r2.scau.moblieofficing.bean.User;

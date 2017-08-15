@@ -112,7 +112,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
     private String endDateString = null;
     private String endTimeString = null;
     private String omReasonString = "";
-    private String photoString = null;
+    private String photoString = "";
 
     private long officeManageId = -1;     //初始化 返回的事务id
     private static final int MY_PERMISSIONS_REQUEST_EXTERNAL_STORAGE = 1;
@@ -163,7 +163,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                             sendMessagToOmBoss(officeManageId);
                         }
 
-                        if (photoString != null  ){
+                        if (!photoString.equals("") ){
                             //如果有图片就上传图片 （officeManageId）
                             File file = new File(photoString);
                             omUploadPhoto(file);
@@ -439,6 +439,10 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                 if (omType == null || startDateString == null || startTimeString == null || endDateString == null
                         || endTimeString == null) {
                     ToastUtils.show(FieldWorkActivity.this, "至少一项为空", Toast.LENGTH_SHORT);
+                    Log.e(TAG, "onClick: mcontactlist" + mContactList.size()+"///" );
+                } else if(mContactList.size() == 0){
+                    ToastUtils.show(FieldWorkActivity.this, "审批人为空，请选择审批人", Toast.LENGTH_SHORT);
+                    Log.e(TAG, "审批人为空，请选择");
                 } else {
                     Log.e(TAG, "提交按钮  请求网络");
                     FormBody formBody = new FormBody.Builder()
@@ -496,9 +500,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                 if (resultCode == Contants.ACTIVIRY_SELECT_MEMBER_RETURN_RESULT) {
                     Log.e("onActivityResult", "getMember");
                     mContactList = data.getParcelableArrayListExtra("member");
-                    for (Contact c : mContactList) {
-                        Log.e(TAG, "onActivityResult: fdsfafa   " + c.getName());
-                    }
+
                     fieldworkAdapter.addAll(mContactList);
                 }
                 break;

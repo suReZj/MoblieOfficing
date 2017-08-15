@@ -15,7 +15,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftTextString="申请人手机："
-        app:sRightTextString="郑萎鹏"
         app:sUseRipple="true">
     </com.allen.library.SuperTextView>
 
@@ -24,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftTextString="审批类型："
-        app:sRightTextString="阳痿"
         />
 
     <com.allen.library.SuperTextView
@@ -48,20 +46,21 @@
     <com.allen.library.SuperTextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        app:sLeftTextString="理由：">
+        app:sLeftTextString="理由："
+        app:sLineShow="top">
     </com.allen.library.SuperTextView>
 
     <TextView
         android:id="@+id/examination_reason"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿阳痿"
         android:layout_margin="10dp"/>
 
     <com.allen.library.SuperTextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        app:sLeftTextString="图片：">
+        app:sLeftTextString="图片："
+        app:sLineShow="top">
     </com.allen.library.SuperTextView>
 
     <LinearLayout
