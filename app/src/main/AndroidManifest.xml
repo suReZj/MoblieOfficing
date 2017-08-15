@@ -88,6 +88,7 @@
         <activity android:name=".activity.GroupInfoActivity"/>
         <activity android:name=".activity.SelectGroupActivity">
         </activity>
+        <activity android:name=".activity.ExaminationActivity"/>
     </application>
 
 </manifest>
