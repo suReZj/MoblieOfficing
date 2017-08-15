@@ -163,9 +163,9 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                             sendMessagToOmBoss(officeManageId);
                         }
 
-                        //如果有图片就上传图片 （officeManageId）
-                        File file = new File(photoString);
-                        if (photoString != null && file != null ){
+                        if (photoString != null  ){
+                            //如果有图片就上传图片 （officeManageId）
+                            File file = new File(photoString);
                             omUploadPhoto(file);
                         }
 
