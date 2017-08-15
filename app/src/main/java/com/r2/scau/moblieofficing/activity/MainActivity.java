@@ -3,7 +3,6 @@ package com.r2.scau.moblieofficing.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,7 +11,6 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +23,6 @@ import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
-import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;

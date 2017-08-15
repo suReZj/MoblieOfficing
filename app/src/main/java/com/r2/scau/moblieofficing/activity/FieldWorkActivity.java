@@ -160,7 +160,7 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
                                 setomBoss(contact.getPhone(), officeManageId);
                             }
                             //给审批人推送消息
-                            sendMessagToOmBoss();
+                            sendMessagToOmBoss(officeManageId);
                         }
 
                         //如果有图片就上传图片 （officeManageId）
@@ -185,14 +185,14 @@ public class FieldWorkActivity extends BaseActivity implements TimePickerDialog.
         };
     }
 
-    public void sendMessagToOmBoss() {
+    public void sendMessagToOmBoss(long officeManageId) {
         SmackManager  smack = SmackManager.getInstance();
-
 
         for (final Contact c : mContactList){
             final Chat mChat = smack.createChat(c.getPhone() + "@" + SmackManager.SERVER_IP);
             //msg 为一个可查询事务的url
-            String msg = Contants.SERVER_IP + Contants.OfficeManage + Contants.queryOfficeThing + "?userPhone=" + UserUntil.gsonUser.getUserPhone();
+//            String msg = Contants.SERVER_IP + Contants.OfficeManage + Contants.queryOfficeThing + "?userPhone=" + UserUntil.gsonUser.getUserPhone();
+            String msg = "[长按进行审批]\n申请人:" + UserUntil.gsonUser.getUserPhone() +"\n事务号:" + officeManageId;
             Observable.just(msg)
                     .observeOn(Schedulers.io())
                     .subscribe(new Consumer<String>() {

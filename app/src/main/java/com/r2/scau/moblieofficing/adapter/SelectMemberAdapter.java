@@ -58,7 +58,7 @@ public class SelectMemberAdapter extends ContactListAdapter<SelectMemberAdapter.
         });
 
         if (contact.getPhotoURL() == null || contact.getPhotoURL().equals("")){
-            holder.icon.setImageDrawable(ImageUtils.getIcon(contact.getName(), 32));
+            holder.icon.setImageDrawable(ImageUtils.getIcon(contact.getName(), 23));
         }else {
             Glide.with(mContext)
                     .load(Contants.PHOTO_SERVER_IP + contact.getPhotoURL())

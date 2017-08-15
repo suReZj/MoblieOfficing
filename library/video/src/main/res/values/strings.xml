@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+    <string name="app_name">Open Video Call</string>
+
+    <string name="label_settings">设置</string>
+
+    <string name="msg_welcome_message">欢迎</string>
+
+    <string name="label_channel_name_hint">房间名字</string>
+
+    <string name="label_encryption_key_hint">房间密码</string>
+
+    <string name="label_join">加入</string>
+
+    <string name="label_confirm">确认</string>
+
+    <string name="label_send">发生</string>
+
+    <string name="msg_say_something">输入对话内容</string>
+
+    <string name="msg_no_network_connection">没有网络链接！</string>
+
+    <string name="label_title_resolution">Resolution\n(Width * Height)</string>
+    <string name="label_title_frame_rate">Frame Rate\n(fps)</string>
+    <string name="label_title_bit_rate">Bit Rate\n(kbps)</string>
+
+    // DO NOT TRANSLATE
+    <string name="bit_rate_value_with_unit">%d kbps</string>
+    <string name="frame_rate_value_with_unit">%d fps</string>
+</resources>

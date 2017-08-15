@@ -48,6 +48,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.agora.openvcall.ui.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -190,6 +191,13 @@ public class FriendsInfoActivity extends BaseActivity {
                 EventBus.getDefault().post(record);
                 intent.putExtra("chatrecord", record);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        videoToFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendsInfoActivity.this, io.agora.openvcall.ui.MainActivity.class);
                 startActivity(intent);
             }
         });
