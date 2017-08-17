@@ -1,11 +1,15 @@
 package com.r2.scau.moblieofficing.activity;
 
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
@@ -33,6 +38,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,6 +58,7 @@ public class LoginActivity extends BaseActivity {
     private String user;
     private String password;
     private String loginSessionID;
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 1;
 
     // 登录特效
     private PopField mPopField;
@@ -114,6 +121,42 @@ public class LoginActivity extends BaseActivity {
                 passwordET.setText((CharSequence) SharedPrefUtil.getInstance().get(Contants.SP_LOGIN_PASSWORD_KEY,""));
             }
         }
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST_CALL_PHONE);
+        }
+        else{
+            initialPath();
+        }
+    }
+
+    private void initialPath() {
+        File file = new File(Contants.FILEPATH+"/data/portraits");
+        if(!file.exists()){
+            file.mkdirs();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+
+        if (requestCode == MY_PERMISSIONS_REQUEST_CALL_PHONE)
+        {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+            {
+                initialPath();
+            }
+            else
+            {
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override

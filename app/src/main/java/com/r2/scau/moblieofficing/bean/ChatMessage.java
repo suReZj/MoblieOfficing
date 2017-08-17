@@ -10,6 +10,9 @@ import org.litepal.crud.DataSupport;
 import java.util.Date;
 import java.util.UUID;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+
 
 public class ChatMessage extends DataSupport implements Parcelable {
     public static final String KEY_FROM_NICKNAME = "fromNickName";
@@ -53,7 +56,16 @@ public class ChatMessage extends DataSupport implements Parcelable {
      */
     private boolean mIsMeSend;
 
-    private String multiUserName=null;
+    private String multiUserName = null;
+    private String iconPath = null;
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
+    }
 
     public String getMultiUserName() {
         return multiUserName;
@@ -80,6 +92,7 @@ public class ChatMessage extends DataSupport implements Parcelable {
     public ChatMessage() {
 
     }
+
     public String getMsgID() {
         return msgID;
     }

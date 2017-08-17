@@ -5,14 +5,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLightGray">
+    android:background="@color/userInfoBackground">
 
     <include layout="@layout/toolbar" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/colorGray"/>
+        android:background="@color/userInfoBackground"/>
 
     <RelativeLayout
         android:id="@+id/layout_user_photo"
@@ -56,13 +56,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/colorGray"/>
+        android:background="@color/userInfoBackground"/>
 
     <com.allen.library.SuperTextView
         android:id="@+id/st_user_info"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        app:sLeftIconRes="@mipmap/ic_friend"
+        android:layout_height="50dp"
+        app:sLeftIconRes="@drawable/iconmonstr_user"
+        app:sLeftIconHeight="35dp"
+        app:sLeftIconWidth="35dp"
         app:sLeftTextString="@string/user_info"
         app:sUseRipple="true"
         >
@@ -71,9 +73,11 @@
     <com.allen.library.SuperTextView
         android:id="@+id/st_qr_code"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="15dp"
-        app:sLeftIconRes="@mipmap/ic_friend"
+        app:sLeftIconRes="@drawable/iconmonstrqrcode"
+        app:sLeftIconHeight="35dp"
+        app:sLeftIconWidth="35dp"
         app:sLeftTextString="@string/qr_code"
         app:sUseRipple="true"
         >
@@ -82,8 +86,10 @@
     <com.allen.library.SuperTextView
         android:id="@+id/st_cloud_disk"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        app:sLeftIconRes="@mipmap/ic_friend"
+        android:layout_height="50dp"
+        app:sLeftIconRes="@drawable/iconmonstr_cloud"
+        app:sLeftIconHeight="35dp"
+        app:sLeftIconWidth="35dp"
         app:sLeftTextString="@string/cloud_disk"
         app:sUseRipple="true"
         >
@@ -92,9 +98,11 @@
     <com.allen.library.SuperTextView
         android:id="@+id/st_notice"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="50dp"
         android:layout_marginBottom="15dp"
-        app:sLeftIconRes="@mipmap/ic_friend"
+        app:sLeftIconRes="@drawable/iconmonstrmegaphone"
+        app:sLeftIconHeight="35dp"
+        app:sLeftIconWidth="35dp"
         app:sLeftTextString="@string/notice"
         app:sUseRipple="true"
         >
@@ -103,8 +111,10 @@
     <com.allen.library.SuperTextView
         android:id="@+id/st_setting"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        app:sLeftIconRes="@mipmap/ic_friend"
+        android:layout_height="50dp"
+        app:sLeftIconRes="@drawable/iconmonstrgear"
+        app:sLeftIconHeight="35dp"
+        app:sLeftIconWidth="35dp"
         app:sLeftTextString="@string/setting"
         app:sUseRipple="true"
         >

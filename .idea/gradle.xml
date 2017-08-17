@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/library" />
             <option value="$PROJECT_DIR$/library/libzxing" />
             <option value="$PROJECT_DIR$/library/smoothcheckbox" />
+            <option value="$PROJECT_DIR$/library/video" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

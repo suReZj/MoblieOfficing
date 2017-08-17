@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.r2.scau.moblieofficing.Contants;
 
 import com.r2.scau.moblieofficing.R;
@@ -47,8 +48,15 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 import static com.r2.scau.moblieofficing.Contants.creat_multi_chat;
@@ -126,8 +134,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         recyclerView.setLayoutManager(layoutManager);
         refreshData();
         recyclerView.setAdapter(adapter);
-//        registerForContextMenu(recyclerView);
-//        msgTextView.setOnClickListener(this);
+
 
 
         faceFragment = FaceFragment.Instance();
@@ -141,19 +148,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     protected void initData() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    RetrofitUntil.type = Contants.LOGIN_IN_GET_DATA;
-                    RetrofitUntil.getUserInfo();
-                    RetrofitUntil.getFriend();
-                    RetrofitUntil.getGroupInfo();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+
     }
 
     @Override
@@ -277,7 +272,7 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
         ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
         if (!chatRecord.ismIsMulti()) {
             getMenuInflater().inflate(R.menu.toolbar_chat_title_menu, menu);
-        }else {
+        } else {
             getMenuInflater().inflate(R.menu.toolbar_chat_title_multi_menu, menu);
         }
         return true;
@@ -285,29 +280,29 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.personInfo:
                 ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
-                Intent intent=new Intent(this,FriendsInfoActivity.class);
-                intent.putExtra("phone",chatRecord.getmFriendUsername());
+                Intent intent = new Intent(this, FriendsInfoActivity.class);
+                intent.putExtra("phone", chatRecord.getmFriendUsername());
                 startActivity(intent);
                 break;
             case R.id.invite_group:
                 chatRecord = getIntent().getParcelableExtra("chatrecord");
-                intent=new Intent(this,SelectMemberActivity.class);
-                intent.putExtra(multi_invite,multi_invite);
-                intent.putExtra(multi_invite_room_name,chatRecord.getmFriendNickname());
+                intent = new Intent(this, SelectMemberActivity.class);
+                intent.putExtra(multi_invite, multi_invite);
+                intent.putExtra(multi_invite_room_name, chatRecord.getmFriendNickname());
                 startActivity(intent);
                 break;
             case R.id.notice_group:
-                intent=new Intent(this,SendNoticeActivity.class);
+                intent = new Intent(this, SendNoticeActivity.class);
                 startActivity(intent);
                 break;
             case R.id.file_group:
                 break;
             case R.id.info_group:
                 chatRecord = getIntent().getParcelableExtra("chatrecord");
-                String groupName=chatRecord.getmFriendUsername();
+                String groupName = chatRecord.getmFriendUsername();
                 checkGroupId(groupName);
                 break;
         }
@@ -376,12 +371,6 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
             }
             chatRecord.setmUnReadMessageCount();
             chatRecord.save();
-//            ChatRecord chatRecord=getIntent().getParcelableExtra("chatrecord");
-//            if (chatRecord.isSaved()){
-//                Log.e("aaaaaaa","aaaaaaaa");
-//            }else {
-//                Log.e("bbbbbbb","bbbbbbbb");
-//            }
             finish();
         }
     }
@@ -415,90 +404,126 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
     }
 
     public void send(final String message) {
-        Observable.just(message)
-                .observeOn(Schedulers.io())
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext(message);
+            }
+        }).observeOn(Schedulers.io())
                 .subscribe(new Consumer<String>() {
                     @Override
-                    public void accept(String message) {
-                        try {
-                            JSONObject json = new JSONObject();
-                            json.put("fromNickName", UserUntil.gsonUser.getNickname());
-                            json.put("messageContent", message);
-                            mChat.sendMessage(json.toString());
+                    public void accept(@NonNull String s) throws Exception {
+                        JSONObject json = new JSONObject();
+                        json.put("fromNickName", UserUntil.gsonUser.getNickname());
+                        json.put("messageContent", message);
+                        mChat.sendMessage(json.toString());
 
-                            ChatMessage msg = new ChatMessage(1, true);
-                            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
-                            msg.setFriendNickname(chatRecord.getmFriendNickname());
-                            msg.setFriendUsername(chatRecord.getmFriendUsername());
-                            msg.setMeUsername(chatRecord.getmMeUsername());
-                            msg.setMeNickname(chatRecord.getmMeNickname());
-                            msg.setContent(message);
-                            msg.setMeSend(true);
-                            msg.save();
-                            EventBus.getDefault().post(new MessageEvent(msg));
-                        } catch (Exception e) {
-                            Log.d("send message failure", e.toString());
-                        }
+                        ChatMessage msg = new ChatMessage(1, true);
+                        ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+                        msg.setFriendNickname(chatRecord.getmFriendNickname());
+                        msg.setFriendUsername(chatRecord.getmFriendUsername());
+                        msg.setMeUsername(chatRecord.getmMeUsername());
+                        msg.setMeNickname(chatRecord.getmMeNickname());
+                        msg.setContent(message);
+                        msg.setMeSend(true);
+                        msg.save();
+                        EventBus.getDefault().post(new MessageEvent(msg));
                     }
                 });
     }
 
     public void refreshData() {
-
         ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
         String whereClause = chatRecord.getmFriendUsername();
         String whereArgs = UserUntil.gsonUser.getUserPhone();
-//    String[] whereArgs = {LoginHelper.getUser().getUsername()};
-//        if (!chatRecord.ismIsMulti()) {
+
         chatMessageList = new ArrayList<>(DataSupport.where("mfriendusername=? and mmeusername=? ", whereClause, whereArgs).find(ChatMessage.class));
-//        } else {
-//            chatMessageList = new ArrayList<>(DataSupport.where("uuid=?", chatRecord.getUuid()).find(ChatMessage.class));
-//        }
+
         adapter = new ChatMessageAdapter(chatMessageList, this);
         layoutManager.scrollToPosition(adapter.getItemCount() - 1);
     }
 
-    public void sendMulti(String message) {
-        Observable.just(message)
-                .observeOn(Schedulers.io())
+
+    public void sendMulti(final String message) {
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext(message);
+            }
+        }).observeOn(Schedulers.io())
                 .subscribe(new Consumer<String>() {
                     @Override
-                    public void accept(String message) {
-                        try {
-                            JSONObject json = new JSONObject();
-                            json.put(ChatMessage.KEY_MESSAGE_CONTENT, message);
-                            json.put(ChatMessage.KEY_MULTI_CHAT_SEND_USER, UserUntil.gsonUser.getUserPhone());//信息后缀必须为用户名
+                    public void accept(@NonNull String s) throws Exception {
+                        JSONObject json = new JSONObject();
+                        json.put(ChatMessage.KEY_MESSAGE_CONTENT, message);
+                        json.put(ChatMessage.KEY_MULTI_CHAT_SEND_USER, UserUntil.gsonUser.getUserPhone());//信息后缀必须为用户名
 //                            Log.e(mChatUser.getMeUsername(),mChatUser.getMeUsername());
-                            mMultiUserChat.sendMessage(json.toString());
+                        mMultiUserChat.sendMessage(json.toString());
 
 
-                            ChatMessage msg = new ChatMessage(1, true);
-                            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
-                            msg.setFriendNickname(chatRecord.getmFriendNickname());
-                            msg.setFriendUsername(chatRecord.getmFriendUsername());
-                            msg.setMeUsername(UserUntil.gsonUser.getUserPhone());
-                            msg.setMeNickname(UserUntil.gsonUser.getNickname());
-                            msg.setContent(message);
-                            msg.setMulti(true);
-                            msg.setUuid(chatRecord.getUuid());
-                            msg.setMeSend(true);
-                            msg.save();
-                            EventBus.getDefault().post(new MessageEvent(msg));
-                        } catch (Exception e) {
-                            Log.e(e.toString(), "send message failure");
-                        }
+                        ChatMessage msg = new ChatMessage(1, true);
+                        ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+                        msg.setFriendNickname(chatRecord.getmFriendNickname());
+                        msg.setFriendUsername(chatRecord.getmFriendUsername());
+                        msg.setMeUsername(UserUntil.gsonUser.getUserPhone());
+                        msg.setMeNickname(UserUntil.gsonUser.getNickname());
+                        msg.setContent(message);
+                        msg.setMulti(true);
+                        msg.setUuid(chatRecord.getUuid());
+                        msg.setMeSend(true);
+                        msg.save();
+                        EventBus.getDefault().post(new MessageEvent(msg));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        Log.e(throwable.toString(), "send message failure");
                     }
                 });
     }
 
-    public void checkGroupId(String groupName){
-        List<MultiChatRoom> list=DataSupport.findAll(MultiChatRoom.class);
-        for(int i=0;i<list.size();i++){
-            if(list.get(i).getRoomJid().equals(groupName)){
-                Intent intent=new Intent(this,GroupInfoActivity.class);
-                intent.putExtra("Id",list.get(i).getRoomId());
-                Log.e("check",list.get(i).getRoomId()+"");
+//    public void sendMulti(String message) {
+//        Observable.just(message)
+//                .observeOn(Schedulers.io())
+//                .subscribe(new Consumer<String>() {
+//                    @Override
+//                    public void accept(String message) {
+//                        try {
+//                            JSONObject json = new JSONObject();
+//                            json.put(ChatMessage.KEY_MESSAGE_CONTENT, message);
+//                            json.put(ChatMessage.KEY_MULTI_CHAT_SEND_USER, UserUntil.gsonUser.getUserPhone());//信息后缀必须为用户名
+////                            Log.e(mChatUser.getMeUsername(),mChatUser.getMeUsername());
+//                            mMultiUserChat.sendMessage(json.toString());
+//
+//
+//                            ChatMessage msg = new ChatMessage(1, true);
+//                            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
+//                            msg.setFriendNickname(chatRecord.getmFriendNickname());
+//                            msg.setFriendUsername(chatRecord.getmFriendUsername());
+//                            msg.setMeUsername(UserUntil.gsonUser.getUserPhone());
+//                            msg.setMeNickname(UserUntil.gsonUser.getNickname());
+//                            msg.setContent(message);
+//                            msg.setMulti(true);
+//                            msg.setUuid(chatRecord.getUuid());
+//                            msg.setMeSend(true);
+//                            msg.save();
+//                            EventBus.getDefault().post(new MessageEvent(msg));
+//                        } catch (Exception e) {
+//                            Log.e(e.toString(), "send message failure");
+//                        }
+//                    }
+//                });
+//    }
+
+    public void checkGroupId(String groupName) {
+        List<MultiChatRoom> list = DataSupport.findAll(MultiChatRoom.class);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).getRoomJid().equals(groupName)) {
+                Intent intent = new Intent(this, GroupInfoActivity.class);
+                intent.putExtra("Id", list.get(i).getRoomId());
+                Log.e("check", list.get(i).getRoomId() + "");
                 startActivity(intent);
+                break;
             }
         }
 

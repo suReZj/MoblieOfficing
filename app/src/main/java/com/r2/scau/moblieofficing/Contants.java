@@ -9,8 +9,8 @@ import android.os.Environment;
  */
 
 public class Contants {
-    public static final String SERVER_IP = "http://192.168.13.61:8089";
-    public static final String PHOTO_SERVER_IP = "http://192.168.13.61:8080";
+    public static final String SERVER_IP = "http://192.168.13.40:8089";
+    public static final String PHOTO_SERVER_IP = "http://192.168.13.40:8080";
 
     public static final String getInfo="/group";
     public static final String file_Server = "/fileServer";
@@ -32,7 +32,7 @@ public class Contants {
     public static final String joinGroup="/joinGroup.shtml";
 
     public static final String getGroupInfo="/getGroupInfo.shtml";
-    public static final String room_id="@conference.192.168.13.61";
+    public static final String room_id="@conference.192.168.13.40";
 
 
     public static final String createOfficeThing = "/createOfficeThing.shtml";
@@ -109,6 +109,8 @@ public class Contants {
         public static final int QRSCAN = 804;
 
         public static final int OPEN_SYSTEM_ALBUM = 805;
+
+        public static final int MOVE = 806;
 
     }
 

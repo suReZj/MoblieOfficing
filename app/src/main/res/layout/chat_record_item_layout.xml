@@ -21,14 +21,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     >
-        <ImageView
+        <com.r2.scau.moblieofficing.widge.popview.CircleImageView
             android:id="@+id/chat_friend_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="10dp"
             android:scaleType="centerCrop">
-        </ImageView>
+        </com.r2.scau.moblieofficing.widge.popview.CircleImageView>
         <TextView
             android:id="@+id/chat_message_count"
             android:layout_width="15dp"

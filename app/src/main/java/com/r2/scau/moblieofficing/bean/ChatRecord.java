@@ -18,7 +18,7 @@ public class ChatRecord extends DataSupport implements Parcelable{
     /**
      * 朋友头像地址
      */
-    private String mFriendAvatar;
+    private String mFriendAvatar=null;
     /**
      * 最后一条聊天记录
      */

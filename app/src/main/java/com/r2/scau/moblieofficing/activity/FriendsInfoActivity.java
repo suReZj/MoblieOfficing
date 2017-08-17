@@ -38,6 +38,7 @@ import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.DensityUtil;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,6 +48,7 @@ import java.util.List;
 import java.util.UUID;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.agora.openvcall.ui.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -192,6 +194,13 @@ public class FriendsInfoActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        videoToFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendsInfoActivity.this, io.agora.openvcall.ui.MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         qrOfFriend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,6 +224,8 @@ public class FriendsInfoActivity extends BaseActivity {
                     }
                 }
                 SmackManager.getInstance().addFriend(phone, userName, null);
+                RetrofitUntil.getFriend();
+                Toast.makeText(getApplicationContext(), "添加成功", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -338,7 +349,7 @@ public class FriendsInfoActivity extends BaseActivity {
                         if (userIconPath == null) {
                             ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
                         } else {
-                            Glide.with(getApplicationContext()).load(userIconPath).into(userIcon);
+                            Glide.with(getApplicationContext()).load(PHOTO_SERVER_IP+userIconPath).into(userIcon);
                         }
                     }
                     friendName.setLeftBottomString2(userName);

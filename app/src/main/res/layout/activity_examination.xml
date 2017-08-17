@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+
+    <include layout="@layout/toolbar_info"/>
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/examination_person"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftTextString="申请人手机："
+        app:sUseRipple="true">
+    </com.allen.library.SuperTextView>
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/examination_type"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:sLeftTextString="审批类型："
+        />
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/start_time"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:sLeftTextString="开始时间:"
+        app:sRightTextString="11.00"
+        >
+    </com.allen.library.SuperTextView>
+
+    <com.allen.library.SuperTextView
+        android:id="@+id/end_time"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:sLeftTextString="结束时间："
+        app:sRightTextString="4.00"
+        >
+    </com.allen.library.SuperTextView>
+
+    <com.allen.library.SuperTextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:sLeftTextString="理由："
+        app:sLineShow="top">
+    </com.allen.library.SuperTextView>
+
+    <TextView
+        android:id="@+id/examination_reason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"/>
+
+    <com.allen.library.SuperTextView
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:sLeftTextString="图片："
+        app:sLineShow="top">
+    </com.allen.library.SuperTextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.r2.scau.moblieofficing.widge.popview.CircleImageView
+            android:id="@+id/examination_photo"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_margin="10dp"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:id="@+id/select_true">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/select_ok"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:text="同意申请"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:id="@+id/select_false">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/select_close"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:text="拒绝申请"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>

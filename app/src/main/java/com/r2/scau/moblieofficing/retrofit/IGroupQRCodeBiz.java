@@ -3,6 +3,7 @@ package com.r2.scau.moblieofficing.retrofit;
 import com.r2.scau.moblieofficing.gson.GsonGroupInfo;
 import com.r2.scau.moblieofficing.gson.GsonGroupQRCode;
 
+import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -15,7 +16,7 @@ import retrofit2.http.POST;
 public interface IGroupQRCodeBiz {
     @POST("createGroupQRcode.shtml")
     @FormUrlEncoded
-    Call<GsonGroupQRCode> getGroupQR(
+    Observable<GsonGroupQRCode> getGroupQR(
             @Field("groupId") Integer groupId
     );
 }

@@ -30,15 +30,15 @@
             <!--android:layout_height="0.5dp"-->
             <!--android:background="#6c6c6c"/>-->
 
-        <!--<TextView-->
-            <!--android:id="@+id/transmit_message"-->
-            <!--android:layout_width="80dp"-->
-            <!--android:layout_height="40dp"-->
-            <!--android:gravity="center"-->
-            <!--android:text="收藏"-->
-            <!--android:background="@drawable/selector_menu_popup"-->
-            <!--android:textSize="18sp"-->
-            <!--android:textColor="@color/colorBlack"/>-->
+        <TextView
+            android:id="@+id/transmit_message"
+            android:layout_width="80dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="审批"
+            android:background="@drawable/selector_menu_popup"
+            android:textSize="18sp"
+            android:textColor="@color/colorBlack"/>
 
         <!--<View-->
             <!--android:layout_width="100dp"-->

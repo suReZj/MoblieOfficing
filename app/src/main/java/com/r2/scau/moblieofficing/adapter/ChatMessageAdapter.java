@@ -16,8 +16,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.r2.scau.moblieofficing.activity.ExaminationActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.gson.GsonUser;
 import com.r2.scau.moblieofficing.gson.GsonUsers;
@@ -41,6 +43,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.r2.scau.moblieofficing.Contants.PHOTO_SERVER_IP;
 import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
 import static com.r2.scau.moblieofficing.Contants.getInfo;
 
@@ -65,7 +68,6 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         TextView lTextView;
         ImageView lIcon;
         TextView lUserName;
-        TextView rUserName;
         TextView timeText;
         RecyclerView recyclerView;
         RelativeLayout rightLayout;
@@ -100,12 +102,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         if (chat_message_bean.isMeSend()) {
             holder.rightLayout.setVisibility(View.VISIBLE);
             holder.leftLayout.setVisibility(View.GONE);
-//            holder.rUserName.setText(chat_message_bean.getMeNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
 
-
             //设置头像
-            ImageUtils.setUserImageIcon(mContext,holder.rIcon,chatMessageList.get(position).getMeNickname());
+            ImageUtils.setUserImageIcon(mContext, holder.rIcon, chatMessageList.get(position).getMeNickname());
 
             try {
                 EmojiUtil.handlerEmojiText(holder.rTextView, chat_message_bean.getContent(), this.mContext);
@@ -116,17 +116,15 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             holder.leftLayout.setVisibility(View.VISIBLE);
             holder.rightLayout.setVisibility(View.GONE);
             holder.lUserName.setText(chat_message_bean.getFriendNickname());
-//            Log.e("nickname",chat_message_bean.getFriendNickname());
             holder.timeText.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(chat_message_bean.getDatetime()));
-
-
             //设置头像
-            getFriendInfo(chatMessageList.get(position).getFriendUsername());
-            if(userIcon==null){
-                ImageUtils.setUserImageIcon(mContext,holder.lIcon,chatMessageList.get(position).getFriendNickname());
-            }else {
-                Glide.with(mContext).load(userIcon).into(holder.lIcon);
+
+            if (chatMessageList.get(position).getIconPath() == null) {
+                ImageUtils.setUserImageIcon(mContext, holder.lIcon, chatMessageList.get(position).getFriendNickname());
+            } else {
+                Glide.with(mContext).load(PHOTO_SERVER_IP + chatMessageList.get(position).getIconPath()).into(holder.lIcon);
             }
+
 
             try {
                 EmojiUtil.handlerEmojiText(holder.lTextView, chat_message_bean.getContent(), this.mContext);
@@ -158,38 +156,38 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         holder.lIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone=null;
-                if (chatMessageList.get(position).isMeSend()){
-                    phone= UserUntil.gsonUser.getUserPhone();
-                }else {
-                    if(chatMessageList.get(position).isMulti()){
-                        phone=chatMessageList.get(position).getMultiUserName();
-                    }else {
-                        phone=chatMessageList.get(position).getFriendUsername();
+                String phone = null;
+                if (chatMessageList.get(position).isMeSend()) {
+                    phone = UserUntil.gsonUser.getUserPhone();
+                } else {
+                    if (chatMessageList.get(position).isMulti()) {
+                        phone = chatMessageList.get(position).getMultiUserName();
+                    } else {
+                        phone = chatMessageList.get(position).getFriendUsername();
                     }
                 }
-                Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                Intent intent = new Intent(mContext, FriendsInfoActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("phone",phone);
+                intent.putExtra("phone", phone);
                 mContext.startActivity(intent);
             }
         });
         holder.rIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String phone=null;
-                if (chatMessageList.get(position).isMeSend()){
-                    phone= UserUntil.gsonUser.getUserPhone();
-                }else {
-                    if(chatMessageList.get(position).isMulti()){
-                        phone=chatMessageList.get(position).getMultiUserName();
-                    }else {
-                        phone=chatMessageList.get(position).getFriendUsername();
+                String phone = null;
+                if (chatMessageList.get(position).isMeSend()) {
+                    phone = UserUntil.gsonUser.getUserPhone();
+                } else {
+                    if (chatMessageList.get(position).isMulti()) {
+                        phone = chatMessageList.get(position).getMultiUserName();
+                    } else {
+                        phone = chatMessageList.get(position).getFriendUsername();
                     }
                 }
-                Intent intent=new Intent(mContext, FriendsInfoActivity.class);
+                Intent intent = new Intent(mContext, FriendsInfoActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("phone",phone);
+                intent.putExtra("phone", phone);
                 mContext.startActivity(intent);
             }
         });
@@ -197,9 +195,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
 
     @Override
     public int getItemCount() {
-
         return chatMessageList == null ? 0 : chatMessageList.size();
-
     }
 
     public void add(ChatMessage item) {
@@ -217,7 +213,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         public MenuPopup(Activity context) {
             super(context, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             findViewById(R.id.copy_message).setOnClickListener(this);
-//            findViewById(R.id.transmit_message).setOnClickListener(this);
+            findViewById(R.id.transmit_message).setOnClickListener(this);
         }
 
         @Override
@@ -244,8 +240,8 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
         public void showPopupWindow(View v) {
 //            setOffsetX((getWidth() - v.getWidth()));
 //            setOffsetY(-4 * v.getHeight());
-            setOffsetX(v.getWidth()/2);
-            setOffsetY(-2*v.getHeight());
+            setOffsetX(v.getWidth() / 2);
+            setOffsetY(-v.getHeight()/8);
             super.showPopupWindow(v);
         }
 
@@ -272,49 +268,34 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
                     clipboardManager.setText(chatMessageList.get(mPosition).getContent());
                     this.dismiss();
                     break;
-//                case R.id.transmit_message:
-//
-//                    this.dismiss();
-//                    break;
+                case R.id.transmit_message:
+                    if (chatMessageList.get(mPosition).isMeSend()) {
+                        Toast.makeText(mContext, "不能审批自己发送的事务", Toast.LENGTH_SHORT).show();
+                        this.dismiss();
+                        break;
+                    }
+                    if (chatMessageList.get(mPosition).getContent().indexOf("长按进行审批")!=-1) {
+                        chatMessageList.get(mPosition).getContent();
+                        Log.e("aaaaaaaaa", chatMessageList.get(mPosition).getContent());
+                        String content = chatMessageList.get(mPosition).getContent();
+                        String type = content.substring(content.indexOf("号") + 2, content.length());
+                        Log.e("aaaaaaaaa", type);
+                        Intent intent = new Intent(mContext, ExaminationActivity.class);
+                        Integer omid = Integer.parseInt(type);
+                        intent.putExtra("omid", omid);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        mContext.startActivity(intent);
+                        this.dismiss();
+                        break;
+                    } else {
+                        Toast.makeText(mContext, "不是可以审批的事务", Toast.LENGTH_SHORT).show();
+                        this.dismiss();
+                        break;
+                    }
                 default:
                     break;
 
             }
         }
     }
-
-    public void getFriendInfo(String Phone) {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_IP+getInfo+"/")
-                .callFactory(OkHttpUntil.getInstance())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        IFriendInfoByPhoneBiz iFriendInfoBiz=retrofit.create(IFriendInfoByPhoneBiz.class);
-        Call<GsonUsers> call = iFriendInfoBiz.getInfo(Phone);
-        call.enqueue(new Callback<GsonUsers>() {
-            @Override
-            public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
-                GsonUsers gsonUsers = response.body();
-
-                if (gsonUsers.getCode() == 200) {
-                    GsonUser user=gsonUsers.getUserInfo();
-                    if(user.getUserHeadPortrait()!=null){
-                        userIcon=user.getUserHeadPortrait().toString();
-                        Log.e("icon!=null",userIcon);
-                    }else {
-                        Log.e("icon==null","icon==null");
-                    }
-                    Log.e("getIcon", "success");
-                } else {
-                    Log.e("getIcon", gsonUsers.getMsg());
-                }
-            }
-            @Override
-            public void onFailure(Call<GsonUsers> call, Throwable t) {
-                Log.e("getIcon", "fail");
-            }
-        });
-    }
-
-
 }

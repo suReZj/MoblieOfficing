@@ -3,6 +3,8 @@ package com.r2.scau.moblieofficing.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,12 +33,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static com.r2.scau.moblieofficing.Contants.PHOTO_SERVER_IP;
 import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
 import static com.r2.scau.moblieofficing.Contants.getInfo;
 
@@ -52,7 +57,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
     private final LayoutInflater inflater;
     private String userIcon;
 
-
     public List<ChatRecord> getMessageList() {
         return messageList;
     }
@@ -61,6 +65,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         messageList = list;
         mContext = context;
         this.inflater = LayoutInflater.from(context);
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).ismIsMulti()) {
+                list.get(i).setmFriendAvatar(null);
+            }
+            getFriendInfo(list.get(i).getmFriendUsername(), i);
+        }
     }
 
     static class messageHolder extends RecyclerView.ViewHolder {
@@ -73,9 +83,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         TextView chatTime;
         TextView unRead;
         CardView cardView;
-        String iconPath="";
-        String phone="";
-
+        String iconPath = "";
+        String phone = "";
+        Handler handler;
 
         public messageHolder(final View view) {
             super(view);
@@ -121,20 +131,13 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
     }
 
     @Override
-    public void onBindViewHolder(messageHolder holder, final int position) {
-        Resources resources=mContext.getResources();
-
-        if(messageList.get(position).ismIsMulti()){
-            ImageUtils.setUserImageIcon(mContext,holder.icon,messageList.get(position).getmFriendNickname());
+    public void onBindViewHolder(final messageHolder holder, final int position) {
+        if(messageList.get(position).getmFriendAvatar()==null){
+            ImageUtils.setUserImageIcon(mContext, holder.icon, messageList.get(position).getmFriendNickname());
         }else {
-            getFriendInfo(messageList.get(position).getmFriendUsername());
-            if(userIcon==null){
-                ImageUtils.setUserImageIcon(mContext,holder.icon,messageList.get(position).getmFriendNickname());
-            }else {
-                Glide.with(mContext).load(userIcon).into(holder.icon);
-            }
+            Glide.with(mContext).load(PHOTO_SERVER_IP + messageList.get(position).getmFriendAvatar()).into(holder.icon);
         }
-
+        Resources resources = mContext.getResources();
 
 
         ChatRecord msg = messageList.get(position);
@@ -159,14 +162,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
                     EmojiUtil.handlerEmojiText(holder.chatContent, msg.getmLastMessage(), this.mContext);
                 }
                 holder.chatTitle.setText(msg.getmFriendNickname());
-                if(msg.getmChatTime()==null){
+                if (msg.getmChatTime() == null) {
                     holder.chatTime.setText(null);
-                }else {
+                } else {
                     holder.chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getmChatTime()));
                 }
 
-//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-//                ((messageHolder) holder).unRead.setText(messageCount);
                 if ((msg.getmUnReadMessageCount() > 0) && (msg.getmUnReadMessageCount() <= 99)) {
                     holder.unRead.setVisibility(View.VISIBLE);
                     holder.unRead.setText(String.valueOf(msg.getmUnReadMessageCount()));
@@ -191,13 +192,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
                     EmojiUtil.handlerEmojiText(holder.chatContent, msg.getmLastMessage(), this.mContext);
                 }
                 holder.chatTitle.setText(msg.getmFriendNickname());
-                if(msg.getmChatTime()==null){
+                if (msg.getmChatTime() == null) {
                     holder.chatTime.setText(null);
-                }else {
+                } else {
                     holder.chatTime.setText(ChatTimeUtil.getFriendlyTimeSpanByNow(msg.getmChatTime()));
                 }
-//                String messageCount = msg.getUnReadMessageCount() > 0 ? String.valueOf(msg.getUnReadMessageCount()) : "";
-//                ((messageHolder) holder).unRead.setText(messageCount);
                 if ((msg.getmUnReadMessageCount() > 0) && (msg.getmUnReadMessageCount() <= 99)) {
                     holder.unRead.setVisibility(View.VISIBLE);
                     holder.unRead.setText(String.valueOf(msg.getmUnReadMessageCount()));
@@ -261,39 +260,40 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
         notifyDataSetChanged();
     }
 
-    public void getFriendInfo(String Phone) {
+    public void getFriendInfo(String Phone, final int position) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(SERVER_IP+getInfo+"/")
+                .baseUrl(SERVER_IP + getInfo + "/")
                 .callFactory(OkHttpUntil.getInstance())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        IFriendInfoByPhoneBiz iFriendInfoBiz=retrofit.create(IFriendInfoByPhoneBiz.class);
+        IFriendInfoByPhoneBiz iFriendInfoBiz = retrofit.create(IFriendInfoByPhoneBiz.class);
         Call<GsonUsers> call = iFriendInfoBiz.getInfo(Phone);
         call.enqueue(new Callback<GsonUsers>() {
             @Override
             public void onResponse(Call<GsonUsers> call, Response<GsonUsers> response) {
                 GsonUsers gsonUsers = response.body();
-
                 if (gsonUsers.getCode() == 200) {
-                    GsonUser user=gsonUsers.getUserInfo();
-                    if(user.getUserHeadPortrait()!=null){
-                        userIcon=user.getUserHeadPortrait().toString();
-                        Log.e("icon!=null",userIcon);
-                    }else {
-                        Log.e("icon==null","icon==null");
+                    GsonUser user = gsonUsers.getUserInfo();
+                    if (user.getUserHeadPortrait() != null) {
+                        userIcon = user.getUserHeadPortrait().toString();
+                        Log.e("icon!=null", userIcon);
+                        messageList.get(position).setmFriendAvatar(userIcon);
+                    } else {
+                        messageList.get(position).setmFriendAvatar(null);
+                        Log.e("icon==null", "icon==null");
                     }
                     Log.e("getIcon", "success");
                 } else {
                     Log.e("getIcon", gsonUsers.getMsg());
                 }
             }
+
             @Override
             public void onFailure(Call<GsonUsers> call, Throwable t) {
                 Log.e("getIcon", "fail");
             }
         });
     }
-
 
 
 }

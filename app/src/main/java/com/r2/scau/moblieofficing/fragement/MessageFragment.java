@@ -2,7 +2,6 @@ package com.r2.scau.moblieofficing.fragement;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -28,15 +27,15 @@ import android.widget.Toast;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.AddFriendActivity;
-import com.r2.scau.moblieofficing.activity.ChatActivity;
 import com.r2.scau.moblieofficing.activity.EditGroupActivity;
+import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
+import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
+import com.r2.scau.moblieofficing.activity.GroupInfoActivity;
 import com.r2.scau.moblieofficing.adapter.MessageAdapter;
 import com.r2.scau.moblieofficing.bean.ChatMessage;
 import com.r2.scau.moblieofficing.bean.ChatRecord;
 import com.r2.scau.moblieofficing.event.MessageEvent;
-import com.r2.scau.moblieofficing.smack.SmackListenerManager;
 import com.r2.scau.moblieofficing.smack.SmackManager;
-import com.r2.scau.moblieofficing.untils.DateUtil;
 import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 import com.xys.libzxing.zxing.activity.CaptureActivity;
@@ -44,15 +43,14 @@ import com.xys.libzxing.zxing.activity.CaptureActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.jivesoftware.smackx.muc.MultiUserChat;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
 
@@ -100,12 +98,12 @@ public class MessageFragment extends Fragment {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 if (item.getItemId() == R.id.scan) {
-                    if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_CONTACTS)
-                            != PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(getActivity() ,
-                                new String[]{Manifest.permission.READ_CONTACTS},
+                    if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                            != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.CAMERA},
                                 MY_PERMISSIONS_REQUEST_CAMERA);
-                    }else {
+                    } else {
                         openQRCodeActivity();
                     }
                 }
@@ -118,6 +116,8 @@ public class MessageFragment extends Fragment {
                     startActivity(addFriendIntent);
                 }
                 if (item.getItemId() == R.id.cloud) {
+                    Intent intent = new Intent(getActivity(), FileTypeSelectActivity.class);
+                    startActivity(intent);
                 }
                 return true;
             }
@@ -153,9 +153,11 @@ public class MessageFragment extends Fragment {
     public void onChatRecordEvent(ChatRecord event) {
         //向其他人发起聊天时接收到的事件
         if (isRemoving() || message_adapter == null) {
+            Log.e("向其他人发起聊天时接收到的事件", "向其他人发起聊天时接收到的事件");
             return;
         }
         if (message_adapter.getMessageList().indexOf(event) > -1) {
+            Log.e("已经存在此人的聊天窗口记录", "已经存在此人的聊天窗口记录");
             return;//已经存在此人的聊天窗口记录
         }
         addChatRecord(event);
@@ -175,6 +177,7 @@ public class MessageFragment extends Fragment {
             message.getChatMessage().save();
             chatRecord = new ChatRecord(message.getChatMessage());
             chatRecord.setSetTopFlag(false);
+            chatRecord.setmFriendAvatar(message.getChatMessage().getIconPath());
             addChatRecord(chatRecord);
         } else {
             Log.d("chatRecord2", "chatRecord2");
@@ -197,8 +200,10 @@ public class MessageFragment extends Fragment {
             }
 //            message_adapter.update(chatRecord);
             if (!message.getChatMessage().isMulti()) {
+                chatRecord.setmFriendAvatar(message.getChatMessage().getIconPath());
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
             } else {
+                chatRecord.setmFriendAvatar(null);
                 chatRecord.updateAll("mchatjid=? and mfriendusername=?", chatRecord.getmChatJid(), chatRecord.getmFriendUsername());
             }
             refreshData();
@@ -289,9 +294,9 @@ public class MessageFragment extends Fragment {
     }
 
 
-    public void openQRCodeActivity(){
-        Intent intent = new Intent(getActivity(),CaptureActivity.class);
-        getActivity().startActivityForResult(intent, Contants.RequestCode.QRSCAN);
+    public void openQRCodeActivity() {
+        Intent intent = new Intent(getActivity(), CaptureActivity.class);
+        startActivityForResult(intent, Contants.RequestCode.QRSCAN);
     }
 
     @Override
@@ -301,20 +306,80 @@ public class MessageFragment extends Fragment {
     }
 
     public void refreshData() {
-        //我的用户名
         String whereClause = UserUntil.gsonUser.getUserPhone();
         Log.e("whereClausewhereClause",whereClause);
         msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"1")
-//                .where("settopflag=?", "1")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         newList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"0")
-//                .where("settopflag=?", "0")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         msgList.addAll(newList);
         message_adapter = new MessageAdapter(getContext(), msgList);
         recyclerView.setAdapter(message_adapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case Contants.RequestCode.QRSCAN:
+                if (resultCode == RESULT_OK) {
+                    /**
+                     * Create by edwincheng in 2017/08/04
+                     * resultdata代表的是 二维码内部储存的信息
+                     *
+                     * 自己解析resultdata中的字段 然后在做相应操作
+                     */
+                    String resultdata = data.getStringExtra("result");
+                    Log.e("二维码扫描结果", resultdata);
+                    String[] resultarr = resultdata.split(":");
+
+                    if (resultarr.length == 2) {
+                        if (resultarr[0].equals("user")) {
+                            //打开个人信息页面的activity
+
+                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(getActivity(), FriendsInfoActivity.class);
+                            bundle.putString("phone", resultarr[1]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+
+                        } else if (resultarr[0].equals("groupId")) {
+//                            打开 查看群信息 的Actiity
+                            Bundle bundle = new Bundle();
+                            Intent intent = new Intent(getActivity(), GroupInfoActivity.class);
+                            bundle.putInt("Id", Integer.parseInt(resultarr[1]));
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        } else {
+                            ToastUtils.show(getActivity(), "未知二维码信息", Toast.LENGTH_SHORT);
+                        }
+                    } else {
+                        ToastUtils.show(getActivity(), "未知的二维码信息", Toast.LENGTH_SHORT);
+                    }
+
+
+                } else if (resultCode == RESULT_CANCELED) {
+                    Log.e("二维码扫描结果", "用户选择取消");
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.e("permission", "accept");
+                openQRCodeActivity();
+            } else {
+                // Permission Denied
+                Toast.makeText(getActivity(), "Permission Denied", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
 

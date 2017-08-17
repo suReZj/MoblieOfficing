@@ -1,6 +1,7 @@
 package com.r2.scau.moblieofficing.fragement;
 
 import android.Manifest;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +30,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.allen.library.SuperTextView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
 import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
+import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.bean.ImageIconBean;
+import com.r2.scau.moblieofficing.gson.GsonQRCode;
+import com.r2.scau.moblieofficing.retrofit.IQRCodeBiz;
 import com.r2.scau.moblieofficing.untils.BitmapToRound_Util;
 import com.r2.scau.moblieofficing.untils.DateUtil;
+import com.r2.scau.moblieofficing.untils.DensityUtil;
 import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
@@ -53,6 +64,15 @@ import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.r2.scau.moblieofficing.Contants.PHOTO_SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.SERVER_IP;
+import static com.r2.scau.moblieofficing.Contants.file_Server;
 
 /**
  * Created by 嘉进 on 9:23.
@@ -72,6 +92,10 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
     private String mCurrentPhotoPath = null;
     private RelativeLayout mRelativeLayout;
     private BitmapToRound_Util round_Util = new BitmapToRound_Util();
+    private SuperTextView userInfo;
+    private SuperTextView QRcode;
+    private SuperTextView cloudDisk;
+    private String QRPath;
 
     public static final int ALBUM_REQUEST = 100;
     public static final int CAMERA_REQUEST = 200;
@@ -96,10 +120,13 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         userNameTV = (TextView) view.findViewById(R.id.tv_user_name);
         userPhonrTV = (TextView) view.findViewById(R.id.tv_user_phone);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        userInfo=(SuperTextView)view.findViewById(R.id.st_user_info);
+        QRcode=(SuperTextView)view.findViewById(R.id.st_qr_code);
+        cloudDisk = (SuperTextView) view.findViewById(R.id.st_cloud_disk);
 
         Object object = UserUntil.gsonUser.getUserHeadPortrait();
         if (object == null || object.toString(). equals("")){
-            photoIV.setImageDrawable(ImageUtils.getIcon(UserUntil.gsonUser.getNickname(), 32));
+            photoIV.setImageDrawable(ImageUtils.getIcon(UserUntil.gsonUser.getNickname(), 23));
         }else {
             Glide.with(mContext)
                     .load(Contants.PHOTO_SERVER_IP + object.toString())
@@ -111,6 +138,9 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
 
 
         mRelativeLayout.setOnClickListener(this);
+        userInfo.setOnClickListener(this);
+        QRcode.setOnClickListener(this);
+        cloudDisk.setOnClickListener(this);
         mToolbar.setTitle("");
         titleTV.setText("我的");
     }
@@ -308,7 +338,18 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
                 } else {
                     createDialog();
                 }
-
+                break;
+            case R.id.st_user_info:
+                Intent intent=new Intent(v.getContext(), FriendsInfoActivity.class);
+                intent.putExtra("phone",UserUntil.gsonUser.getUserPhone());
+                startActivity(intent);
+                break;
+            case R.id.st_qr_code:
+                getQRCode(UserUntil.gsonUser.getUserPhone());
+                break;
+            case R.id.st_cloud_disk:
+                Intent intent1 = new Intent(getActivity(), FileTypeSelectActivity.class);
+                startActivity(intent1);
                 break;
         }
     }
@@ -326,5 +367,61 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
             }
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    private void showImageDialog() {
+
+
+//        imageView.setBackground(getDrawable(R.mipmap.test));
+        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_content_circle, null);
+        Dialog bottomDialog = new Dialog(getContext(), R.style.BottomDialog);
+        final ImageView imageView = (ImageView) contentView.findViewById(R.id.QR_image);
+        Log.e("path", QRPath);
+        Glide.with(getContext()).load(PHOTO_SERVER_IP + QRPath).into(new SimpleTarget<GlideDrawable>() {
+            @Override
+            public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                imageView.setBackground(resource);
+                Log.e("path", QRPath);
+            }
+        });
+//        Glide.with(this).load(QRPath).into(imageView);
+        bottomDialog.setContentView(contentView);
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) contentView.getLayoutParams();
+        params.width = getResources().getDisplayMetrics().widthPixels - DensityUtil.dp2px(getContext(), 16f);
+        params.bottomMargin = DensityUtil.dp2px(getContext(), 8f);
+        contentView.setLayoutParams(params);
+        bottomDialog.setCanceledOnTouchOutside(true);
+        bottomDialog.getWindow().setGravity(Gravity.CENTER);
+        bottomDialog.getWindow().setWindowAnimations(R.style.BottomDialog_Animation);
+        bottomDialog.show();
+    }
+
+
+    public void getQRCode(String Phone) {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(SERVER_IP + file_Server + "/")
+                .callFactory(OkHttpUntil.getInstance())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        IQRCodeBiz iqrCodeBiz = retrofit.create(IQRCodeBiz.class);
+        Call<GsonQRCode> call = iqrCodeBiz.getQR(Phone);
+        call.enqueue(new Callback<GsonQRCode>() {
+            @Override
+            public void onResponse(Call<GsonQRCode> call, Response<GsonQRCode> response) {
+                GsonQRCode gsonQRCode = response.body();
+                if (gsonQRCode.getCode() == 200) {
+                    QRPath = gsonQRCode.getPath();
+                    Log.e("getQR", "success");
+                    showImageDialog();
+                } else {
+                    Log.e("getQR", gsonQRCode.getMsg());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GsonQRCode> call, Throwable t) {
+                Log.e("getInfo", "fail");
+            }
+        });
     }
 }
