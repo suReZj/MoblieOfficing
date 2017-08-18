@@ -1,16 +1,12 @@
 package com.r2.scau.moblieofficing.activity;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -263,7 +259,7 @@ public class SignUpActivity extends BaseActivity {
 
         final RequestBody requestBody = builder.build();
         Request request = new Request.Builder()
-                .url(Contants.SERVER_IP + "fileServer/uploadPortrait.shtml")
+                .url(Contants.SERVER_IP + "/fileServer/uploadPortrait.shtml")
                 .addHeader("cookie", OkHttpUntil.loginSessionID)
                 .post(requestBody)
                 .build();

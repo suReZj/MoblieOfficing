@@ -23,12 +23,16 @@ import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.SelectGroupActivity;
 import com.r2.scau.moblieofficing.adapter.NoticeAdapter;
+import com.r2.scau.moblieofficing.event.RefreshNoticeEvent;
 import com.r2.scau.moblieofficing.gson.GsonGroup;
 import com.r2.scau.moblieofficing.gson.GsonNotice;
 import com.r2.scau.moblieofficing.gson.GsonNotices;
 import com.r2.scau.moblieofficing.retrofit.INoticeBiz;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,12 +148,18 @@ public class NoticeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
 
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshNoticeEvent(RefreshNoticeEvent event) {
+        //向其他人发起聊天时接收到的事件
+        getNotices();
+        adapter.addAll(notices, creators);
     }
 
 }

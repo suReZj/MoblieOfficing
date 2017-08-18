@@ -30,6 +30,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
     // TinyPinyin核心包，约80KB
     // 可选，适用于Android的中国地区词典
     compile project(':library:smoothcheckbox')

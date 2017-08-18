@@ -4,8 +4,6 @@ package com.r2.scau.moblieofficing;
 import android.content.Context;
 import android.util.Log;
 
-import org.litepal.LitePalApplication;
-
 import io.agora.openvcall.AGApplication;
 
 /**

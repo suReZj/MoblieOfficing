@@ -12,8 +12,11 @@ import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.Contants;
+import com.r2.scau.moblieofficing.event.RefreshNoticeEvent;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -133,6 +136,10 @@ public class SendNoticeActivity extends BaseActivity {
                     Toast toast = Toast.makeText(getApplicationContext(), "合格", Toast.LENGTH_SHORT);
                     toast.show();
                     send(title, author, content);
+                    Intent intent = new Intent(SendNoticeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    EventBus.getDefault().post(new RefreshNoticeEvent());
+
                 }
         }
         return super.onOptionsItemSelected(item);

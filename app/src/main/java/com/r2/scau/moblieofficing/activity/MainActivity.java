@@ -1,34 +1,40 @@
 package com.r2.scau.moblieofficing.activity;
 
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.r2.scau.moblieofficing.Contants;
 import com.r2.scau.moblieofficing.R;
+import com.r2.scau.moblieofficing.event.NoticeEvent;
 import com.r2.scau.moblieofficing.fragement.ContactFragment;
 import com.r2.scau.moblieofficing.fragement.MessageFragment;
 import com.r2.scau.moblieofficing.fragement.NoticeFragment;
 import com.r2.scau.moblieofficing.fragement.UserInfoFragment;
 import com.r2.scau.moblieofficing.fragement.WorkFragment;
-import com.r2.scau.moblieofficing.untils.ToastUtils;
 import com.r2.scau.moblieofficing.widge.NoScrollViewPager;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.x;
+import static android.R.attr.y;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener{
 
@@ -262,4 +268,31 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
             super.onBackPressed();
         }
     }
+
+    public void setViewPagerToNotice(){
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNoticeEvent(NoticeEvent event) {
+        /**
+         * 模拟mNoticeTV点击
+         */
+        long downTime = SystemClock.uptimeMillis();
+
+        MotionEvent downEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_DOWN, x, y, 0);
+        downTime += 1000;
+
+        MotionEvent upEvent = MotionEvent.obtain(downTime, downTime,
+                MotionEvent.ACTION_UP, x, y, 0);
+
+        mNoticeTV.onTouchEvent(downEvent);
+        mNoticeTV.onTouchEvent(upEvent);
+        downEvent.recycle();
+        upEvent.recycle();
+
+    }
+
+
 }

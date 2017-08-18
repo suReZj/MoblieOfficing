@@ -14,6 +14,7 @@ import com.r2.scau.moblieofficing.gson.GsonUsers;
 import com.r2.scau.moblieofficing.retrofit.ILoginBiz;
 import com.r2.scau.moblieofficing.smack.SmackManager;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
+import com.r2.scau.moblieofficing.untils.RetrofitUntil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
 
 import retrofit2.Call;
@@ -81,6 +82,8 @@ public class SearchPhoneActivity extends BaseActivity {
                     SmackManager.getInstance().addFriend(phone, gsonUsers.getUserInfo().getNickname(), null);
                     Toast toast = Toast.makeText(getApplicationContext(), "添加好友成功", Toast.LENGTH_SHORT);
                     toast.show();
+                    RetrofitUntil.getFriend();
+                    finish();
                 }else {
                     Toast toast = Toast.makeText(getApplicationContext(), "添加好友失败", Toast.LENGTH_SHORT);
                     toast.show();

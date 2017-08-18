@@ -15,10 +15,12 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/ic_search"
+        app:sLeftIconWidth="45dp"
+        app:sLeftIconHeight="45dp"
         app:sLeftTextString="@string/search_by_phone"
         app:sUseRipple="true"
-        app:sLineShow="both"
-        app:sLineColor="@color/colorGray">
+        app:sLineShow="bottom"
+        app:sLineColor="@color/colorLightGray">
     </com.allen.library.SuperTextView>
 
     <com.allen.library.SuperTextView
@@ -26,9 +28,11 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         app:sLeftIconRes="@mipmap/icon_contact_local"
+        app:sLeftIconWidth="45dp"
+        app:sLeftIconHeight="45dp"
         app:sLeftTextString="@string/add_by_contact"
         app:sUseRipple="true"
         app:sLineShow="bottom"
-        app:sLineColor="@color/colorGray">
+        app:sLineColor="@color/colorLightGray">
     </com.allen.library.SuperTextView>
 </LinearLayout>

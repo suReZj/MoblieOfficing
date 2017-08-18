@@ -41,6 +41,7 @@ import com.r2.scau.moblieofficing.R;
 import com.r2.scau.moblieofficing.activity.FileTypeSelectActivity;
 import com.r2.scau.moblieofficing.activity.FriendsInfoActivity;
 import com.r2.scau.moblieofficing.bean.ImageIconBean;
+import com.r2.scau.moblieofficing.event.NoticeEvent;
 import com.r2.scau.moblieofficing.gson.GsonQRCode;
 import com.r2.scau.moblieofficing.retrofit.IQRCodeBiz;
 import com.r2.scau.moblieofficing.untils.BitmapToRound_Util;
@@ -50,6 +51,8 @@ import com.r2.scau.moblieofficing.untils.ImageUtils;
 import com.r2.scau.moblieofficing.untils.OkHttpUntil;
 import com.r2.scau.moblieofficing.untils.SharedPrefUtil;
 import com.r2.scau.moblieofficing.untils.UserUntil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -94,6 +97,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
     private BitmapToRound_Util round_Util = new BitmapToRound_Util();
     private SuperTextView userInfo;
     private SuperTextView QRcode;
+    private SuperTextView notice;
     private SuperTextView cloudDisk;
     private String QRPath;
 
@@ -123,6 +127,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         userInfo=(SuperTextView)view.findViewById(R.id.st_user_info);
         QRcode=(SuperTextView)view.findViewById(R.id.st_qr_code);
         cloudDisk = (SuperTextView) view.findViewById(R.id.st_cloud_disk);
+        notice = (SuperTextView) view.findViewById(R.id.st_notice);
 
         Object object = UserUntil.gsonUser.getUserHeadPortrait();
         if (object == null || object.toString(). equals("")){
@@ -141,9 +146,11 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         userInfo.setOnClickListener(this);
         QRcode.setOnClickListener(this);
         cloudDisk.setOnClickListener(this);
+        notice.setOnClickListener(this);
         mToolbar.setTitle("");
         titleTV.setText("我的");
     }
+
 
     public void createDialog() {
         final String items[] = {"拍照", "从相册中选择"};
@@ -344,6 +351,9 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
                 intent.putExtra("phone",UserUntil.gsonUser.getUserPhone());
                 startActivity(intent);
                 break;
+            case R.id.st_notice:
+                EventBus.getDefault().post(new NoticeEvent());
+                break;
             case R.id.st_qr_code:
                 getQRCode(UserUntil.gsonUser.getUserPhone());
                 break;
@@ -368,6 +378,7 @@ public class UserInfoFragment extends Fragment implements View.OnClickListener {
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
+
 
     private void showImageDialog() {
 
