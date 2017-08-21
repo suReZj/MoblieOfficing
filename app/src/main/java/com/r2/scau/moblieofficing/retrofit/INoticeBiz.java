@@ -12,7 +12,7 @@ import retrofit2.http.POST;
  */
 
 public interface INoticeBiz {
-    @POST("getTheGroupAllAnnouncements.shtml")
+    @POST("getTheGroupAnnouncementsByPage.shtml")
     @FormUrlEncoded
-    Call<GsonNotices> getNotice(@Field("userPhone") String userPhone, @Field("groupId") long groupId);
+    Call<GsonNotices> getNotice(@Field("userPhone") String userPhone, @Field("startPos") long startPos);
 }

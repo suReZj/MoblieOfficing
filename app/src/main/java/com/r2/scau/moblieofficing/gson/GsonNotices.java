@@ -19,6 +19,12 @@ public class GsonNotices {
     @SerializedName("announcementList")
     @Expose
     private List<GsonNotice> announcementList = null;
+    @SerializedName("isNext")
+    @Expose
+    private Boolean isNext;
+    @SerializedName("startPos")
+    @Expose
+    private Integer startPos;
 
     public Integer getCode() {
         return code;
@@ -42,5 +48,21 @@ public class GsonNotices {
 
     public void setAnnouncementList(List<GsonNotice> announcementList) {
         this.announcementList = announcementList;
+    }
+
+    public Boolean getIsNext() {
+        return isNext;
+    }
+
+    public void setIsNext(Boolean isNext) {
+        this.isNext = isNext;
+    }
+
+    public Integer getStartPos() {
+        return startPos;
+    }
+
+    public void setStartPos(Integer startPos) {
+        this.startPos = startPos;
     }
 }

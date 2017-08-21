@@ -42,7 +42,7 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeHold
     public void onBindViewHolder(NoticeHolder holder, int position) {
         Log.e("unreadNotice", "setData");
         holder.title.setText("标题：" + noticeList.get(position).getAtitle());
-        holder.authorAndTime.setText("来自："+ creatorList.get(position));
+//        holder.authorAndTime.setText("来自："+ creatorList.get(position));
         holder.content.setText("内容：" + noticeList.get(position).getAcontent());
     }
 
@@ -63,11 +63,14 @@ public class NoticeAdapter extends RecyclerView.Adapter<NoticeAdapter.NoticeHold
         }
     }
 
+    public void removeALL(){
+        noticeList.clear();
+        creatorList.clear();
+    }
+
     public void addAll(List<GsonNotice> notices, List<String> creators){
         if (notices != null && creators != null){
-            noticeList.clear();
-            notices.addAll(notices);
-            creatorList.clear();
+            noticeList.addAll(notices);
             creatorList.addAll(creators);
             notifyDataSetChanged();
         }
