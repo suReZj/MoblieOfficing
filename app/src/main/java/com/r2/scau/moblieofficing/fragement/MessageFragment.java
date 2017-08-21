@@ -2,17 +2,22 @@ package com.r2.scau.moblieofficing.fragement;
 
 
 import android.Manifest;
+import android.app.SearchManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -22,6 +27,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.r2.scau.moblieofficing.Contants;
@@ -48,10 +55,16 @@ import org.litepal.crud.DataSupport;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
 import okhttp3.OkHttpClient;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.SEARCH_SERVICE;
 
 
 /**
@@ -73,6 +86,7 @@ public class MessageFragment extends Fragment {
     private String flagOfMulti;
     private ArrayList<String> roomNameList;
     private OkHttpClient okHttpClient = new OkHttpClient();
+    private SearchView searchView;
 
     private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
 
@@ -93,6 +107,18 @@ public class MessageFragment extends Fragment {
 
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         registerForContextMenu(recyclerView);
+
+        searchView = (SearchView) view.findViewById(R.id.searchView);
+        searchView.setIconifiedByDefault(false);
+        searchView.setSubmitButtonEnabled(false);//添加提交按钮，监听在OnQueryTextListener的onQueryTextSubmit响应
+        searchView.setIconified(false);//输入框内icon不显示
+        searchView.clearFocus();//禁止弹出输入法，在某些情况下有需要
+//下面是在搜索栏的字体，设置为白色，默认也是黑色
+        TextView TextViewtextView=(TextView)searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        TextViewtextView.setTextColor(Color.WHITE);
+        TextView mSearchSrcTextView = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        mSearchSrcTextView.setHintTextColor(Color.WHITE);
+
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -119,6 +145,56 @@ public class MessageFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), FileTypeSelectActivity.class);
                     startActivity(intent);
                 }
+
+                if (item.getItemId() == R.id.searchBtn) {
+                    if (searchView.getVisibility() == View.GONE) {
+                        Log.e("searchView.getVisibility()==View.GONE", "searchView.getVisibility()==View.GONE");
+                        item.setIcon(R.drawable.close);
+                        searchView.setVisibility(View.VISIBLE);
+                        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                            @Override
+                            public boolean onQueryTextSubmit(final String query) {
+                                Observable.create(new ObservableOnSubscribe<String>() {
+                                    @Override
+                                    public void subscribe(@io.reactivex.annotations.NonNull ObservableEmitter<String> e) throws Exception {
+                                        e.onNext(query);
+                                    }
+                                }).observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<String>() {
+                                            @Override
+                                            public void accept(@io.reactivex.annotations.NonNull String s) throws Exception {
+                                                searchRefreshData(s);
+                                            }
+                                        });
+                                return false;
+                            }
+
+                            @Override
+                            public boolean onQueryTextChange(final String newText) {
+                                Observable.create(new ObservableOnSubscribe<String>() {
+                                    @Override
+                                    public void subscribe(@io.reactivex.annotations.NonNull ObservableEmitter<String> e) throws Exception {
+                                        e.onNext(newText);
+                                    }
+                                }).observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(new Consumer<String>() {
+                                            @Override
+                                            public void accept(@io.reactivex.annotations.NonNull String s) throws Exception {
+                                                searchRefreshData(s);
+                                            }
+                                        });
+                                return false;
+                            }
+                        });
+                    } else {
+                        Log.e("searchView.getVisibility()==View.VISIBLE", "searchView.getVisibility()==View.VISIBLE");
+                        item.setIcon(R.drawable.ic_search_white_24dp);
+                        searchView.setVisibility(View.GONE);
+                        refreshData();
+                       TextView mSearchSrcTextView = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+                        mSearchSrcTextView.setText(null);
+                    }
+                }
                 return true;
             }
         });
@@ -129,7 +205,10 @@ public class MessageFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        refreshData();
+        if(searchView.getVisibility()==View.VISIBLE){
+        }else {
+            refreshData();
+        }
     }
 
     @Override
@@ -307,11 +386,11 @@ public class MessageFragment extends Fragment {
 
     public void refreshData() {
         String whereClause = UserUntil.gsonUser.getUserPhone();
-        Log.e("whereClausewhereClause",whereClause);
-        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"1")
+        Log.e("whereClausewhereClause", whereClause);
+        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause, "1")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
-        newList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause,"0")
+        newList = new ArrayList<>(DataSupport.where("mmeusername= ? and settopflag=?", whereClause, "0")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         msgList.addAll(newList);
@@ -380,6 +459,16 @@ public class MessageFragment extends Fragment {
             return;
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    public void searchRefreshData(String seach) {
+        String whereClause = UserUntil.gsonUser.getUserPhone();
+        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and mfriendusername like ?", whereClause, "%" + seach + "%")
+                .order("mchattime desc")
+                .find(ChatRecord.class));
+        Log.e("searchRefreshData", msgList.toString());
+        message_adapter = new MessageAdapter(getContext(), msgList);
+        recyclerView.setAdapter(message_adapter);
     }
 
 

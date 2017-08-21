@@ -37,8 +37,9 @@ dependencies {
     compile project(':library:libzxing')
     compile project(':library:video')
     compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
-    compile 'com.makeramen:roundedimageview:2.3.0'
+
     compile 'org.igniterealtime.smack:smack-android-extensions:4.1.9'
+    compile 'com.makeramen:roundedimageview:2.3.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha8'
     compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
@@ -64,7 +65,6 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.1.0'
     compile 'org.greenrobot:eventbus:3.0.0'
-
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
     compile 'com.google.code.gson:gson:2.8.1'
@@ -76,6 +76,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
     debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
 }
+
 
 
 

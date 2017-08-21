@@ -482,38 +482,6 @@ public class ChatActivity extends BaseActivity implements FaceFragment.OnEmojiCl
                 });
     }
 
-//    public void sendMulti(String message) {
-//        Observable.just(message)
-//                .observeOn(Schedulers.io())
-//                .subscribe(new Consumer<String>() {
-//                    @Override
-//                    public void accept(String message) {
-//                        try {
-//                            JSONObject json = new JSONObject();
-//                            json.put(ChatMessage.KEY_MESSAGE_CONTENT, message);
-//                            json.put(ChatMessage.KEY_MULTI_CHAT_SEND_USER, UserUntil.gsonUser.getUserPhone());//信息后缀必须为用户名
-////                            Log.e(mChatUser.getMeUsername(),mChatUser.getMeUsername());
-//                            mMultiUserChat.sendMessage(json.toString());
-//
-//
-//                            ChatMessage msg = new ChatMessage(1, true);
-//                            ChatRecord chatRecord = getIntent().getParcelableExtra("chatrecord");
-//                            msg.setFriendNickname(chatRecord.getmFriendNickname());
-//                            msg.setFriendUsername(chatRecord.getmFriendUsername());
-//                            msg.setMeUsername(UserUntil.gsonUser.getUserPhone());
-//                            msg.setMeNickname(UserUntil.gsonUser.getNickname());
-//                            msg.setContent(message);
-//                            msg.setMulti(true);
-//                            msg.setUuid(chatRecord.getUuid());
-//                            msg.setMeSend(true);
-//                            msg.save();
-//                            EventBus.getDefault().post(new MessageEvent(msg));
-//                        } catch (Exception e) {
-//                            Log.e(e.toString(), "send message failure");
-//                        }
-//                    }
-//                });
-//    }
 
     public void checkGroupId(String groupName) {
         List<MultiChatRoom> list = DataSupport.findAll(MultiChatRoom.class);

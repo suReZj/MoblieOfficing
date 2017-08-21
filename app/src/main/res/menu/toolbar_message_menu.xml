@@ -10,7 +10,7 @@
         android:id="@+id/message_fragment_more"
         android:icon="@drawable/ic_add_white_24dp"
         android:title="more"
-        app:showAsAction="ifRoom">
+        app:showAsAction="always">
         <menu>
             <group>
                 <item

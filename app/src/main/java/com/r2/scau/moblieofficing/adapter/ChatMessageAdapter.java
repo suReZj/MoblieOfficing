@@ -120,11 +120,11 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<ChatMessageAdapter.
             //设置头像
 
             if (chatMessageList.get(position).getIconPath() == null) {
-                ImageUtils.setUserImageIcon(mContext, holder.lIcon, chatMessageList.get(position).getFriendNickname());
+                holder.lIcon.setImageDrawable(ImageUtils.getIcon(chatMessageList.get(position).getFriendNickname(), 23));
+//                ImageUtils.setUserImageIcon(mContext, holder.lIcon, chatMessageList.get(position).getFriendNickname());
             } else {
                 Glide.with(mContext).load(PHOTO_SERVER_IP + chatMessageList.get(position).getIconPath()).into(holder.lIcon);
             }
-
 
             try {
                 EmojiUtil.handlerEmojiText(holder.lTextView, chat_message_bean.getContent(), this.mContext);

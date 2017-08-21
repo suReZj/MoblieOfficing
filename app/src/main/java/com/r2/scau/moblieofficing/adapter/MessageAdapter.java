@@ -133,7 +133,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.messageH
     @Override
     public void onBindViewHolder(final messageHolder holder, final int position) {
         if(messageList.get(position).getmFriendAvatar()==null){
-            ImageUtils.setUserImageIcon(mContext, holder.icon, messageList.get(position).getmFriendNickname());
+//            ImageUtils.setUserImageIcon(mContext, holder.icon, messageList.get(position).getmFriendNickname());
+            holder.icon.setImageDrawable(ImageUtils.getIcon(messageList.get(position).getmFriendNickname(), 23));
         }else {
             Glide.with(mContext).load(PHOTO_SERVER_IP + messageList.get(position).getmFriendAvatar()).into(holder.icon);
         }

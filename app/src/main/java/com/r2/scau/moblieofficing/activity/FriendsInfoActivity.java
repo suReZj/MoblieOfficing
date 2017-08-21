@@ -316,7 +316,7 @@ public class FriendsInfoActivity extends BaseActivity {
         });
     }
 
-    public void getFriendInfo(String Phone) {
+    public void getFriendInfo(final String Phone) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(SERVER_IP + getInfo + "/")
                 .callFactory(OkHttpUntil.getInstance())
@@ -343,11 +343,12 @@ public class FriendsInfoActivity extends BaseActivity {
                     } else {
                         Log.e("icon==null", "icon==null");
                     }
-                    if (phone.equals(UserUntil.gsonUser.getUserPhone())) {
+                    if (Phone.equals(UserUntil.gsonUser.getUserPhone())) {
                         ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
                     } else {
                         if (userIconPath == null) {
-                            ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
+//                            ImageUtils.setUserImageIcon(getApplicationContext(), userIcon, userName);
+                            userIcon.setImageDrawable(ImageUtils.getIcon(userName, 23));
                         } else {
                             Glide.with(getApplicationContext()).load(PHOTO_SERVER_IP+userIconPath).into(userIcon);
                         }

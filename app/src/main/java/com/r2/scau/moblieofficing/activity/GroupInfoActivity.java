@@ -269,7 +269,8 @@ public class GroupInfoActivity extends BaseActivity {
                             Integer createrId = gsonGroupInfo.getCreatedUserId();
                             groupName = gsonGroupInfo.getGroupName();
                             group_nickname.setText(groupName);
-                            ImageUtils.setUserImageIcon(getApplicationContext(), groupIcon, groupName);
+//                            ImageUtils.setUserImageIcon(getApplicationContext(), groupIcon, groupName);
+                            groupIcon.setImageDrawable(ImageUtils.getIcon(groupName, 23));
                             getCreaterInfo(createrId);
                             Log.e("getGroupInfo", "success");
                         }
@@ -393,7 +394,6 @@ public class GroupInfoActivity extends BaseActivity {
                 GsonUsers gsonUsers = response.body();
                 if (gsonUsers.getCode() == 200) {
                     GsonUser user = gsonUsers.getUserInfo();
-                    String userName = user.getNickname();
                     if (user.getUserHeadPortrait() != null) {
                         path = user.getUserHeadPortrait().toString();
                         Log.e("icon!=null", path);
@@ -402,20 +402,11 @@ public class GroupInfoActivity extends BaseActivity {
                         groupMembers.get(position).setIconPath(null);
                         Log.e("icon==null", "icon==null");
                     }
-                    if ((groupMembers.size() - 1) == position) {
+                    if ((members.size() - 1) == position) {
                         Message msg = Message.obtain();
                         msg.what = 2;
                         handler.sendMessage(msg);
                     }
-//                    if (userPhone.equals(UserUntil.gsonUser.getUserPhone())) {
-//                        ImageUtils.setUserImageIcon(mContext, holder.memberIcon, userName);
-//                    } else {
-//                        if (userIconPath == null) {
-//                            ImageUtils.setUserImageIcon(mContext, holder.memberIcon, userName);
-//                        } else {
-//                            Glide.with(mContext).load(userIconPath).into(holder.memberIcon);
-//                        }
-//                    }
                     Log.e("getInfo", "success");
                 } else {
                     Log.e("getInfo", gsonUsers.getMsg());

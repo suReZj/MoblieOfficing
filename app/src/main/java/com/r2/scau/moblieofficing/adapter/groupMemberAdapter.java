@@ -69,7 +69,8 @@ public class groupMemberAdapter extends RecyclerView.Adapter<groupMemberAdapter.
                 ImageUtils.setUserImageIcon(mContext, holder.memberIcon, memberList.get(position).getNickName());
             } else {
                 if (userIconPath == null) {
-                    ImageUtils.setUserImageIcon(mContext, holder.memberIcon, memberList.get(position).getNickName());
+//                    ImageUtils.setUserImageIcon(mContext, holder.memberIcon, memberList.get(position).getNickName());
+                    holder.memberIcon.setImageDrawable(ImageUtils.getIcon(memberList.get(position).getNickName(), 23));
                 } else {
                     Glide.with(mContext).load(userIconPath).into(holder.memberIcon);
                 }

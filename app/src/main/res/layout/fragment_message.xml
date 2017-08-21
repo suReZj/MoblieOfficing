@@ -20,7 +20,18 @@
             android:background="@color/colorPrimary"
             toolbar:titleTextColor="@android:color/white"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:popupTheme="@style/ToolbarPopupTheme" />
+            app:popupTheme="@style/ToolbarPopupTheme" >
+            <android.support.v7.widget.SearchView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/searchView"
+                android:layout_gravity="center"
+                app:defaultQueryHint="输入搜索内容"
+                app:closeIcon="@null"
+                app:searchIcon="@null"
+            />
+            </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
 
     <!--<android.support.v4.widget.SwipeRefreshLayout-->
@@ -28,12 +39,29 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
         <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
             android:clickable="true">
-        <android.support.v7.widget.RecyclerView
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!--<android.support.v7.widget.SearchView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:id="@+id/searchView"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--app:defaultQueryHint="输入搜索内容"-->
+                    <!--&gt;-->
+
+                <!--</android.support.v7.widget.SearchView>-->
+
+                <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -41,6 +69,7 @@
             android:scrollbarFadeDuration="1"
             android:fadeScrollbars="true"
             />
+            </LinearLayout>
         </FrameLayout>
     <!--</android.support.v4.widget.SwipeRefreshLayout>-->
 
