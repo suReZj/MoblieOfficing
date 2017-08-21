@@ -463,7 +463,7 @@ public class MessageFragment extends Fragment {
 
     public void searchRefreshData(String seach) {
         String whereClause = UserUntil.gsonUser.getUserPhone();
-        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and mfriendusername like ?", whereClause, "%" + seach + "%")
+        msgList = new ArrayList<>(DataSupport.where("mmeusername= ? and mfriendnickname like ?", whereClause, "%" + seach + "%")
                 .order("mchattime desc")
                 .find(ChatRecord.class));
         Log.e("searchRefreshData", msgList.toString());
